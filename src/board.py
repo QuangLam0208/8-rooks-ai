@@ -25,8 +25,8 @@ def draw_board(screen, rook_img, solution, x_offset, y_offset=0, show_rooks=Fals
             # Vẽ ô
             pygame.draw.rect(screen, color, rect)
 
-            # Nếu cần hiển thị quân hậu
-            if show_rooks and solution and solution[row] == col:
+            # Nếu cần hiển thị quân xe
+            if show_rooks and solution and row < len(solution) and solution[row] == col:
                 screen.blit(rook_img, rect.topleft)
 
     # Vẽ viền bàn cờ
