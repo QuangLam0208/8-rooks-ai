@@ -9,7 +9,7 @@ WHITE = (238, 238, 210)   # ô sáng
 BLACK = (118, 150, 86)    # ô tối
 TEXT_COLOR = (0, 0, 0)
 
-def draw_board(screen, queen_img, solution, x_offset, y_offset=0, show_queens=False, margin=120):
+def draw_board(screen, rook_img, solution, x_offset, y_offset=0, show_rooks=False, margin=120):
     """Vẽ bàn cờ và quân hậu (nếu có)"""
     for row in range(BOARD_SIZE):
         for col in range(BOARD_SIZE):
@@ -26,8 +26,8 @@ def draw_board(screen, queen_img, solution, x_offset, y_offset=0, show_queens=Fa
             pygame.draw.rect(screen, color, rect)
 
             # Nếu cần hiển thị quân hậu
-            if show_queens and solution and solution[row] == col:
-                screen.blit(queen_img, rect.topleft)
+            if show_rooks and solution and solution[row] == col:
+                screen.blit(rook_img, rect.topleft)
 
     # Vẽ viền bàn cờ
     pygame.draw.rect(
