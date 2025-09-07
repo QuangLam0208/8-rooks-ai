@@ -10,8 +10,10 @@ WINDOW_WIDTH = 2 * (BOARD_SIZE * SQUARE_SIZE) + 3 * MARGIN
 WINDOW_HEIGHT = BOARD_SIZE * SQUARE_SIZE + 2 * MARGIN
 BG_COLOR = (221, 211, 211)  # màu bg
 
-# Chạy BFS để tìm nghiệm
-solution = bfs_rooks(BOARD_SIZE)
+# Chạy BFS để lấy tất cả các bước
+steps = bfs_rooks(BOARD_SIZE)
+current_step = 0
+clock = pygame.time.Clock()
 
 pygame.init()
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -42,7 +44,7 @@ while running:
 
     # Bàn cờ trái (Initial)
     left_offset = MARGIN
-    draw_board(screen, rook_img, solution, left_offset, show_rooks=False, margin=MARGIN)
+    draw_board(screen, rook_img, steps, left_offset, show_rooks=False, margin=MARGIN)
     draw_coordinates(screen, font, left_offset, margin=MARGIN)
 
     caption_left = caption_font.render("Initial State", True, (30, 30, 30))
@@ -52,7 +54,7 @@ while running:
 
     # Vẽ bàn cờ phải (Final)
     right_offset = BOARD_SIZE * SQUARE_SIZE + 2 * MARGIN
-    draw_board(screen, rook_img, solution, right_offset, show_rooks=True, margin=MARGIN)
+    draw_board(screen, rook_img, steps[current_step], right_offset, show_rooks=True, margin=MARGIN)
     draw_coordinates(screen, font, right_offset, margin=MARGIN)
 
     caption_right = caption_font.render("Goal State", True, (30, 30, 30))
@@ -63,6 +65,8 @@ while running:
     screen.blit(caption_right, caption_rect_right)
 
     pygame.display.flip()
+    current_step = min(current_step + 1, len(steps)-1)
+    clock.tick(5) 
 
 pygame.quit()
 sys.exit()
