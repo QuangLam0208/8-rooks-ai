@@ -42,19 +42,21 @@ while running:
     title_rect = title_text.get_rect(center=(WINDOW_WIDTH // 2, 50))
     screen.blit(title_text, title_rect)
 
-    # Bàn cờ trái (Initial)
+    # Vẽ bàn cờ trái (chạy từng bước)
     left_offset = MARGIN
-    draw_board(screen, rook_img, steps, left_offset, show_rooks=False, margin=MARGIN)
+    draw_board(screen, rook_img, steps[current_step], left_offset, show_rooks=True, margin=MARGIN)
     draw_coordinates(screen, font, left_offset, margin=MARGIN)
 
-    caption_left = caption_font.render("Initial State", True, (30, 30, 30))
-    caption_rect_left = caption_left.get_rect(center=(left_offset + BOARD_SIZE * SQUARE_SIZE // 2,
-                                                      MARGIN + BOARD_SIZE * SQUARE_SIZE + 60))
+    caption_left = caption_font.render("Current Step", True, (30, 30, 30))
+    caption_rect_left = caption_left.get_rect(center=(
+        left_offset + BOARD_SIZE * SQUARE_SIZE // 2,
+        MARGIN + BOARD_SIZE * SQUARE_SIZE + 60
+    ))
     screen.blit(caption_left, caption_rect_left)
 
-    # Vẽ bàn cờ phải (Final)
+    # Vẽ bàn cờ phải (Final) - luôn là solution cuối cùng
     right_offset = BOARD_SIZE * SQUARE_SIZE + 2 * MARGIN
-    draw_board(screen, rook_img, steps[current_step], right_offset, show_rooks=True, margin=MARGIN)
+    draw_board(screen, rook_img, steps[-1], right_offset, show_rooks=True, margin=MARGIN)
     draw_coordinates(screen, font, right_offset, margin=MARGIN)
 
     caption_right = caption_font.render("Goal State", True, (30, 30, 30))
@@ -66,7 +68,7 @@ while running:
 
     pygame.display.flip()
     current_step = min(current_step + 1, len(steps)-1)
-    clock.tick(5) 
+    clock.tick(5)
 
 pygame.quit()
 sys.exit()
