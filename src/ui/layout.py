@@ -36,28 +36,34 @@ def render_boards(screen, font, caption_font, rook_img,
 
 
 def render_buttons(screen, font, window_width, window_height):
-    """Vẽ 3 nút: Random + Reset + Run BFS"""
+    """Vẽ 3 nút: Random + Reset + Run BFS + Run DFS"""
     button_w, button_h = 120, 40
     gap = 30
     y = window_height - 70
 
     # Random
-    random_rect = pygame.Rect(window_width // 2 - button_w - gap*2, y, button_w, button_h)
+    random_rect = pygame.Rect(window_width // 2 - button_w*2 - gap*3, y, button_w, button_h)
     pygame.draw.rect(screen, (200, 200, 200), random_rect, border_radius=8)
     text = font.render("Random", True, (0, 0, 0))
     screen.blit(text, text.get_rect(center=random_rect.center))
 
     # Reset
-    reset_rect = pygame.Rect(window_width // 2, y, button_w, button_h)
+    reset_rect = pygame.Rect(window_width // 2 - button_w - gap, y, button_w, button_h)
     pygame.draw.rect(screen, (200, 200, 200), reset_rect, border_radius=8)
     text = font.render("Reset", True, (0, 0, 0))
     screen.blit(text, text.get_rect(center=reset_rect.center))
 
     # Run BFS
-    run_rect = pygame.Rect(window_width // 2 + button_w + gap*2, y, button_w, button_h)
-    pygame.draw.rect(screen, (200, 200, 200), run_rect, border_radius=8)
+    run_bfs_rect = pygame.Rect(window_width // 2 + gap, y, button_w, button_h)
+    pygame.draw.rect(screen, (200, 200, 200), run_bfs_rect, border_radius=8)
     text = font.render("Run BFS", True, (0, 0, 0))
-    screen.blit(text, text.get_rect(center=run_rect.center))
+    screen.blit(text, text.get_rect(center=run_bfs_rect.center))
 
-    return random_rect, reset_rect, run_rect
+    # Run DFS
+    run_dfs_rect = pygame.Rect(window_width // 2 + button_w + gap*2, y, button_w, button_h)
+    pygame.draw.rect(screen, (200, 200, 200), run_dfs_rect, border_radius=8)
+    text = font.render("Run DFS", True, (0, 0, 0))
+    screen.blit(text, text.get_rect(center=run_dfs_rect.center))
+
+    return random_rect, reset_rect, run_bfs_rect, run_dfs_rect
 
