@@ -22,7 +22,7 @@ Bài toán này tương đương với việc tìm một **hoán vị của 8 s�
 
 - Hiển thị bàn cờ 8x8.
 
-- Thuật toán giải (ví dụ: BFS, …).
+- Thuật toán giải (BFS, DFS, …).
 
 - Giao diện trực quan (sử dụng pygame).
 
