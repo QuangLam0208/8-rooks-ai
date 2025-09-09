@@ -1,7 +1,6 @@
 from core.app import GameApp
-from algorithms import bfs_rooks
+from algorithms import bfs_rooks, dfs_rooks
 
 if __name__ == "__main__":
-    solutions = bfs_rooks(8)  # lấy tất cả nghiệm 8 xe
-    app = GameApp(solutions)
+    app = GameApp([])
     app.run()
