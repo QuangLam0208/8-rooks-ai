@@ -1,7 +1,7 @@
 import pygame, sys, os, random
 from ui.board import BOARD_SIZE, SQUARE_SIZE
 from ui.layout import render_title, render_boards, render_buttons
-from algorithms import bfs_rooks
+from algorithms import bfs_rooks, dfs_rooks
 import itertools
 
 MARGIN = 120
@@ -49,8 +49,12 @@ class GameApp:
                         self.left_solution = None
                         self.steps = None
                         self.running_bfs = False
-                    elif self.run_btn.collidepoint(mouse_pos):
+                    elif self.run_bfs_btn.collidepoint(mouse_pos):
                         self.steps = bfs_rooks(BOARD_SIZE, list(self.right_solution))
+                        self.step_index = 0
+                        self.running_bfs = True
+                    elif self.run_dfs_btn.collidepoint(mouse_pos):
+                        self.steps = dfs_rooks(BOARD_SIZE, list(self.right_solution))
                         self.step_index = 0
                         self.running_bfs = True
 
@@ -75,7 +79,10 @@ class GameApp:
                 self.window_width
             )
 
-            self.random_btn, self.reset_btn, self.run_btn = render_buttons(
+            (self.random_btn, 
+            self.reset_btn, 
+            self.run_bfs_btn, 
+            self.run_dfs_btn) = render_buttons(
                 self.screen, self.font, self.window_width, self.window_height
             )
 
