@@ -29,10 +29,10 @@ class GameApp:
         self.rook_img = pygame.image.load(os.path.join("assets", "rook.png"))
         self.rook_img = pygame.transform.scale(self.rook_img, (SQUARE_SIZE, SQUARE_SIZE))
 
-        # BFS animation state
+        # animation state
         self.steps = None
         self.step_index = 0
-        self.running_bfs = False
+        self.running_algorithms = False
 
     def run(self):
         running = True
@@ -48,23 +48,49 @@ class GameApp:
                     elif self.reset_btn.collidepoint(mouse_pos):
                         self.left_solution = None
                         self.steps = None
-                        self.running_bfs = False
+                        self.running_algorithms = False
                     elif self.run_bfs_btn.collidepoint(mouse_pos):
-                        self.steps = bfs_rooks(BOARD_SIZE, list(self.right_solution))
-                        self.step_index = 0
-                        self.running_bfs = True
+                        
+                        # In từng step (Visualization):
+                        # self.steps = bfs_rooks(BOARD_SIZE, list(self.right_solution))
+                        # self.step_index = 0
+                        # self.running_bfs = True
+                        
+                        final_state = bfs_rooks(BOARD_SIZE, list(self.right_solution))
+                        if final_state:
+                            self.steps = final_state  # lưu đúng solution cuối cùng
+                            self.step_index = 0
+                            self.left_solution = []   # reset bàn cờ trái
+                            self.running_algorithms = True
+                        
                     elif self.run_dfs_btn.collidepoint(mouse_pos):
-                        self.steps = dfs_rooks(BOARD_SIZE, list(self.right_solution))
-                        self.step_index = 0
-                        self.running_bfs = True
+                        # In từng step (Visualization):
+                        # self.steps = dfs_rooks(BOARD_SIZE, list(self.right_solution))
+                        # self.step_index = 0
+                        # self.running_bfs = True
+                        final_state = dfs_rooks(BOARD_SIZE, list(self.right_solution))
+                        if final_state:
+                            self.steps = final_state   # chính là list các cột của goal
+                            self.step_index = 0
+                            self.left_solution = []    # bắt đầu rỗng
+                            self.running_algorithms = True    # dùng chung flag để animate
 
-            # update BFS animation
-            if self.running_bfs and self.steps:
+            # update animation
+            if self.running_algorithms and self.steps:
+                
+                # In từng step (Visualization):
+                # if self.step_index < len(self.steps):
+                #     self.left_solution = self.steps[self.step_index]
+                #     self.step_index += 1
+                # else:
+                #     self.running_bfs = False  # xong thì dừng
+                
                 if self.step_index < len(self.steps):
-                    self.left_solution = self.steps[self.step_index]
+                    # thêm dần từng quân cờ vào bàn cờ trái
+                    self.left_solution.append(self.steps[self.step_index])
                     self.step_index += 1
                 else:
-                    self.running_bfs = False  # xong thì dừng
+                    self.running_algorithms = False  # đã xong thì dừng
 
             self.screen.fill(BG_COLOR)
 
@@ -87,7 +113,7 @@ class GameApp:
             )
 
             pygame.display.flip()
-            self.clock.tick(10000)  # giảm fps để thấy rõ animation
+            self.clock.tick(1)  # giảm fps để thấy rõ animation
 
         pygame.quit()
         sys.exit()
