@@ -2,13 +2,15 @@ from collections import deque
 
 def bfs_rooks(n, goal=None):
     """
-    BFS đặt n quân xe, trả về state cuối cùng = goal (nếu có).
+    BFS đặt n quân xe, trả về tất cả trạng thái duyệt được.
+    Nếu goal != None thì dừng đúng tại goal.
     """
-    from collections import deque
-    queue = deque([[]])
+    queue = deque([[]])  
+    steps = []  
 
     while queue:
         state = queue.popleft()
+        steps.append(state)
 
         row = len(state)
         if row == n:
@@ -16,7 +18,7 @@ def bfs_rooks(n, goal=None):
                 goal = list(goal)
             if state == goal:
                 return state  # chỉ trả về state cuối cùng, nếu muốn trả về các bước thì return steps
-            continue
+            continue  # nếu khác goal thì bỏ qua
 
         # mở rộng
         for col in range(n):
