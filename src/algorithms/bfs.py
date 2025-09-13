@@ -1,6 +1,6 @@
 from collections import deque
 
-def bfs_rooks(n, goal=None):
+def breadth_first_search(n, goal=None):
     """
     BFS đặt n quân xe, trả về tất cả trạng thái duyệt được.
     Nếu goal != None thì dừng đúng tại goal.

@@ -19,7 +19,7 @@ def placement_cost_goal(state, row, col, goal):
     else:
         return abs(col - target_col) + 1
     
-def ucs_rooks_goal(n, goal):
+def uniform_cost_search(n, goal):
     if isinstance(goal, tuple):
         goal = list(goal)
 

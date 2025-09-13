@@ -1,4 +1,4 @@
-from .bfs import bfs_rooks
-from .dfs import dfs_rooks
-from .ucs import ucs_rooks_goal
-__all__ = ["bfs_rooks", "dfs_rooks", "ucs_rooks_goal"]
+from .bfs import breadth_first_search
+from .dfs import depth_first_search
+from .ucs import uniform_cost_search
+__all__ = ["breadth_first_search", "depth_first_search", "uniform_cost_search"]

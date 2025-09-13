@@ -1,7 +1,7 @@
 import pygame, sys, os, random
 from ui.board import BOARD_SIZE, SQUARE_SIZE
 from ui.layout import render_title, render_boards, render_buttons
-from algorithms import bfs_rooks, dfs_rooks, ucs_rooks_goal
+from algorithms import breadth_first_search, depth_first_search, uniform_cost_search
 import itertools
 
 MARGIN = 120
@@ -54,10 +54,10 @@ class GameApp:
 
                     elif self.run_bfs_btn.collidepoint(mouse_pos):
                         # In từng step (Visualization):
-                        # self.steps = bfs_rooks(BOARD_SIZE, list(self.right_solution))
+                        # self.steps = breadth_first_search(BOARD_SIZE, list(self.right_solution))
                         # self.step_index = 0
                         # self.running_bfs = True
-                        final_state = bfs_rooks(BOARD_SIZE, list(self.right_solution))
+                        final_state = breadth_first_search(BOARD_SIZE, list(self.right_solution))
                         if final_state:
                             self.steps = final_state  # lưu đúng solution cuối cùng
                             self.step_index = 0
@@ -66,10 +66,10 @@ class GameApp:
                         
                     elif self.run_dfs_btn.collidepoint(mouse_pos):
                         # In từng step (Visualization):
-                        # self.steps = dfs_rooks(BOARD_SIZE, list(self.right_solution))
+                        # self.steps = depth_first_search(BOARD_SIZE, list(self.right_solution))
                         # self.step_index = 0
                         # self.running_bfs = True
-                        final_state = dfs_rooks(BOARD_SIZE, list(self.right_solution))
+                        final_state = depth_first_search(BOARD_SIZE, list(self.right_solution))
                         if final_state:
                             self.steps = final_state   # chính là list các cột của goal
                             self.step_index = 0
@@ -77,7 +77,7 @@ class GameApp:
                             self.running_algorithms = True    # dùng chung flag để animate
 
                     elif self.run_ucs_btn.collidepoint(mouse_pos):
-                        final_state = ucs_rooks_goal(BOARD_SIZE, list(self.right_solution))
+                        final_state = uniform_cost_search(BOARD_SIZE, list(self.right_solution))
                         if final_state:
                             self.steps = final_state
                             self.step_index = 0

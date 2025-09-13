@@ -1,4 +1,4 @@
-def dfs_rooks(n, goal=None):
+def depth_first_search(n, goal=None):
     """
     DFS đặt n quân xe, trả về tất cả trạng thái duyệt được.
     Nếu goal != None thì dừng đúng tại goal.
