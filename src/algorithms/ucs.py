@@ -34,7 +34,7 @@ def ucs_rooks_goal(n, goal):
         row = len(state)
         if row == n:
             if state == goal:
-                return steps
+                return state # chỉ trả về goal (nếu muốn trả các bước thì return steps)
             continue
 
         if tuple(state) in visited:
@@ -48,4 +48,4 @@ def ucs_rooks_goal(n, goal):
                 new_state = state + [col]
                 heapq.heappush(heap, (new_cost, new_state))
 
-    return steps
+    return None # nếu muốn trả về danh sách các state thì return steps
