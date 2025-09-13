@@ -1,7 +1,7 @@
 import pygame, sys, os, random
 from ui.board import BOARD_SIZE, SQUARE_SIZE
 from ui.layout import render_title, render_boards, render_buttons
-from algorithms import breadth_first_search, depth_first_search, uniform_cost_search
+from algorithms import breadth_first_search, depth_first_search, uniform_cost_search, depth_limited_search
 import itertools
 
 MARGIN = 120
@@ -84,6 +84,14 @@ class GameApp:
                             self.left_solution = []
                             self.running_algorithms = True
 
+                    elif self.run_dls_btn.collidepoint(mouse_pos):
+                        final_state = depth_limited_search(BOARD_SIZE, list(self.right_solution), limit=BOARD_SIZE)
+                        if final_state:
+                            self.steps = final_state   # chính là list cột của goal
+                            self.step_index = 0
+                            self.left_solution = []    # reset bàn cờ trái
+                            self.running_algorithms = True
+
             # update animation
             if self.running_algorithms and self.steps:
                 # In từng step (Visualization):
@@ -116,7 +124,8 @@ class GameApp:
             self.reset_btn, 
             self.run_bfs_btn, 
             self.run_dfs_btn,
-            self.run_ucs_btn) = render_buttons(
+            self.run_ucs_btn,
+            self.run_dls_btn) = render_buttons(
                 self.screen, self.font, self.window_width, self.window_height
             )
 
