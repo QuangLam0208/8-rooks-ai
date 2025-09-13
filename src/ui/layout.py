@@ -36,34 +36,33 @@ def render_boards(screen, font, caption_font, rook_img,
 
 
 def render_buttons(screen, font, window_width, window_height):
-    """Vẽ 3 nút: Random + Reset + Run BFS + Run DFS"""
+    """Vẽ 5 nút: Random + Reset + Run BFS + Run DFS + Run UCS (căn giữa)"""
     button_w, button_h = 120, 40
     gap = 30
     y = window_height - 70
 
-    # Random
-    random_rect = pygame.Rect(window_width // 2 - button_w*2 - gap*3, y, button_w, button_h)
-    pygame.draw.rect(screen, (200, 200, 200), random_rect, border_radius=8)
-    text = font.render("Random", True, (0, 0, 0))
-    screen.blit(text, text.get_rect(center=random_rect.center))
+    # Danh sách tên nút
+    labels = ["Random", "Reset", "Run BFS", "Run DFS", "Run UCS"]
+    num_buttons = len(labels)
 
-    # Reset
-    reset_rect = pygame.Rect(window_width // 2 - button_w - gap, y, button_w, button_h)
-    pygame.draw.rect(screen, (200, 200, 200), reset_rect, border_radius=8)
-    text = font.render("Reset", True, (0, 0, 0))
-    screen.blit(text, text.get_rect(center=reset_rect.center))
+    # Tổng chiều rộng block (tất cả nút + khoảng cách)
+    total_width = num_buttons * button_w + (num_buttons - 1) * gap
 
-    # Run BFS
-    run_bfs_rect = pygame.Rect(window_width // 2 + gap, y, button_w, button_h)
-    pygame.draw.rect(screen, (200, 200, 200), run_bfs_rect, border_radius=8)
-    text = font.render("Run BFS", True, (0, 0, 0))
-    screen.blit(text, text.get_rect(center=run_bfs_rect.center))
+    # Điểm bắt đầu để căn giữa
+    start_x = (window_width - total_width) // 2
 
-    # Run DFS
-    run_dfs_rect = pygame.Rect(window_width // 2 + button_w + gap*2, y, button_w, button_h)
-    pygame.draw.rect(screen, (200, 200, 200), run_dfs_rect, border_radius=8)
-    text = font.render("Run DFS", True, (0, 0, 0))
-    screen.blit(text, text.get_rect(center=run_dfs_rect.center))
+    rects = []
 
-    return random_rect, reset_rect, run_bfs_rect, run_dfs_rect
+    for i, label in enumerate(labels):
+        x = start_x + i * (button_w + gap)
+        rect = pygame.Rect(x, y, button_w, button_h)
+        pygame.draw.rect(screen, (200, 200, 200), rect, border_radius=8)
+
+        text = font.render(label, True, (0, 0, 0))
+        screen.blit(text, text.get_rect(center=rect.center))
+
+        rects.append(rect)
+
+    return tuple(rects)  # trả về các nút
+
 
