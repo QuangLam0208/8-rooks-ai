@@ -1,6 +1,6 @@
 from collections import deque
 
-def bfs_rooks(n, goal=None):
+def breadth_first_search(n, goal=None):
     """
     BFS đặt n quân xe, trả về tất cả trạng thái duyệt được.
     Nếu goal != None thì dừng đúng tại goal.
@@ -17,7 +17,7 @@ def bfs_rooks(n, goal=None):
             if goal is not None and isinstance(goal, tuple):
                 goal = list(goal)
             if state == goal:
-                return steps  # Dừng ngay khi khớp goal
+                return state  # chỉ trả về state cuối cùng, nếu muốn trả về các bước thì return steps
             continue  # nếu khác goal thì bỏ qua
 
         # mở rộng
@@ -25,4 +25,4 @@ def bfs_rooks(n, goal=None):
             if col not in state:
                 queue.append(state + [col])
 
-    return steps
+    return None # nếu muốn trả về các bước thì return steps

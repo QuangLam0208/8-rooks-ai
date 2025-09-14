@@ -1,4 +1,4 @@
-def dfs_rooks(n, goal=None):
+def depth_first_search(n, goal=None):
     """
     DFS đặt n quân xe, trả về tất cả trạng thái duyệt được.
     Nếu goal != None thì dừng đúng tại goal.
@@ -16,7 +16,7 @@ def dfs_rooks(n, goal=None):
         row = len(state)
         if row == n:
             if state == goal:
-                return steps
+                return state # chỉ trả về state cuối cùng, nếu muốn trả về các bước thì return steps
             continue
 
         # mở rộng theo DFS (thêm cuối stack)
@@ -24,4 +24,4 @@ def dfs_rooks(n, goal=None):
             if col not in state:
                 stack.append(state + [col])
 
-    return steps
+    return None # nếu muốn trả về các bước thì return steps
