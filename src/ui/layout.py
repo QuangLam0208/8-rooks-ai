@@ -36,13 +36,12 @@ def render_boards(screen, font, caption_font, rook_img,
 
 
 def render_buttons(screen, font, window_width, window_height):
-    """Vẽ 6 nút: Random + Reset + Run BFS + Run DFS + Run UCS + Run DLS (căn giữa)"""
     button_w, button_h = 120, 40
     gap = 30
     y = window_height - 70
 
     # Danh sách tên nút
-    labels = ["Random", "Reset", "Run BFS", "Run DFS", "Run UCS", "Run DLS"]
+    labels = ["Random", "Reset", "Run BFS", "Run DFS", "Run UCS", "Run DLS", "Run IDS", "Run GS"]
     num_buttons = len(labels)
 
     # Tổng chiều rộng block (tất cả nút + khoảng cách)
