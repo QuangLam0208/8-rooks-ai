@@ -1,7 +1,7 @@
 import pygame, sys, os, random
 from ui.board import BOARD_SIZE, SQUARE_SIZE
 from ui.layout import render_title, render_boards, render_buttons
-from algorithms import breadth_first_search, depth_first_search, uniform_cost_search, depth_limited_search
+from algorithms import * 
 import itertools
 
 MARGIN = 120
@@ -77,7 +77,7 @@ class GameApp:
                             self.running_algorithms = True    # dùng chung flag để animate
 
                     elif self.run_ucs_btn.collidepoint(mouse_pos):
-                        final_state = uniform_cost_search(BOARD_SIZE, list(self.right_solution))
+                        final_state = uniform_cost_search(BOARD_SIZE, list(self.right_solution), placement_cost_goal)
                         if final_state:
                             self.steps = final_state
                             self.step_index = 0
@@ -90,6 +90,22 @@ class GameApp:
                             self.steps = final_state   # chính là list cột của goal
                             self.step_index = 0
                             self.left_solution = []    # reset bàn cờ trái
+                            self.running_algorithms = True
+
+                    elif self.run_ids_btn.collidepoint(mouse_pos):
+                        final_state = iterative_deepening_search(BOARD_SIZE, self.right_solution)
+                        if final_state:
+                            self.steps = final_state
+                            self.step_index = 0
+                            self.left_solution = []
+                            self.running_algorithms = True
+
+                    elif self.run_gs_btn.collidepoint(mouse_pos):
+                        final_state = greedy_search(BOARD_SIZE, self.right_solution, h_misplaced)
+                        if final_state:
+                            self.steps = final_state
+                            self.step_index = 0
+                            self.left_solution = []
                             self.running_algorithms = True
 
             # update animation
@@ -125,7 +141,9 @@ class GameApp:
             self.run_bfs_btn, 
             self.run_dfs_btn,
             self.run_ucs_btn,
-            self.run_dls_btn) = render_buttons(
+            self.run_dls_btn,
+            self.run_ids_btn,
+            self.run_gs_btn) = render_buttons(
                 self.screen, self.font, self.window_width, self.window_height
             )
 
