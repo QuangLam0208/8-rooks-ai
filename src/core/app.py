@@ -108,6 +108,14 @@ class GameApp:
                             self.left_solution = []
                             self.running_algorithms = True
 
+                    elif self.run_a_star_btn.collidepoint(mouse_pos):
+                        final_state = a_star_search(BOARD_SIZE, self.right_solution, placement_cost_goal, h_misplaced)
+                        if final_state:
+                            self.steps = final_state
+                            self.step_index = 0
+                            self.left_solution = []
+                            self.running_algorithms = True
+
             # update animation
             if self.running_algorithms and self.steps:
                 # In từng step (Visualization):
@@ -143,7 +151,8 @@ class GameApp:
             self.run_ucs_btn,
             self.run_dls_btn,
             self.run_ids_btn,
-            self.run_gs_btn) = render_buttons(
+            self.run_gs_btn,
+            self.run_a_star_btn) = render_buttons(
                 self.screen, self.font, self.window_width, self.window_height
             )
 

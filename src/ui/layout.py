@@ -41,7 +41,7 @@ def render_buttons(screen, font, window_width, window_height):
     y = window_height - 70
 
     # Danh sách tên nút
-    labels = ["Random", "Reset", "Run BFS", "Run DFS", "Run UCS", "Run DLS", "Run IDS", "Run GS"]
+    labels = ["Random", "Reset", "Run BFS", "Run DFS", "Run UCS", "Run DLS", "Run IDS", "Run GS", "Run A*"]
     num_buttons = len(labels)
 
     # Tổng chiều rộng block (tất cả nút + khoảng cách)
