@@ -115,6 +115,16 @@ class GameApp:
                             self.step_index = 0
                             self.left_solution = []
                             self.running_algorithms = True
+                        
+                    elif self.run_sa_btn.collidepoint(mouse_pos):
+                        final_state = simulated_annealing(BOARD_SIZE, self.right_solution, h_misplaced)
+                        if final_state:
+                            self.steps = final_state
+                            self.step_index = 0
+                            self.left_solution = []
+                            self.running_algorithms = True
+                        else:
+                            print("SA không tìm thấy nghiệm phù hợp trong giới hạn vòng lặp.")
 
             # update animation
             if self.running_algorithms and self.steps:
@@ -152,7 +162,8 @@ class GameApp:
             self.run_dls_btn,
             self.run_ids_btn,
             self.run_gs_btn,
-            self.run_a_star_btn) = render_buttons(
+            self.run_a_star_btn,
+            self.run_sa_btn) = render_buttons(
                 self.screen, self.font, self.window_width, self.window_height
             )
 

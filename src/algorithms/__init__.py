@@ -7,6 +7,7 @@ from .cost import placement_cost_goal
 from .heuristic import h_misplaced
 from .gs import greedy_search
 from .astar import a_star_search
+from .sa import simulated_annealing
 __all__ = ["breadth_first_search", "depth_first_search", "uniform_cost_search", 
            "depth_limited_search", "iterative_deepening_search", "placement_cost_goal",
-           "h_misplaced", "greedy_search", "a_star_search"]
+           "h_misplaced", "greedy_search", "a_star_search", "simulated_annealing"]
