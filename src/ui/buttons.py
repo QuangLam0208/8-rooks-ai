@@ -22,8 +22,10 @@ algorithm_groups = [
         "name": "Uninformed\nSearch",
         "color": BLUE,
         "algorithms": [
-            {"name": "Breadth-First Search (BFS)", "desc": "Tìm theo chiều rộng"},
-            {"name": "Depth-First Search (DFS)", "desc": "Tìm theo chiều sâu"},
+            {"name": "Breadth-First Search", "desc": "Tìm theo chiều rộng"},
+            {"name": "Depth-First Search", "desc": "Tìm theo chiều sâu"},
+            {"name": "Depth Limited Search", "desc": "Giới hạn độ sâu"},
+            {"name": "Iterative Deepening Search", "desc": "Lặp tăng dần độ sâu"},
             {"name": "Uniform Cost Search", "desc": "Chi phí đồng đều"}
         ]
     },
@@ -32,17 +34,7 @@ algorithm_groups = [
         "color": GREEN,
         "algorithms": [
             {"name": "A* Search", "desc": "Tối ưu với heuristic"},
-            {"name": "Greedy Best-First", "desc": "Tham lam heuristic"},
-            {"name": "Bidirectional Search", "desc": "Tìm hai chiều"}
-        ]
-    },
-    {
-        "name": "Dynamic\nProgramming",
-        "color": PURPLE,
-        "algorithms": [
-            {"name": "Dijkstra's Algorithm", "desc": "Đường ngắn nhất"},
-            {"name": "Floyd-Warshall", "desc": "Mọi cặp điểm"},
-            {"name": "Bellman-Ford", "desc": "Trọng số âm"}
+            {"name": "Greedy Best-First", "desc": "Tham lam heuristic"}
         ]
     },
     {
@@ -52,6 +44,15 @@ algorithm_groups = [
             {"name": "Hill Climbing", "desc": "Leo đồi tối ưu"},
             {"name": "Simulated Annealing", "desc": "Mô phỏng ủ kim loại"},
             {"name": "Beam Search", "desc": "Giới hạn node"}
+        ]
+    },
+    {
+        "name": "Dynamic\nProgramming",
+        "color": PURPLE,
+        "algorithms": [
+            {"name": "Dijkstra's Algorithm", "desc": "Đường ngắn nhất"},
+            {"name": "Floyd-Warshall", "desc": "Mọi cặp điểm"},
+            {"name": "Bellman-Ford", "desc": "Trọng số âm"}
         ]
     },
     {
@@ -101,8 +102,6 @@ def draw_group_buttons(screen, font, selected_group):
             )
         rects.append(rect)  
     return rects     
-
-
 
 def draw_algorithm_buttons(screen, font, selected_group, selected_algorithm):
     """Vẽ các thuật toán thuộc nhóm đã chọn (nút nhỏ)"""
