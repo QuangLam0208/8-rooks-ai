@@ -1,3 +1,5 @@
+# h càng nhỏ -> càng tốt
+
 def h_misplaced(state, goal):
     """
     Heuristic = số quân đã đặt nhưng sai cột so với goal.
