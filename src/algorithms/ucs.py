@@ -1,4 +1,3 @@
-from collections import deque
 import heapq
 from .cost import placement_cost_goal
 

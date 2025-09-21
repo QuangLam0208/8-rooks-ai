@@ -1,4 +1,5 @@
 from .heuristic import h_misplaced
+
 def hill_climbing(n, goal, heuristic=h_misplaced):
     current = []  # bắt đầu từ state rỗng
     while True:

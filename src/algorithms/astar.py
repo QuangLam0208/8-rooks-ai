@@ -1,6 +1,8 @@
 import heapq
+from .cost import placement_cost_goal
+from .heuristic import h_misplaced
 
-def a_star_search(n=8, goal=None, placement_cost=None, heuristic=None):
+def a_star_search(n=8, goal=None, placement_cost=placement_cost_goal, heuristic=h_misplaced):
     """
     A* Search cho bài toán 8 quân xe.
     - n: kích thước bàn cờ (mặc định 8)
