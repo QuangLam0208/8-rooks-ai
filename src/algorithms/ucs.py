@@ -1,7 +1,8 @@
 from collections import deque
 import heapq
+from .cost import placement_cost_goal
 
-def uniform_cost_search(n, goal, placement_cost_goal):
+def uniform_cost_search(n, goal, placement_cost_goal=placement_cost_goal):
     if isinstance(goal, tuple):
         goal = list(goal)
 
