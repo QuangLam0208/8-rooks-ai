@@ -132,7 +132,6 @@ def draw_algorithm_buttons(screen, font, selected_group, selected_algorithm):
 
     return rects
 
-
 def draw_action_buttons(screen, font, window_width, window_height):
     """
     Vẽ 2 nút Random / Reset nằm riêng biệt
