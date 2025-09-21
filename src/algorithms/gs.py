@@ -1,6 +1,7 @@
 import heapq
+from .heuristic import h_misplaced
 
-def greedy_search(n=8, goal=None, heuristic=None):
+def greedy_search(n=8, goal=None, heuristic=h_misplaced):
     """
     Greedy Best-First Search cho bài toán 8 quân xe.
     Nếu goal != None thì dùng heuristic theo goal.
