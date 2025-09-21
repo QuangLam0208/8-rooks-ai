@@ -1,47 +1,28 @@
-import math
-import random
+import math, random
+from .heuristic import h_misplaced, h_partial
 
-def random_successor(state, n):
+def expand_partial(state, n):
     """
-    Sinh ngẫu nhiên 1 successor từ state.
-    Cách làm: chọn 1 hàng bất kỳ và đổi cột của nó sang 1 vị trí khác.
-    """
-    if not state:  # nếu state rỗng
-        # khởi tạo 1 trạng thái ngẫu nhiên
-        return [random.randrange(n) for _ in range(n)]
-
-    next_state = state.copy()
-    row = random.randrange(n)
-    col = random.randrange(n)
-    next_state[row] = col
-    return next_state
-
-def all_successors(state, n):
-    """
-    Sinh tất cả các successor từ state hiện tại bằng cách thay đổi 1 hàng sang cột khác
+    Sinh các successor bằng cách ĐẶT THÊM 1 QUÂN mới
+    vào hàng kế tiếp.
     """
     successors = []
-    for row in range(n):
+    row = len(state)
+    if row < n:
         for col in range(n):
-            if state[row] != col:
-                next_state = state.copy()
-                next_state[row] = col
-                successors.append(next_state)
+            if col not in state:         # tránh trùng cột
+                successors.append(state + [col])
     return successors
 
-def simulated_annealing(n, goal, heuristic, max_iter=10000):
+def simulated_annealing(n, goal, heuristic=h_partial,
+                                max_iter=10000):
     """
-    Nếu có successor tốt nhất hơn current -> chọn nó
-    Nếu không -> random 1 successor và xét theo xác suất SA.
-
-    Thuật toán Simulated Annealing cho n quân xe.
-    - n: kích thước bàn cờ
-    - goal: trạng thái đích
-    - heuristic: hàm đánh giá
-    - max_iter: số vòng lặp tối đa
+    Simulated Annealing đặt từng quân:
+    - Bắt đầu từ state rỗng []
+    - Mỗi bước chỉ mở rộng thêm 1 quân
     """
-    current = [random.randrange(n) for _ in range(n)]
-    best = current.copy()  # lưu lại state tốt nhất tìm được
+    current = []               # bắt đầu rỗng
+    best = current[:]          # state tốt nhất
     best_score = heuristic(current, goal)
 
     t = 1
@@ -49,21 +30,25 @@ def simulated_annealing(n, goal, heuristic, max_iter=10000):
         T = max(0.01, 1000 / (t + 1))
 
         if current == goal:
-            return current  # tìm thấy goal
-        
-        successors = all_successors(current, n) # tất cả successor của current
+            return current     # đã đặt đủ và đúng
+
+        successors = expand_partial(current, n)
+        if not successors:
+            # không còn nước đi hợp lệ
+            return best if best_score == 0 else None
 
         # Tìm successor tốt nhất
         scored = [(heuristic(s, goal), s) for s in successors]
-        scored.sort(key=lambda x: x[0])  # sắp xếp theo h tăng dần
-        best_successor_score, best_successor = scored[0]
-        
-        if best_successor_score < heuristic(current, goal):
-            current = best_successor
-        else:
-            next_state = random.choice(successors)
-            deltaE = heuristic(current, goal) - heuristic(next_state, goal)
+        scored.sort(key=lambda x: x[0])
+        best_s_h, best_s = scored[0]
 
+        curr_h = heuristic(current, goal)
+        if best_s_h < curr_h:
+            current = best_s
+        else:
+            # chọn ngẫu nhiên 1 successor và xét xác suất
+            next_state = random.choice(successors)
+            deltaE = curr_h - heuristic(next_state, goal)
             if deltaE > 0:
                 current = next_state
             else:
@@ -73,9 +58,9 @@ def simulated_annealing(n, goal, heuristic, max_iter=10000):
         # cập nhật state tốt nhất
         score = heuristic(current, goal)
         if score < best_score:
-            best = current.copy()
+            best = current[:]
             best_score = score
 
         t += 1
 
-    return best
+    return best if best_score == 0 else None

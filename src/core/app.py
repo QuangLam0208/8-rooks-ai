@@ -39,7 +39,7 @@ class GameApp:
         self.step_index = 0
         self.running_algorithms = False
 
-        # ✅ State cho menu mới
+        # State cho menu mới
         self.selected_group = -1
         self.selected_algorithm = -1
 
@@ -129,17 +129,17 @@ class GameApp:
         elif "Iterative Deepening" in alg_name:
             result = iterative_deepening_search(BOARD_SIZE, goal)
         elif "Uniform Cost" in alg_name:
-            result = uniform_cost_search(BOARD_SIZE, goal, placement_cost_goal)
+            result = uniform_cost_search(BOARD_SIZE, goal)
             
         elif "A*" in alg_name:
-            result = a_star_search(BOARD_SIZE, goal, placement_cost_goal, h_misplaced)
+            result = a_star_search(BOARD_SIZE, goal)
         elif "Greedy" in alg_name:
-            result = greedy_search(BOARD_SIZE, goal, h_misplaced)
+            result = greedy_search(BOARD_SIZE, goal)
 
         elif "Simulated Annealing" in alg_name:
-            result = simulated_annealing(BOARD_SIZE, goal, h_misplaced)
+            result = simulated_annealing(BOARD_SIZE, goal)
         elif "Hill Climbing" in alg_name:
-            result = hill_climbing(BOARD_SIZE, goal, h_misplaced)
+            result = hill_climbing(BOARD_SIZE, goal)
         else:
             print("Thuật toán chưa được gán!")
             return
