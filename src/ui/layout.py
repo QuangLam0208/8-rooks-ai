@@ -33,36 +33,3 @@ def render_boards(screen, font, caption_font, rook_img,
         MARGIN + BOARD_SIZE * SQUARE_SIZE + 60
     ))
     screen.blit(caption_right, caption_rect_right)
-
-
-def render_buttons(screen, font, window_width, window_height):
-    button_w, button_h = 120, 40
-    gap = 30
-    y = window_height - 70
-
-    # Danh sách tên nút
-    labels = ["Random", "Reset", "BFS", "DFS", "UCS", "DLS", "IDS", "GS", "A*", "SA"]
-    num_buttons = len(labels)
-
-    # Tổng chiều rộng block (tất cả nút + khoảng cách)
-    total_width = num_buttons * button_w + (num_buttons - 1) * gap
-
-    # Điểm bắt đầu để căn giữa
-    start_x = (window_width - total_width) // 2
-
-    rects = []
-
-    for i, label in enumerate(labels):
-        x = start_x + i * (button_w + gap)
-        rect = pygame.Rect(x, y, button_w, button_h)
-        pygame.draw.rect(screen, (200, 200, 200), rect, border_radius=8)
-
-        text = font.render(label, True, (0, 0, 0))
-        screen.blit(text, text.get_rect(center=rect.center))
-
-        rects.append(rect)
-
-    return tuple(rects)  
-
-
-
