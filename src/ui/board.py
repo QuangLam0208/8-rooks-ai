@@ -10,7 +10,7 @@ BLACK = (118, 150, 86)    # ô tối
 TEXT_COLOR = (0, 0, 0)
 
 def draw_board(screen, rook_img, solution, x_offset, y_offset=0, show_rooks=False, margin=120):
-    """Vẽ bàn cờ và quân hậu (nếu có)"""
+    """Vẽ bàn cờ và quân xe (nếu có)"""
     for row in range(BOARD_SIZE):
         for col in range(BOARD_SIZE):
             # Màu ô
