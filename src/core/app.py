@@ -130,14 +130,16 @@ class GameApp:
             result = iterative_deepening_search(BOARD_SIZE, goal)
         elif "Uniform Cost" in alg_name:
             result = uniform_cost_search(BOARD_SIZE, goal, placement_cost_goal)
-
+            
         elif "A*" in alg_name:
             result = a_star_search(BOARD_SIZE, goal, placement_cost_goal, h_misplaced)
         elif "Greedy" in alg_name:
             result = greedy_search(BOARD_SIZE, goal, h_misplaced)
-            
+
         elif "Simulated Annealing" in alg_name:
             result = simulated_annealing(BOARD_SIZE, goal, h_misplaced)
+        elif "Hill Climbing" in alg_name:
+            result = hill_climbing(BOARD_SIZE, goal, h_misplaced)
         else:
             print("Thuật toán chưa được gán!")
             return
