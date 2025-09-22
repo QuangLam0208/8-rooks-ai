@@ -1,4 +1,3 @@
-import pygame
 from .board import draw_board, draw_coordinates, BOARD_SIZE, SQUARE_SIZE
 
 MARGIN = 120
