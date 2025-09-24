@@ -1,7 +1,7 @@
 import pygame
 
 # Kích thước bàn cờ
-SQUARE_SIZE = 60
+SQUARE_SIZE = 50
 BOARD_SIZE = 8
 
 # Màu sắc các ô
