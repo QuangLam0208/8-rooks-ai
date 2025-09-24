@@ -112,7 +112,7 @@ class GameApp:
             )
 
             pygame.display.flip()
-            self.clock.tick(10)
+            self.clock.tick(3)
 
         pygame.quit()
         sys.exit()
@@ -136,10 +136,14 @@ class GameApp:
         elif "Greedy" in alg_name:
             result = greedy_search(BOARD_SIZE, goal)
 
-        elif "Simulated Annealing" in alg_name:
-            result = simulated_annealing(BOARD_SIZE, goal)
         elif "Hill Climbing" in alg_name:
             result = hill_climbing(BOARD_SIZE, goal)
+        elif "Simulated Annealing" in alg_name:
+            result = simulated_annealing(BOARD_SIZE, goal)
+        elif "Genetic Algorithm" in alg_name:
+            result = genetic_algorithm(BOARD_SIZE, goal)
+        elif "Beam Search" in alg_name:
+            result = beam_search(BOARD_SIZE, goal)
         else:
             print("Thuật toán chưa được gán!")
             return

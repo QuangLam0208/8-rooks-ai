@@ -43,6 +43,7 @@ algorithm_groups = [
         "algorithms": [
             {"name": "Hill Climbing", "desc": "Leo đồi tối ưu"},
             {"name": "Simulated Annealing", "desc": "Mô phỏng ủ kim loại"},
+            {"name": "Genetic Algorithm", "desc": "Tiến hóa tự nhiên"},
             {"name": "Beam Search", "desc": "Giới hạn node"}
         ]
     },
@@ -59,7 +60,6 @@ algorithm_groups = [
         "name": "Evolutionary\nAlgorithms",
         "color": ORANGE,
         "algorithms": [
-            {"name": "Genetic Algorithm", "desc": "Tiến hóa tự nhiên"},
             {"name": "Ant Colony Optimization", "desc": "Hành vi kiến"},
             {"name": "Particle Swarm Optimization", "desc": "Đàn chim"}
         ]
@@ -131,7 +131,6 @@ def draw_algorithm_buttons(screen, font, selected_group, selected_algorithm):
         rects.append(rect)
 
     return rects
-
 
 def draw_action_buttons(screen, font, window_width, window_height):
     """
