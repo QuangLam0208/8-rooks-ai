@@ -38,7 +38,7 @@ algorithm_groups = [
         ]
     },
     {
-        "name": "Heuristic\nMethods",
+        "name": "Local\nSearch",
         "color": RED,
         "algorithms": [
             {"name": "Hill Climbing", "desc": "Leo đồi tối ưu"},
