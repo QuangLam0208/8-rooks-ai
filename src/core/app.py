@@ -32,7 +32,8 @@ class GameApp:
         self.caption_font = pygame.font.SysFont("Arial", 20, bold=True)
 
         self.rook_img = pygame.image.load(os.path.join("assets", "rook.png"))
-        self.rook_img = pygame.transform.scale(self.rook_img, (SQUARE_SIZE, SQUARE_SIZE))
+        piece_size = int(SQUARE_SIZE * 0.8)  # 80% của ô
+        self.rook_img = pygame.transform.scale(self.rook_img, (piece_size, piece_size))
 
         # Animation
         self.steps = None
