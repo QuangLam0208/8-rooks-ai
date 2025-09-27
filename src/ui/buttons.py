@@ -133,19 +133,15 @@ def draw_algorithm_buttons(screen, font, selected_group, selected_algorithm):
     return rects
 
 def draw_action_buttons(screen, font, window_width, window_height):
-    """
-    Vẽ 2 nút Random / Reset nằm riêng biệt
-    Trả về tuple (rect_random, rect_reset) để xử lý click.
-    """
     button_w, button_h = 140, 50
     spacing = 20
     y = window_height - 80
 
-    # Đặt hai nút sát cạnh nhau và căn giữa theo chiều ngang
-    total_width = button_w * 2 + spacing
+    # Tổng chiều rộng
+    total_width = button_w * 3 + spacing * 2
     start_x = (window_width - total_width) // 2
 
-    labels = ["Random", "Reset"]
+    labels = ["Run", "Random", "Reset"]
     rects = []
 
     for i, label in enumerate(labels):
