@@ -133,15 +133,16 @@ def draw_algorithm_buttons(screen, font, selected_group, selected_algorithm):
     return rects
 
 def draw_action_buttons(screen, font, window_width, window_height):
-    button_w, button_h = 140, 50
+    button_w, button_h = 100, 50
     spacing = 20
     y = window_height - 80
 
+    labels = ["Run", "Visual", "Random", "Reset"]
+
     # Tổng chiều rộng
-    total_width = button_w * 3 + spacing * 2
+    total_width = button_w * len(labels) + spacing * (len(labels) - 1)
     start_x = (window_width - total_width) // 2
 
-    labels = ["Run", "Random", "Reset"]
     rects = []
 
     for i, label in enumerate(labels):
