@@ -154,6 +154,10 @@ class GameApp:
             result, steps, steps_round = genetic_algorithm(BOARD_SIZE, goal, return_steps=True)
         elif "Beam Search" in alg_name:
             result, steps, steps_round = beam_search(BOARD_SIZE, goal, return_steps=True)
+
+        elif "And Or" in alg_name:
+            result, steps = and_or_bfs(BOARD_SIZE, goal, return_steps=True)
+            
         else:
             print("Thuật toán chưa được gán!")
             return
@@ -191,6 +195,10 @@ class GameApp:
             result = genetic_algorithm(BOARD_SIZE, goal)
         elif "Beam Search" in alg_name:
             result = beam_search(BOARD_SIZE, goal)
+
+        elif "And Or" in alg_name:
+            result = and_or_bfs(BOARD_SIZE, goal)
+
         else:
             print("Thuật toán chưa được gán!")
             return
