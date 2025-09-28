@@ -1,5 +1,5 @@
 import random
-from .heuristic import h_misplaced   # hoặc h_partial
+from .heuristic import h_misplaced, h_partial
 
 def fitness(state, goal, heuristic):
     """
@@ -37,20 +37,35 @@ def mutate(state, rate=0.1):
         s[i], s[j] = s[j], s[i]
     return s
 
-def genetic_algorithm(n, goal, heuristic=h_misplaced,
+def genetic_algorithm(n, goal, return_steps=False, heuristic=h_misplaced,
                       pop_size=50, generations=500,
                       crossover_rate=0.9, mutation_rate=0.1):
     """
     GA sử dụng heuristic h(state, goal) (càng nhỏ càng tốt).
+    Trả về:
+        - Nếu return_steps=False: best solution
+        - Nếu return_steps=True : (best solution, steps_visual, steps_console)
     """
     # 1. Khởi tạo quần thể ban đầu (các hoán vị cột)
     population = [random.sample(range(n), n) for _ in range(pop_size)]
+    # Mảng lưu quá trình
+    steps_visual = []
+    steps_console = []
 
     for g in range(1, generations + 1):
+        # Lưu trạng thái tốt nhất hiện tại
+        if return_steps:
+            best_curr = min(population, key=lambda s: heuristic(s, goal))
+            h_best = heuristic(best_curr, goal)
+            steps_visual.append(best_curr[:])                   # copy để tránh mutate
+            steps_console.append((g, best_curr[:], h_best))      # (generation, best_state, h)
+
         # Kiểm tra xem có cá thể nào = goal chưa
         for s in population:
             if s == goal:
                 # print(f"Goal found at generation {g}: {s}")
+                if return_steps:
+                    return s, steps_visual, steps_console
                 return s
 
         # 2. Sinh thế hệ mới
@@ -73,6 +88,12 @@ def genetic_algorithm(n, goal, heuristic=h_misplaced,
 
     # Hết thế hệ mà chưa gặp goal
     best = min(population, key=lambda s: heuristic(s, goal))
+    if return_steps:
+        h_best = heuristic(best, goal)
+        steps_visual.append(best[:])
+        steps_console.append((generations + 1, best[:], h_best))
+        return best, steps_visual, steps_console
+
     print(f"No exact goal after {generations} generations.")
     print(f"Best found: {best} (h={heuristic(best, goal)})")
     return best

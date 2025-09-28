@@ -16,7 +16,7 @@ def successors(state, n):
                 succ.append(s)
     return succ
 
-def beam_search(n, goal, beam_width=10, max_steps=1000, heuristic=h_misplaced):
+def beam_search(n, goal, return_steps=False, beam_width=10, max_steps=1000, heuristic=h_misplaced):
     """
     Beam Search với heuristic (h càng nhỏ càng tốt).
     - n: kích thước bàn cờ
@@ -27,18 +27,28 @@ def beam_search(n, goal, beam_width=10, max_steps=1000, heuristic=h_misplaced):
     """
     # 1. Khởi tạo beam ban đầu (ngẫu nhiên k state)
     beam = [random.sample(range(n), n) for _ in range(beam_width)]
+    steps_visual = []  # lưu lại các state để visualize (state tốt nhất mỗi step)
+    steps_beam = []    # dùng in console: toàn bộ beam mỗi step
 
     for step in range(1, max_steps + 1):
-        # Kiểm tra goal
-        for s in beam:
-            if s == goal:
-                # print(f"Goal found at step {step}: {s}")
-                return s
+        # Lưu toàn bộ beam cho console
+        steps_beam.append([s[:] for s in beam])
 
         # 2. Sinh toàn bộ successor từ beam hiện tại
         all_succ = []
         for s in beam:
-            all_succ.extend(successors(s, n))
+            succ = successors(s, n)
+            all_succ.extend(succ)
+            # Lưu từng state được mở rộng vào steps_visual
+            steps_visual.extend(succ)
+
+        # Kiểm tra goal
+        for s in beam:
+            if s == goal:
+                # print(f"Goal found at step {step}: {s}")
+                if return_steps:
+                    return s, steps_visual, steps_beam
+                return s
 
         if not all_succ:
             break
@@ -50,4 +60,7 @@ def beam_search(n, goal, beam_width=10, max_steps=1000, heuristic=h_misplaced):
     best = min(beam, key=lambda s: heuristic(s, goal))
     print(f"No exact goal after {max_steps} steps.")
     print(f"Best found: {best} (h={heuristic(best, goal)})")
+    
+    if return_steps:
+        return best, steps_visual, steps_beam
     return best
