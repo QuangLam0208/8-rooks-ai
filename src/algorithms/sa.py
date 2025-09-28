@@ -14,7 +14,7 @@ def expand_partial(state, n):
                 successors.append(state + [col])
     return successors
 
-def simulated_annealing(n, goal, heuristic=h_partial,
+def simulated_annealing(n, goal, return_steps=False, heuristic=h_partial,
                                 max_iter=10000):
     """
     Simulated Annealing đặt từng quân:
@@ -24,17 +24,29 @@ def simulated_annealing(n, goal, heuristic=h_partial,
     current = []               # bắt đầu rỗng
     best = current[:]          # state tốt nhất
     best_score = heuristic(current, goal)
+    steps_visual = []   # để animate: chỉ lưu state
+    steps_console = []  # để in console: lưu (iter, T, state, h)
 
     t = 1
     for _ in range(max_iter):
         T = max(0.01, 1000 / (t + 1))
 
+        # Lưu lại bước hiện tại
+        if return_steps:
+            h_curr = heuristic(current, goal)
+            steps_visual.append(current[:])  # copy để tránh mutate
+            steps_console.append((t, round(T, 3), current[:], h_curr))
+
         if current == goal:
-            return current     # đã đặt đủ và đúng
+            if return_steps:
+                return current, steps_visual, steps_console
+            return current
 
         successors = expand_partial(current, n)
         if not successors:
             # không còn nước đi hợp lệ
+            if return_steps:
+                return best if best_score == 0 else None, steps_visual, steps_console
             return best if best_score == 0 else None
 
         # Tìm successor tốt nhất
@@ -63,4 +75,7 @@ def simulated_annealing(n, goal, heuristic=h_partial,
 
         t += 1
 
+    # Hết vòng lặp
+    if return_steps:
+        return best if best_score == 0 else None, steps_visual, steps_console
     return best if best_score == 0 else None

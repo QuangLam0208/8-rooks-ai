@@ -1,7 +1,7 @@
 import heapq
 from .heuristic import h_misplaced
 
-def greedy_search(n=8, goal=None, heuristic=h_misplaced):
+def greedy_search(n=8, goal=None, return_steps=False, heuristic=h_misplaced):
     """
     Greedy Best-First Search cho bài toán 8 quân xe.
     Nếu goal != None thì dùng heuristic theo goal.
@@ -23,9 +23,9 @@ def greedy_search(n=8, goal=None, heuristic=h_misplaced):
         # Goal test
         if len(state) == n:
             if goal is None:
-                return state
+                return (state, steps) if return_steps else state
             if state == goal:
-                return state
+                return (state, steps) if return_steps else state
             continue
 
         row = len(state)
@@ -35,4 +35,4 @@ def greedy_search(n=8, goal=None, heuristic=h_misplaced):
                 new_h = heuristic(new_state, goal) if heuristic and goal else (n - len(new_state))
                 heapq.heappush(open_list, (new_h, new_state))
 
-    return None
+    return (None, steps) if return_steps else None
