@@ -1,9 +1,10 @@
 from collections import deque
 
-def breadth_first_search(n, goal=None):
+def breadth_first_search(n, goal=None, return_steps=False):
     """
-    BFS đặt n quân xe, trả về tất cả trạng thái duyệt được.
-    Nếu goal != None thì dừng đúng tại goal.
+    BFS đặt n quân xe.
+    - Nếu return_steps = False: trả về state cuối cùng (như cũ).
+    - Nếu return_steps = True: trả về (goal_state, steps)
     """
     queue = deque([[]])  
     steps = []  
@@ -17,7 +18,7 @@ def breadth_first_search(n, goal=None):
             if goal is not None and isinstance(goal, tuple):
                 goal = list(goal)
             if state == goal:
-                return state  # chỉ trả về state cuối cùng, nếu muốn trả về các bước thì return steps
+                return (state, steps) if return_steps else state
             continue  # nếu khác goal thì bỏ qua
 
         # mở rộng
@@ -25,4 +26,4 @@ def breadth_first_search(n, goal=None):
             if col not in state:
                 queue.append(state + [col])
 
-    return None # nếu muốn trả về các bước thì return steps
+    return (None, steps) if return_steps else None

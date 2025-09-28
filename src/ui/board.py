@@ -27,7 +27,15 @@ def draw_board(screen, rook_img, solution, x_offset, y_offset=0, show_rooks=Fals
 
             # Nếu cần hiển thị quân xe
             if show_rooks and solution and row < len(solution) and solution[row] == col:
-                screen.blit(rook_img, rect.topleft)
+                # Lấy kích thước ảnh hiện tại (đã scale nhỏ)
+                piece_w, piece_h = rook_img.get_size()
+
+                # Tính lề để căn giữa trong ô
+                dx = (SQUARE_SIZE - piece_w) // 2
+                dy = (SQUARE_SIZE - piece_h) // 2
+
+                # Vẽ quân cờ ở vị trí giữa ô
+                screen.blit(rook_img, (rect.x + dx, rect.y + dy))
 
     # Vẽ viền bàn cờ
     pygame.draw.rect(

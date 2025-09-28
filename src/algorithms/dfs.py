@@ -1,4 +1,4 @@
-def depth_first_search(n, goal=None):
+def depth_first_search(n, goal=None, return_steps=False):
     """
     DFS đặt n quân xe, trả về tất cả trạng thái duyệt được.
     Nếu goal != None thì dừng đúng tại goal.
@@ -16,7 +16,7 @@ def depth_first_search(n, goal=None):
         row = len(state)
         if row == n:
             if state == goal:
-                return state # chỉ trả về state cuối cùng, nếu muốn trả về các bước thì return steps
+                return (state, steps) if return_steps else state
             continue
 
         # mở rộng theo DFS (thêm cuối stack)
@@ -24,4 +24,4 @@ def depth_first_search(n, goal=None):
             if col not in state:
                 stack.append(state + [col])
 
-    return None # nếu muốn trả về các bước thì return steps
+    return (None, steps) if return_steps else None # nếu muốn trả về các bước thì return steps
