@@ -48,12 +48,10 @@ algorithm_groups = [
         ]
     },
     {
-        "name": "Dynamic\nProgramming",
+        "name": "Non\nDeterministic",
         "color": PURPLE,
         "algorithms": [
-            {"name": "Dijkstra's Algorithm", "desc": "Đường ngắn nhất"},
-            {"name": "Floyd-Warshall", "desc": "Mọi cặp điểm"},
-            {"name": "Bellman-Ford", "desc": "Trọng số âm"}
+            {"name": "And Or BFS", "desc": "Đường ngắn nhất"}
         ]
     },
     {
