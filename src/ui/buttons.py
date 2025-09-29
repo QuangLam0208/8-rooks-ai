@@ -48,10 +48,12 @@ algorithm_groups = [
         ]
     },
     {
-        "name": "Non\nDeterministic",
+        "name": "Complex\nEnvironment",
         "color": PURPLE,
         "algorithms": [
-            {"name": "And Or BFS", "desc": "Đường ngắn nhất"}
+            {"name": "Nondeterministic", "desc": "Hành động có nhiều kết quả"},
+            {"name": "Conformant", "desc": "Không quan sát, kế hoạch chắc chắn"},
+            {"name": "Contingency", "desc": "Kế hoạch rẽ nhánh theo quan sát"}
         ]
     },
     {
