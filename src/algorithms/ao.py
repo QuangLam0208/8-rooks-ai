@@ -1,53 +1,81 @@
-from collections import deque
+import random
 
-def and_or_bfs(n, goal=None, return_steps=False):
+def nondet_successors(state, n):
     """
-    AND-OR Search sử dụng BFS để đặt n quân xe.
-    - n: số quân xe (8 trong bài toán 8 rooks)
-    - goal: state đích (list hoặc tuple), hoặc None để chấp nhận mọi state đầy đủ
-    - return_steps=False:
-         + False -> chỉ trả về state tìm thấy (Run)
-         + True  -> trả về (state, steps) để Visualization
+    Sinh các kết quả có thể xảy ra khi thực hiện hành động PlaceRook
+    - state: danh sách cột đã chọn, độ dài = số hàng đã đặt.
+    - n: kích thước bàn cờ (8 cho 8 rooks).
     """
-    # hàng đợi BFS, mỗi phần tử = state hiện tại (list các cột đã chọn)
-    queue = deque([[]])
-    steps = []  # lưu tất cả các state đã duyệt (dùng cho visualization)
+    row = len(state)
+    results = []
+    for col in range(n):
+        if col not in state:  # cột hợp lệ
+            # Action: cố đặt vào cột col
+            succ = []
+            # Kết quả 1: thành công
+            succ.append(state + [col])
+            # Kết quả 2: bị đẩy (nếu còn cột khác)
+            other_cols = [c for c in range(n) if c not in state and c != col]
+            if other_cols:
+                pushed = random.choice(other_cols)
+                succ.append(state + [pushed])
+            results.append((col, succ))
+    return results
 
-    while queue:
-        state = queue.popleft()
-        steps.append(state)  # ghi nhận bước đã duyệt
 
-        # Nếu đã đặt đủ n quân
-        if len(state) == n:
-            # Chuẩn hóa goal (nếu có)
-            if goal is not None and isinstance(goal, tuple):
-                goal = list(goal)
-            # Kiểm tra goal
-            if goal is None or state == goal:
-                return (state, steps) if return_steps else state
-            # Không phải goal thì bỏ qua (không mở rộng nữa)
-            continue
+def and_or_search(state, n, visited):
+    """
+    AND–OR search đệ quy cho hành động không xác định.
+    Trả về:
+      - Một plan dạng cây (dict) nếu thành công
+      - None nếu thất bại
+    """
+    # Goal: đủ n quân
+    if len(state) == n:
+        return "GOAL"
 
-        # ---------- AND phần ----------
-        # Với AND, ta yêu cầu tất cả các hành động khả thi đều được kiểm tra
-        actions = []
-        for col in range(n):
-            # điều kiện hợp lệ: không trùng cột (vì mỗi hàng 1 xe)
-            if col not in state:
-                actions.append(col)
+    # Nếu đã thăm state này -> tránh lặp
+    key = tuple(state)
+    if key in visited:
+        return None
+    visited.add(key)
 
-        # Nếu không có hành động nào => fail (AND thất bại)
-        if not actions:
-            # Không mở rộng gì, BFS sẽ tự bỏ state này
-            continue
+    # OR-node: ta phải chọn một hành động
+    for action, outcomes in nondet_successors(state, n):
+        # AND-node: mọi kết quả của hành động phải có kế hoạch tiếp
+        subplans = []
+        all_success = True
+        for result_state in outcomes:
+            subplan = and_or_search(result_state, n, visited)
+            if subplan is None:
+                all_success = False
+                break
+            subplans.append((result_state, subplan))
+        if all_success:
+            # Trả về plan cho hành động này
+            return {"action": action, "results": subplans}
 
-        # ---------- OR phần ----------
-        # Duyệt tất cả action (OR: chỉ cần 1 nhánh thành công)
-        # BFS nghĩa là chỉ cần enqueue các nhánh hợp lệ, 
-        # và vòng lặp sẽ tiếp tục xử lý từng nhánh
-        for col in actions:
-            new_state = state + [col]
-            queue.append(new_state)
+    return None
 
-    # Nếu duyệt hết vẫn không tìm thấy goal
-    return (None, steps) if return_steps else None
+
+def extract_all_solutions(plan):
+    """
+    Duyệt toàn bộ cây kế hoạch và trả về danh sách
+    TẤT CẢ các state đích (goal states) trong plan.
+    """
+    solutions = []
+
+    def dfs(node):
+        # Nếu đã tới goal, node chính là một state hoàn chỉnh
+        if node == "GOAL":
+            # Khi gặp "GOAL", state hiện tại đã được truyền vào từ cha
+            return  # goal tự được xử lý ở cấp cha
+        if isinstance(node, dict):
+            for state, subplan in node["results"]:
+                if subplan == "GOAL":
+                    solutions.append(state)       # state hoàn chỉnh
+                else:
+                    dfs(subplan)                  # tiếp tục đi sâu
+
+    dfs(plan)
+    return solutions
