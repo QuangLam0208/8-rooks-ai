@@ -17,7 +17,7 @@ def render_boards(screen, font, caption_font, rook_img,
                show_rooks=True, margin=TOP_MARGIN)
     draw_coordinates(screen, font,
                x_offset=left_offset, y_offset=0,
-               margin=TOP_MARGIN)
+               margin=TOP_MARGIN, side="left")
 
     caption_left = caption_font.render("Current Step", True, (30, 30, 30))
     caption_rect_left = caption_left.get_rect(center=(
@@ -33,7 +33,7 @@ def render_boards(screen, font, caption_font, rook_img,
                show_rooks=True, margin=TOP_MARGIN)
     draw_coordinates(screen, font,
                x_offset=right_offset, y_offset=0,
-               margin=TOP_MARGIN)
+               margin=TOP_MARGIN, side="right")
 
     caption_right = caption_font.render("Goal State", True, (30, 30, 30))
     caption_rect_right = caption_right.get_rect(center=(
