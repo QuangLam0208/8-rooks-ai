@@ -198,7 +198,10 @@ class GameApp:
             plan = and_or_search([], BOARD_SIZE, visited)
             if plan:
                 all_states = extract_all_solutions(plan)
-                result = all_states[1]
+                if goal in all_states:
+                    result = goal
+                else:
+                    result = all_states[0]
             else:
                 result = None
 
