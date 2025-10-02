@@ -52,9 +52,9 @@ algorithm_groups = [
         "color": COTTON,
         "text_color": DARK_GRAY,
         "algorithms": [
-            {"name": "Nondeterministic", "desc": "Hành động có nhiều kết quả"},
-            {"name": "Conformant", "desc": "Không quan sát, kế hoạch chắc chắn"},
-            {"name": "Contingency", "desc": "Kế hoạch rẽ nhánh theo quan sát"}
+            {"name": "Nondeterministic", "desc": "Hành động không chắc chắn"},
+            {"name": "Unobservable", "desc": "Không nhìn thấy được"},
+            {"name": "Partial Observable", "desc": "Nhìn thấy một phần"}
         ]
     },
     {

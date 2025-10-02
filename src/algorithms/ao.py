@@ -26,7 +26,7 @@ def nondet_successors(state, n):
 
 def and_or_search(state, n, visited):
     """
-    AND–OR search đệ quy cho hành động không xác định.
+    AND-OR search đệ quy cho hành động không xác định.
     Trả về:
       - Một plan dạng cây (dict) nếu thành công
       - None nếu thất bại
