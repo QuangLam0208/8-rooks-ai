@@ -155,8 +155,10 @@ class GameApp:
         elif "Beam Search" in alg_name:
             result, steps, steps_round = beam_search(BOARD_SIZE, goal, return_steps=True)
 
-        elif "And Or" in alg_name:
-            result, steps = and_or_bfs(BOARD_SIZE, goal, return_steps=True)
+        elif "Unobservable" in alg_name:
+            result, steps = dfs_belief_search(BOARD_SIZE, goal, return_steps=True)
+        elif "Partial Observable" in alg_name:
+            result, steps = dfs_partial_obs(BOARD_SIZE, goal, return_steps=True)
             
         else:
             print("Thuật toán chưa được gán!")
@@ -196,8 +198,21 @@ class GameApp:
         elif "Beam Search" in alg_name:
             result = beam_search(BOARD_SIZE, goal)
 
-        elif "And Or" in alg_name:
-            result = and_or_bfs(BOARD_SIZE, goal)
+        elif "Nondeterministic" in alg_name:
+            visited = set()
+            plan = and_or_search([], BOARD_SIZE, visited)
+            if plan:
+                all_states = extract_all_solutions(plan)
+                if goal in all_states:
+                    result = goal
+                else:
+                    result = all_states[0]
+            else:
+                result = None
+        elif "Unobservable" in alg_name:
+            result = dfs_belief_search(BOARD_SIZE, goal)
+        elif "Partial Observable" in alg_name:
+            result = dfs_partial_obs(BOARD_SIZE, goal)
 
         else:
             print("Thuật toán chưa được gán!")
