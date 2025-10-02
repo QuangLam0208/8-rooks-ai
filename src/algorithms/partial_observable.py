@@ -53,6 +53,7 @@ def dfs_partial_obs(n, goal, prefix_len=6, return_steps=False):
     # goal beliefs (ví dụ gồm 3 state)
     goal_beliefs = [
         goal
+        # có thể thêm goal2, goal3 tùy ý, nhưng để tối ưu tìm được goal thì chỉ nên để mỗi goal
     ]
 
     stack = [belief_start]
