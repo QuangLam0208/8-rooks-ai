@@ -58,12 +58,13 @@ algorithm_groups = [
         ]
     },
     {
-        "name": "Evolutionary Algorithms",
+        "name": "Constraint Satisfied Problem",
         "color": ECRU,
         "text_color": WHITE,
         "algorithms": [
-            {"name": "Ant Colony Optimization", "desc": "Hành vi kiến"},
-            {"name": "Particle Swarm Optimization", "desc": "Đàn chim"}
+            {"name": "Backtracking", "desc": "Thử và sai, quay lui khi vi phạm"},
+            {"name": "Forward Checking", "desc": "Cắt tỉa miền giá trị sau mỗi gán"},
+            {"name": "Arc Consistency (AC-3)", "desc": "Duy trì arc-consistency toàn cục"}
         ]
     },
     {

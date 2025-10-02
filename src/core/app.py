@@ -159,6 +159,11 @@ class GameApp:
             result, steps = dfs_belief_search(BOARD_SIZE, goal, return_steps=True)
         elif "Partial Observable" in alg_name:
             result, steps = dfs_partial_obs(BOARD_SIZE, goal, return_steps=True)
+
+        elif "Backtracking" in alg_name:
+            result, steps = backtracking_search(BOARD_SIZE, goal, return_steps=True)
+        elif "Forward Checking" in alg_name:
+            result, steps = forward_checking_search(BOARD_SIZE, goal, return_steps=True)
             
         else:
             print("Thuật toán chưa được gán!")
@@ -213,6 +218,11 @@ class GameApp:
             result = dfs_belief_search(BOARD_SIZE, goal)
         elif "Partial Observable" in alg_name:
             result = dfs_partial_obs(BOARD_SIZE, goal)
+
+        elif "Backtracking" in alg_name:
+            result = backtracking_search(BOARD_SIZE, goal)
+        elif "Forward Checking" in alg_name:
+            result = forward_checking_search(BOARD_SIZE, goal)
 
         else:
             print("Thuật toán chưa được gán!")
