@@ -16,16 +16,17 @@ def nondet_successors(state, n):
             succ.append(state + [col])
             # Kết quả 2: bị đẩy (nếu còn cột khác)
             other_cols = [c for c in range(n) if c not in state and c != col]
-            if other_cols:
-                pushed = random.choice(other_cols)
+            # if other_cols:
+            #     pushed = random.choice(other_cols)
+            #     succ.append(state + [pushed])
+            for pushed in other_cols:
                 succ.append(state + [pushed])
             results.append((col, succ))
     return results
 
-
 def and_or_search(state, n, visited):
     """
-    AND–OR search đệ quy cho hành động không xác định.
+    AND-OR search đệ quy cho hành động không xác định.
     Trả về:
       - Một plan dạng cây (dict) nếu thành công
       - None nếu thất bại
