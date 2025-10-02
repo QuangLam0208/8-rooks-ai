@@ -13,8 +13,9 @@ from .ga import genetic_algorithm
 from .beam import beam_search
 from .nondeterministic import and_or_search, extract_all_solutions
 from .unobservable import dfs_belief_search
+from .partial_observable import dfs_partial_obs
 __all__ = ["breadth_first_search", "depth_first_search", "uniform_cost_search", 
            "depth_limited_search", "iterative_deepening_search", "placement_cost_goal",
            "h_misplaced", "greedy_search", "a_star_search", "simulated_annealing", 
            "hill_climbing", "genetic_algorithm", "beam_search", "and_or_search", 
-           "extract_all_solutions", "dfs_belief_search"]
+           "extract_all_solutions", "dfs_belief_search", "dfs_partial_obs"]
