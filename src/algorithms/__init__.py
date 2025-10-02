@@ -11,7 +11,7 @@ from .sa import simulated_annealing
 from .hc import hill_climbing
 from .ga import genetic_algorithm
 from .beam import beam_search
-from .ao import and_or_search, extract_all_solutions
+from .nondeterministic import and_or_search, extract_all_solutions
 from .unobservable import dfs_belief_search
 __all__ = ["breadth_first_search", "depth_first_search", "uniform_cost_search", 
            "depth_limited_search", "iterative_deepening_search", "placement_cost_goal",
