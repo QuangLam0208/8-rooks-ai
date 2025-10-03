@@ -1,8 +1,9 @@
 import pygame
+from .buttons import ALG_GROUP_HEIGHT, ALG_SPACING
 
 # Kích thước bàn cờ
-SQUARE_SIZE = 50
 BOARD_SIZE = 8
+SQUARE_SIZE = (6 * ALG_GROUP_HEIGHT + 5 * ALG_SPACING) // BOARD_SIZE
 
 # Màu sắc các ô
 WHITE = (238, 238, 210)   # ô sáng

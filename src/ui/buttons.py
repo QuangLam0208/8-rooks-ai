@@ -11,7 +11,13 @@ COTTON = (0xE2, 0xDC, 0xD0)
 ECRU = (0xBD, 0xBB, 0xA5)
 SAGE = (0x8D, 0x9B, 0x86)
 
-ALGORITHM_LIST_TOP = 380
+ALG_GROUP_TOP = 70
+ALG_LIST_TOP = 400
+ALG_LEFT = 50
+ALG_WIDTH = 210
+ALG_GROUP_HEIGHT = 40
+ALG_LIST_HEIGHT = 60
+ALG_SPACING = 8
 BORDER_RADIUS = 10
 
 algorithm_groups = [
@@ -20,11 +26,11 @@ algorithm_groups = [
         "color": MYOSOTIS,
         "text_color": WHITE,
         "algorithms": [
-            {"name": "Breadth-First Search", "desc": "Tìm theo chiều rộng"},
-            {"name": "Depth-First Search", "desc": "Tìm theo chiều sâu"},
-            {"name": "Depth Limited Search", "desc": "Giới hạn độ sâu"},
-            {"name": "Iterative Deepening Search", "desc": "Lặp tăng dần độ sâu"},
-            {"name": "Uniform Cost Search", "desc": "Chi phí đồng đều"}
+            {"name": "Breadth-First", "desc": "Tìm theo chiều rộng"},
+            {"name": "Depth-First", "desc": "Tìm theo chiều sâu"},
+            {"name": "Depth Limited", "desc": "Giới hạn độ sâu"},
+            {"name": "Iterative Deepening", "desc": "Lặp tăng dần độ sâu"},
+            {"name": "Uniform Cost", "desc": "Chi phí đồng đều"}
         ]
     },
     {
@@ -32,7 +38,7 @@ algorithm_groups = [
         "color": CADETGRAY,
         "text_color": WHITE,
         "algorithms": [
-            {"name": "A* Search", "desc": "Tối ưu với heuristic"},
+            {"name": "A Star", "desc": "Tối ưu với heuristic"},
             {"name": "Greedy Best-First", "desc": "Tham lam heuristic"}
         ]
     },
@@ -44,7 +50,7 @@ algorithm_groups = [
             {"name": "Hill Climbing", "desc": "Leo đồi tối ưu"},
             {"name": "Simulated Annealing", "desc": "Mô phỏng ủ kim loại"},
             {"name": "Genetic Algorithm", "desc": "Tiến hóa tự nhiên"},
-            {"name": "Beam Search", "desc": "Giới hạn node"}
+            {"name": "Beam", "desc": "Giới hạn node"}
         ]
     },
     {
@@ -58,7 +64,7 @@ algorithm_groups = [
         ]
     },
     {
-        "name": "Constraint Satisfied Problem",
+        "name": "Constraint Satisfied",
         "color": ECRU,
         "text_color": WHITE,
         "algorithms": [
@@ -81,9 +87,9 @@ algorithm_groups = [
 
 # ===================== DRAW FUNCTIONS =====================
 def draw_group_buttons(screen, font, selected_group):
-    button_width, button_height = 250, 40
-    start_x, start_y = 20, 20
-    spacing = 8
+    button_width, button_height = ALG_WIDTH, ALG_GROUP_HEIGHT
+    start_x, start_y = ALG_LEFT, ALG_GROUP_TOP
+    spacing = ALG_SPACING
     rects = [] 
 
     for i, group in enumerate(algorithm_groups):
@@ -96,13 +102,12 @@ def draw_group_buttons(screen, font, selected_group):
         pygame.draw.rect(screen, BLACK, rect, 2, border_radius=BORDER_RADIUS)
 
         txt_color = group["text_color"] if i == selected_group else BLACK
-        for j, line in enumerate(group["name"].split("\n")):
-            text = font.render(line, True, txt_color)
-            screen.blit(
-                text,
-                (x + (button_width - text.get_width()) // 2,
-                 y + 8 + j * 18)
-            )
+        text = font.render(group["name"], True, txt_color)
+
+        # ---- canh giữa cả dọc và ngang ----
+        text_rect = text.get_rect(center=rect.center)
+        screen.blit(text, text_rect)
+
         rects.append(rect)  
     return rects     
 
@@ -113,9 +118,9 @@ def draw_algorithm_buttons(screen, font, selected_group, selected_algorithm):
     
     group = algorithm_groups[selected_group]
 
-    start_x, start_y = 20, ALGORITHM_LIST_TOP
-    button_width, button_height = 250, 60
-    spacing = 8
+    start_x, start_y = ALG_LEFT, ALG_LIST_TOP
+    button_width, button_height = ALG_WIDTH, ALG_LIST_HEIGHT
+    spacing = ALG_SPACING
     rects = []
 
     for i, alg in enumerate(group["algorithms"]):
@@ -131,7 +136,11 @@ def draw_algorithm_buttons(screen, font, selected_group, selected_algorithm):
             text_color = SAGE
 
         text = font.render(alg["name"], True, text_color)
-        screen.blit(text, (start_x + 10, y + 18))
+
+        # ---- canh giữa cả dọc và ngang ----
+        text_rect = text.get_rect(center=rect.center)
+        screen.blit(text, text_rect)
+        
         rects.append(rect)
 
     return rects

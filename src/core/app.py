@@ -1,6 +1,6 @@
 import pygame, sys, os, random
 from ui.board import BOARD_SIZE, SQUARE_SIZE
-from ui.layout import render_title, render_boards
+from ui.layout import render_boards
 from ui.buttons import (
     draw_group_buttons,
     draw_algorithm_buttons,
@@ -25,13 +25,14 @@ class GameApp:
 
         pygame.init()
         self.screen = pygame.display.set_mode((self.window_width, self.window_height))
-        pygame.display.set_caption("Bàn cờ vua - 8 rooks")
+        pygame.display.set_caption("8 ROOKS")
 
-        self.font = pygame.font.SysFont("Arial", 18, bold=True)
-        self.title_font = pygame.font.SysFont("Arial", 32, bold=True)
-        self.caption_font = pygame.font.SysFont("Arial", 20, bold=True)
+        # ===== Load font JosefinSans =====
+        font_path = os.path.join("assets", "fonts", "JosefinSans-SemiBold.ttf")
+        self.font = pygame.font.Font(font_path, 18)       # font chính
+        self.caption_font = pygame.font.Font(font_path, 20)  # font caption (to hơn tí)
 
-        self.rook_img = pygame.image.load(os.path.join("assets", "rook.png"))
+        self.rook_img = pygame.image.load(os.path.join("assets", "pics", "rook.png"))
         piece_size = int(SQUARE_SIZE * 0.8)  # 80% của ô
         self.rook_img = pygame.transform.scale(self.rook_img, (piece_size, piece_size))
 
@@ -99,7 +100,6 @@ class GameApp:
             # =================== DRAW ===================
             self.screen.fill(BG_COLOR)
 
-            render_title(self.screen, self.title_font, self.window_width)
             render_boards(
                 self.screen,
                 self.font,
@@ -141,7 +141,7 @@ class GameApp:
         elif "Uniform Cost" in alg_name:
             result, steps, steps_round = uniform_cost_search(BOARD_SIZE, goal, return_steps=True)
             
-        elif "A*" in alg_name:
+        elif "A Star" in alg_name:
             result, steps, steps_round = a_star_search(BOARD_SIZE, goal, return_steps=True)
         elif "Greedy" in alg_name:
             result, steps = greedy_search(BOARD_SIZE, goal, return_steps=True)
@@ -152,7 +152,7 @@ class GameApp:
             result, steps, steps_round  = simulated_annealing(BOARD_SIZE, goal, return_steps=True)
         elif "Genetic Algorithm" in alg_name:
             result, steps, steps_round = genetic_algorithm(BOARD_SIZE, goal, return_steps=True)
-        elif "Beam Search" in alg_name:
+        elif "Beam" in alg_name:
             result, steps, steps_round = beam_search(BOARD_SIZE, goal, return_steps=True)
 
         elif "Unobservable" in alg_name:
