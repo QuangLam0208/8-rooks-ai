@@ -68,7 +68,7 @@ algorithm_groups = [
         ]
     },
     {
-        "name": "Machine Learning",
+        "name": "Coming Soon",
         "color": SAGE,
         "text_color": WHITE,
         "algorithms": [
