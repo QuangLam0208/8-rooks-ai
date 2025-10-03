@@ -72,9 +72,9 @@ algorithm_groups = [
         "color": SAGE,
         "text_color": WHITE,
         "algorithms": [
-            {"name": "Q-Learning", "desc": "Học tăng cường"},
-            {"name": "Neural Network Path", "desc": "Mạng neural"},
-            {"name": "Random Forest Path", "desc": "Ensemble learning"}
+            {"name": "Coming Soon", "desc": "Coming Soon"},
+            {"name": "Coming Soon", "desc": "Coming Soon"},
+            {"name": "Coming Soon", "desc": "Coming Soon"}
         ]
     }
 ]
