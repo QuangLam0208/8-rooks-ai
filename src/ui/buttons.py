@@ -12,7 +12,7 @@ ECRU = (0xBD, 0xBB, 0xA5)
 SAGE = (0x8D, 0x9B, 0x86)
 
 ALG_GROUP_TOP = 70
-ALG_LIST_TOP = 400
+ALG_LIST_TOP = 380
 ALG_LEFT = 50
 ALG_WIDTH = 210
 ALG_GROUP_HEIGHT = 40
@@ -140,7 +140,7 @@ def draw_algorithm_buttons(screen, font, selected_group, selected_algorithm):
         # ---- canh giữa cả dọc và ngang ----
         text_rect = text.get_rect(center=rect.center)
         screen.blit(text, text_rect)
-        
+
         rects.append(rect)
 
     return rects
@@ -148,7 +148,7 @@ def draw_algorithm_buttons(screen, font, selected_group, selected_algorithm):
 def draw_action_buttons(screen, font, window_width, window_height):
     button_w, button_h = 100, 50
     spacing = 20
-    y = window_height - 80
+    y = window_height - 70
 
     labels = ["Run", "Visual", "Random", "Reset"]
 

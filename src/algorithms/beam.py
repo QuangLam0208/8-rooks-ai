@@ -1,12 +1,7 @@
-import random
-from .heuristic import h_misplaced, h_partial
+import random, time
+from .heuristic import h_misplaced
 
 def successors(state, n):
-    """
-    Sinh các successor của 1 state.
-    - State là hoán vị: state[i] = cột đặt quân ở hàng i.
-    - Successor = đổi cột của 1 hàng sang 1 vị trí khác.
-    """
     succ = []
     for i in range(n):
         for j in range(n):
@@ -16,51 +11,67 @@ def successors(state, n):
                 succ.append(s)
     return succ
 
-def beam_search(n, goal, return_steps=False, beam_width=10, max_steps=1000, heuristic=h_misplaced):
+def beam_search(n, goal, return_steps=False, return_stats=False,
+                beam_width=10, max_steps=1000, heuristic=h_misplaced):
     """
-    Beam Search với heuristic (h càng nhỏ càng tốt).
-    - n: kích thước bàn cờ
-    - goal: trạng thái đích (list)
-    - beam_width: số lượng state tốt nhất giữ lại mỗi vòng
-    - max_steps: giới hạn số vòng lặp
-    - heuristic: hàm h(state, goal) (giá trị càng nhỏ càng tốt)
+    Beam Search có thống kê tương tự BFS, nhưng frontier thường nhỏ.
     """
-    # 1. Khởi tạo beam ban đầu (ngẫu nhiên k state)
+    start_time = time.time()
+
     beam = [random.sample(range(n), n) for _ in range(beam_width)]
-    steps_visual = []  # lưu lại các state để visualize (state tốt nhất mỗi step)
-    steps_beam = []    # dùng in console: toàn bộ beam mỗi step
+    steps_visual = []
+    steps_beam = []
+
+    expanded = 0
+    visited = 0
 
     for step in range(1, max_steps + 1):
-        # Lưu toàn bộ beam cho console
         steps_beam.append([s[:] for s in beam])
 
-        # 2. Sinh toàn bộ successor từ beam hiện tại
-        all_succ = []
+        # Kiểm tra goal trong beam
         for s in beam:
-            succ = successors(s, n)
-            all_succ.extend(succ)
-            # Lưu từng state được mở rộng vào steps_visual
-            steps_visual.extend(succ)
-
-        # Kiểm tra goal
-        for s in beam:
+            visited += 1
             if s == goal:
-                # print(f"Goal found at step {step}: {s}")
+                elapsed = (time.time() - start_time) * 1000
+                stats = {
+                    "expanded": expanded,
+                    "visited": visited,
+                    "frontier": len(beam),
+                    "time": elapsed
+                }
+                if return_stats:
+                    if return_steps:
+                        return s, steps_visual, stats
+                    return s, stats
                 if return_steps:
                     return s, steps_visual, steps_beam
                 return s
 
+        all_succ = []
+        for s in beam:
+            succ = successors(s, n)
+            all_succ.extend(succ)
+            expanded += len(succ)
+            steps_visual.extend(succ)
+
         if not all_succ:
             break
 
-        # 3. Chọn beam_width state tốt nhất theo heuristic (nhỏ nhất)
         beam = sorted(all_succ, key=lambda s: heuristic(s, goal))[:beam_width]
 
-    # Hết vòng lặp mà chưa gặp goal
+    elapsed = (time.time() - start_time) * 1000
     best = min(beam, key=lambda s: heuristic(s, goal))
-    print(f"No exact goal after {max_steps} steps.")
-    print(f"Best found: {best} (h={heuristic(best, goal)})")
-    
+    stats = {
+        "expanded": expanded,
+        "visited": visited,
+        "frontier": len(beam),
+        "time": elapsed
+    }
+
+    if return_stats:
+        if return_steps:
+            return best, steps_visual, stats
+        return best, stats
     if return_steps:
         return best, steps_visual, steps_beam
     return best

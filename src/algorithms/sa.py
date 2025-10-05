@@ -1,55 +1,55 @@
-import math, random
-from .heuristic import h_misplaced, h_partial
+import math, random, time
+from .heuristic import h_partial
 
 def expand_partial(state, n):
-    """
-    Sinh các successor bằng cách ĐẶT THÊM 1 QUÂN mới
-    vào hàng kế tiếp.
-    """
     successors = []
     row = len(state)
     if row < n:
         for col in range(n):
-            if col not in state:         # tránh trùng cột
+            if col not in state:
                 successors.append(state + [col])
     return successors
 
-def simulated_annealing(n, goal, return_steps=False, heuristic=h_partial,
-                                max_iter=10000):
+
+def simulated_annealing(n, goal, return_steps=False, return_stats=False,
+                        heuristic=h_partial, max_iter=10000):
     """
-    Simulated Annealing đặt từng quân:
-    - Bắt đầu từ state rỗng []
-    - Mỗi bước chỉ mở rộng thêm 1 quân
+    Simulated Annealing đặt từng quân.
+    - expanded: số successor sinh ra
+    - visited: số bước đã xét (mỗi lần lặp)
+    - frontier: 0 (vì không lưu tập chờ)
     """
-    current = []               # bắt đầu rỗng
-    best = current[:]          # state tốt nhất
+    start_time = time.time()
+    goal = list(goal) if isinstance(goal, tuple) else goal
+
+    current = []  # bắt đầu rỗng
+    best = current[:]
     best_score = heuristic(current, goal)
-    steps_visual = []   # để animate: chỉ lưu state
-    steps_console = []  # để in console: lưu (iter, T, state, h)
+
+    steps_visual = []
+    steps_console = []
+
+    expanded_count = 0
+    visited_count = 0
 
     t = 1
     for _ in range(max_iter):
         T = max(0.01, 1000 / (t + 1))
+        visited_count += 1
 
-        # Lưu lại bước hiện tại
         if return_steps:
             h_curr = heuristic(current, goal)
-            steps_visual.append(current[:])  # copy để tránh mutate
+            steps_visual.append(current[:])
             steps_console.append((t, round(T, 3), current[:], h_curr))
 
         if current == goal:
-            if return_steps:
-                return current, steps_visual, steps_console
-            return current
+            break
 
         successors = expand_partial(current, n)
+        expanded_count += len(successors)
         if not successors:
-            # không còn nước đi hợp lệ
-            if return_steps:
-                return best if best_score == 0 else None, steps_visual, steps_console
-            return best if best_score == 0 else None
+            break
 
-        # Tìm successor tốt nhất
         scored = [(heuristic(s, goal), s) for s in successors]
         scored.sort(key=lambda x: x[0])
         best_s_h, best_s = scored[0]
@@ -58,7 +58,6 @@ def simulated_annealing(n, goal, return_steps=False, heuristic=h_partial,
         if best_s_h < curr_h:
             current = best_s
         else:
-            # chọn ngẫu nhiên 1 successor và xét xác suất
             next_state = random.choice(successors)
             deltaE = curr_h - heuristic(next_state, goal)
             if deltaE > 0:
@@ -67,7 +66,7 @@ def simulated_annealing(n, goal, return_steps=False, heuristic=h_partial,
                 if random.random() < math.exp(deltaE / T):
                     current = next_state
 
-        # cập nhật state tốt nhất
+        # cập nhật best nếu tốt hơn
         score = heuristic(current, goal)
         if score < best_score:
             best = current[:]
@@ -75,7 +74,20 @@ def simulated_annealing(n, goal, return_steps=False, heuristic=h_partial,
 
         t += 1
 
-    # Hết vòng lặp
+    elapsed = (time.time() - start_time) * 1000
+    stats = {
+        "expanded": expanded_count,
+        "visited": visited_count,
+        "frontier": 0,
+        "time": elapsed
+    }
+
+    # trả kết quả
+    result = best if best_score == 0 else None
+    if return_stats:
+        if return_steps:
+            return result, steps_visual, stats
+        return result, stats
     if return_steps:
-        return best if best_score == 0 else None, steps_visual, steps_console
-    return best if best_score == 0 else None
+        return result, steps_visual, steps_console
+    return result

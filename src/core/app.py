@@ -1,3 +1,4 @@
+import time
 import pygame, sys, os, random
 from ui.board import BOARD_SIZE, SQUARE_SIZE
 from ui.layout import render_boards
@@ -7,6 +8,7 @@ from ui.buttons import (
     draw_action_buttons,
     algorithm_groups
 )
+from ui.stats_history import draw_stats_and_history
 from algorithms import *
 import itertools
 
@@ -47,6 +49,10 @@ class GameApp:
         self.selected_group = -1
         self.selected_algorithm = -1
 
+        self.current_stats = None
+        self.history = []
+
+
     def run(self):
         running = True
         while running:
@@ -66,7 +72,26 @@ class GameApp:
                             self.run_visualization_by_name(self.selected_algorithm_name)
 
                     elif self.rect_random.collidepoint(mouse_pos):
+                        # ==================== TẠO BÀN CỜ PHẢI MỚI ====================
                         self.right_solution = random.choice(self.all_solutions)
+
+                        # ==================== RESET TRẠNG THÁI ====================
+                        self.left_solution = []
+                        self.steps = []
+                        self.step_index = 0
+                        self.running_algorithms = False
+
+                        # ==================== RESET THỐNG KÊ & LỊCH SỬ ====================
+                        self.current_stats = {
+                            "name": "",
+                            "expanded": 0,
+                            "frontier": 0,
+                            "visited": 0,
+                            "time": 0
+                        }
+                        self.history = []  # hoặc self.history.clear(), đều được
+
+                        print("Đã random lại bàn cờ và reset toàn bộ thống kê!")
 
                     elif self.rect_reset.collidepoint(mouse_pos):
                         self.left_solution = None
@@ -110,6 +135,15 @@ class GameApp:
                 self.window_width
             )
 
+            draw_stats_and_history(
+                self.screen,
+                self.font,
+                self.font,   
+                getattr(self, "current_stats", None),
+                getattr(self, "history", []),
+                self.running_algorithms
+            )
+
             # Vẽ menu mới
             self.group_rects = draw_group_buttons(self.screen, self.font, self.selected_group)
             self.algorithm_rects = draw_algorithm_buttons(
@@ -144,7 +178,7 @@ class GameApp:
         elif "A Star" in alg_name:
             result, steps, steps_round = a_star_search(BOARD_SIZE, goal, return_steps=True)
         elif "Greedy" in alg_name:
-            result, steps = greedy_search(BOARD_SIZE, goal, return_steps=True)
+            result, steps = greedy_best_search(BOARD_SIZE, goal, return_steps=True)
 
         elif "Hill Climbing" in alg_name:
             result, steps, steps_round = hill_climbing(BOARD_SIZE, goal, return_steps=True)
@@ -178,63 +212,81 @@ class GameApp:
             self.running_algorithms = True
 
     def run_algorithm_by_name(self, alg_name):
-        """Chạy thuật toán dựa theo tên"""
+        """Chạy thuật toán dựa theo tên, cập nhật bảng thống kê & lịch sử"""
         goal = list(self.right_solution)
-        if "Breadth-First" in alg_name:
-            result = breadth_first_search(BOARD_SIZE, goal)
-        elif "Depth-First" in alg_name:
-            result = depth_first_search(BOARD_SIZE, goal)
-        elif "Depth Limited" in alg_name:
-            result = depth_limited_search(BOARD_SIZE, goal)
-        elif "Iterative Deepening" in alg_name:
-            result = iterative_deepening_search(BOARD_SIZE, goal)
-        elif "Uniform Cost" in alg_name:
-            result = uniform_cost_search(BOARD_SIZE, goal)
-            
-        elif "A*" in alg_name:
-            result = a_star_search(BOARD_SIZE, goal)
-        elif "Greedy" in alg_name:
-            result = greedy_search(BOARD_SIZE, goal)
+        result, steps, stats = None, None, None
 
-        elif "Hill Climbing" in alg_name:
-            result = hill_climbing(BOARD_SIZE, goal)
-        elif "Simulated Annealing" in alg_name:
-            result = simulated_annealing(BOARD_SIZE, goal)
-        elif "Genetic Algorithm" in alg_name:
-            result = genetic_algorithm(BOARD_SIZE, goal)
-        elif "Beam Search" in alg_name:
-            result = beam_search(BOARD_SIZE, goal)
+        if "Breadth-First" in alg_name:
+            result, steps, stats = breadth_first_search(BOARD_SIZE, goal, return_steps=True, return_stats=True)
+        elif "Depth-First" in alg_name:
+            result, steps, stats = depth_first_search(BOARD_SIZE, goal, return_steps=True, return_stats=True)
+        elif "Depth Limited" in alg_name:
+            result, steps, stats = depth_limited_search(BOARD_SIZE, goal, return_steps=True, return_stats=True)
+        elif "Iterative Deepening" in alg_name:
+            result, steps, stats = iterative_deepening_search(BOARD_SIZE, goal, return_steps=True, return_stats=True)
+        elif "Uniform Cost" in alg_name:
+            result, steps, stats = uniform_cost_search(BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            
+        elif "A Star" in alg_name:
+            result, steps, stats = a_star_search(BOARD_SIZE, goal, return_steps=True, return_stats=True)
+        elif "Greedy" in alg_name:
+            result, steps, stats = greedy_best_search(BOARD_SIZE, goal, return_steps=True, return_stats=True)
+
+        elif "Hill" in alg_name:
+            result, steps, stats = hill_climbing(BOARD_SIZE, goal, return_steps=True, return_stats=True)
+        elif "Simulated" in alg_name:
+            result, steps, stats = simulated_annealing(BOARD_SIZE, goal, return_steps=True, return_stats=True)
+        elif "Genetic" in alg_name:
+            result, steps, stats = genetic_algorithm(BOARD_SIZE, goal, return_steps=True, return_stats=True)
+        elif "Beam" in alg_name:
+            result, steps, stats = beam_search(BOARD_SIZE, goal, return_steps=True, return_stats=True)
 
         elif "Nondeterministic" in alg_name:
-            visited = set()
-            plan = and_or_search([], BOARD_SIZE, visited)
-            if plan:
-                all_states = extract_all_solutions(plan)
-                if goal in all_states:
-                    result = goal
-                else:
-                    result = all_states[0]
-            else:
-                result = None
+            result, steps, stats = and_or_search(BOARD_SIZE, goal, return_steps=True, return_stats=True)
         elif "Unobservable" in alg_name:
-            result = dfs_belief_search(BOARD_SIZE, goal)
+            result, steps, stats = dfs_belief_search(BOARD_SIZE, goal, return_steps=True, return_stats=True)
         elif "Partial Observable" in alg_name:
-            result = dfs_partial_obs(BOARD_SIZE, goal)
+            result, steps, stats = dfs_partial_obs(BOARD_SIZE, goal, return_steps=True, return_stats=True)
 
         elif "Backtracking" in alg_name:
-            result = backtracking_search(BOARD_SIZE, goal)
+            result, steps, stats = backtracking_search(BOARD_SIZE, goal, return_steps=True, return_stats=True)
         elif "Forward Checking" in alg_name:
-            result = forward_checking_search(BOARD_SIZE, goal)
+            result, steps, stats = forward_checking_search(BOARD_SIZE, goal, return_steps=True, return_stats=True)
         elif "Arc" in alg_name:
-            result = ac3_search(BOARD_SIZE, goal)
+            result, steps, stats = ac3_search(BOARD_SIZE, goal, return_steps=True, return_stats=True)
 
         else:
             print("Thuật toán chưa được gán!")
             return
 
+        # ==================== CẬP NHẬT KẾT QUẢ HIỂN THỊ ====================
         if result:
             steps = [result[:i] for i in range(1, len(result)+1)]
             self.steps = steps
             self.step_index = 0
             self.left_solution = []
             self.running_algorithms = True
+
+        # ==================== CẬP NHẬT THỐNG KÊ & LỊCH SỬ ====================
+        if stats:  # chỉ có BFS, DFS mới có stats lúc này
+            self.current_stats = {
+                "name": alg_name,
+                "expanded": stats["expanded"],
+                "frontier": stats["frontier"],
+                "visited": stats["visited"],
+                "time": stats["time"]
+            }
+            self.history.append({
+                "name": alg_name,
+                "visited": stats["visited"],
+                "time": stats["time"]
+            })
+        else:
+            # Thuật toán chưa có thống kê (các loại khác)
+            self.current_stats = {
+                "name": alg_name,
+                "expanded": 0,
+                "frontier": 0,
+                "visited": 0,
+                "time": 0
+            }

@@ -5,7 +5,7 @@ from .dls import depth_limited_search
 from .ids import iterative_deepening_search
 from .cost import placement_cost_goal
 from .heuristic import h_misplaced
-from .gs import greedy_search
+from .gs import greedy_best_search
 from .astar import a_star_search
 from .sa import simulated_annealing
 from .hc import hill_climbing
@@ -19,7 +19,7 @@ from .forward_checking import forward_checking_search
 from .ac3 import ac3_search
 __all__ = ["breadth_first_search", "depth_first_search", "uniform_cost_search", 
            "depth_limited_search", "iterative_deepening_search", "placement_cost_goal",
-           "h_misplaced", "greedy_search", "a_star_search", "simulated_annealing", 
+           "h_misplaced", "greedy_best_search", "a_star_search", "simulated_annealing", 
            "hill_climbing", "genetic_algorithm", "beam_search", "and_or_search", 
            "extract_all_solutions", "dfs_belief_search", "dfs_partial_obs", "backtracking_search",
            "forward_checking_search", "ac3_search"]

@@ -1,10 +1,11 @@
-def depth_limited_search(n, goal=None, return_steps=False, limit=None):
+import time
+
+def depth_limited_search(n, goal=None, return_steps=False, return_stats=False, limit=None):
     """
     Depth-Limited Search (TREE-SEARCH version)
-    - n: kích thước bàn cờ (số hàng/cột)
-    - goal: list các cột (ví dụ [0,1,3,2]) hoặc None (chỉ cần tìm một solution bất kỳ)
-    - limit: độ sâu tối đa, thường = n
-    Trả về solution (list cột) hoặc None nếu không tìm thấy.
+    - visited: số trạng thái đã được xét (được lấy ra để mở rộng)
+    - expanded: tổng số trạng thái con đã được sinh ra
+    - frontier: số trạng thái đang nằm trong stack (ước lượng theo lần gọi đệ quy)
     """
     if goal is not None and isinstance(goal, tuple):
         goal = list(goal)
@@ -12,18 +13,19 @@ def depth_limited_search(n, goal=None, return_steps=False, limit=None):
     if limit is None:
         limit = n
 
-    steps_visual = []   # các state đã được expand (dùng để animate)
-    steps_round  = []   # snapshot trạng thái "ngăn xếp" sau mỗi lần pop (dùng để in console)
+    steps_visual = []   # dùng để animate
+    steps_round  = []   # snapshot trạng thái "ngăn xếp"
+    expanded_count = 0
+    visited_count = 0
+
+    start_time = time.time()
 
     def recursive_dls(state, depth, frontier):
-        """
-        state: đường đi hiện tại
-        depth: độ sâu còn lại
-        frontier: danh sách mô phỏng stack hiện tại (chỉ để lưu console)
-        """
-        # Lưu snapshot để in console
+        nonlocal expanded_count, visited_count
+        visited_count += 1
+
+        # Lưu snapshot (dùng cho visualize)
         steps_round.append(frontier[:])
-        # Lưu state vừa pop ra để visualize
         steps_visual.append(state[:])
 
         # Goal test
@@ -38,10 +40,11 @@ def depth_limited_search(n, goal=None, return_steps=False, limit=None):
 
         cutoff_occurred = False
 
-        # Sinh action (các cột chưa được chọn)
+        # Sinh các action (các cột chưa được chọn)
         for col in range(n):
             if col not in state:
                 child = state + [col]
+                expanded_count += 1  # mỗi child sinh ra → tăng expanded
                 result = recursive_dls(child, depth - 1, frontier + [child])
 
                 if result == "cutoff":
@@ -53,11 +56,20 @@ def depth_limited_search(n, goal=None, return_steps=False, limit=None):
 
     result = recursive_dls([], limit, [[]])
 
+    elapsed = (time.time() - start_time) * 1000
+    stats = {
+        "expanded": expanded_count,
+        "visited": visited_count,
+        "frontier": 0,  # DLS dùng đệ quy, frontier không thể đếm chính xác => để 0 hoặc len(frontier cuối)
+        "time": elapsed
+    }
+
+    if return_stats:
+        if return_steps:
+            return result, steps_visual, stats
+        return result, stats
+
     if return_steps:
-        if result == "cutoff" or result is None:
-            return None, steps_visual, steps_round
         return result, steps_visual, steps_round
 
-    if result == "cutoff" or result is None:
-        return None
     return result
