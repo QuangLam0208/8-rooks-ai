@@ -74,22 +74,17 @@ def draw_coordinates(screen, font, x_offset, y_offset=0, margin=120, side="left"
             ))
             screen.blit(text, text_rect_bottom)
 
+
+def draw_shared_numbers(screen, font, left_x_offset, right_x_offset, y_offset=0, margin=120):
+    """Vẽ trục số chung ở giữa hai bàn"""
+    OFFSET_TEXT = 20
+    middle_x = (left_x_offset + BOARD_SIZE * SQUARE_SIZE + right_x_offset) // 2
+
     for row in range(BOARD_SIZE):
         number = str(BOARD_SIZE - row)
         text = font.render(number, True, TEXT_COLOR)
-
-        if side == "left":
-            # Chỉ vẽ bên trái
-            text_rect_left = text.get_rect(center=(
-                x_offset - OFFSET_TEXT,
-                margin + row * SQUARE_SIZE + SQUARE_SIZE // 2 + y_offset
-            ))
-            screen.blit(text, text_rect_left)
-
-        elif side == "right":
-            # Chỉ vẽ bên phải
-            text_rect_right = text.get_rect(center=(
-                x_offset + BOARD_SIZE * SQUARE_SIZE + OFFSET_TEXT,
-                margin + row * SQUARE_SIZE + SQUARE_SIZE // 2 + y_offset
-            ))
-            screen.blit(text, text_rect_right)
+        text_rect = text.get_rect(center=(
+            middle_x,
+            margin + row * SQUARE_SIZE + SQUARE_SIZE // 2 + y_offset
+        ))
+        screen.blit(text, text_rect)
