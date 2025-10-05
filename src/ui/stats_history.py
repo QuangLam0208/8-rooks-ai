@@ -14,7 +14,7 @@ def draw_stats_and_history(screen, font, small_font, current_stats, history, run
     stats_y = ALG_GROUP_TOP
 
     # Background
-    stats_rect = pygame.Rect(stats_x, stats_y, 300, 640)
+    stats_rect = pygame.Rect(stats_x, stats_y, 300, 635)
     pygame.draw.rect(screen, LIGHT_GRAY, stats_rect)
     pygame.draw.rect(screen, BLACK, stats_rect, 2)
 
