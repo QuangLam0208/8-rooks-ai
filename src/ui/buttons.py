@@ -11,14 +11,25 @@ COTTON = (0xE2, 0xDC, 0xD0)
 ECRU = (0xBD, 0xBB, 0xA5)
 SAGE = (0x8D, 0x9B, 0x86)
 
-ALG_GROUP_TOP = 70
-ALG_LIST_TOP = 380
-ALG_LEFT = 50
-ALG_WIDTH = 210
-ALG_GROUP_HEIGHT = 40
-ALG_LIST_HEIGHT = 60
-ALG_SPACING = 8
 BORDER_RADIUS = 10
+# --- NHÓM THUẬT TOÁN ---
+ALG_SPACING = 8
+ALG_WIDTH = 210
+# NHÓM CHA
+ALG_GROUP_TOP = ALG_LEFT = 50
+ALG_GROUP_HEIGHT = 40
+TOTAL_GROUP_HEIGHT = 6 * ALG_GROUP_HEIGHT + 5 * ALG_SPACING
+PARENT_CHILD_SPACING = 30
+# NHÓM CON
+ALG_LIST_TOP = ALG_GROUP_TOP + TOTAL_GROUP_HEIGHT + PARENT_CHILD_SPACING
+ALG_LIST_HEIGHT = 60
+TOTAL_LIST5_HEIGHT = 5 * ALG_LIST_HEIGHT + 4 * ALG_SPACING
+
+# --- NHÓM NÚT CHỨC NĂNG ---
+ACTION_TOP = ALG_LIST_TOP + TOTAL_LIST5_HEIGHT + 30
+ACTION_WIDTH = 100
+ACTION_HEIGHT = 50
+ACTION_SPACING = 20
 
 algorithm_groups = [
     {
@@ -146,9 +157,9 @@ def draw_algorithm_buttons(screen, font, selected_group, selected_algorithm):
     return rects
 
 def draw_action_buttons(screen, font, window_width, window_height):
-    button_w, button_h = 100, 50
-    spacing = 20
-    y = window_height - 70
+    button_w, button_h = ACTION_WIDTH, ACTION_HEIGHT
+    spacing = ACTION_SPACING
+    y = ACTION_TOP
 
     labels = ["Run", "Visual", "Random", "Reset"]
 

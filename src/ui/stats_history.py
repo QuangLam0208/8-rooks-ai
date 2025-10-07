@@ -1,20 +1,19 @@
 import pygame
-from .buttons import LIGHT_GRAY, DARK_GRAY, BLACK, ALG_GROUP_TOP, ALG_LEFT
-from .layout import LEFT_MARGIN
+from .buttons import LIGHT_GRAY, DARK_GRAY, BLACK, ALG_GROUP_TOP, PARENT_CHILD_SPACING, TOTAL_GROUP_HEIGHT, TOTAL_LIST5_HEIGHT
+from .layout import RIGHT_BOARD_X
 from .board import BOARD_SIZE, SQUARE_SIZE
+
+STAT_HIS_X = RIGHT_BOARD_X + BOARD_SIZE * SQUARE_SIZE + 90
 
 def draw_stats_and_history(screen, font, small_font, current_stats, history, running_algorithms):
     """Vẽ bảng thống kê & lịch sử chạy thuật toán cho 8 Rooks"""
 
-    # ======= Tính vị trí động =======
-    board_margin = LEFT_MARGIN - ALG_LEFT
-    right_offset = LEFT_MARGIN + BOARD_SIZE * SQUARE_SIZE + 50
-
-    stats_x = right_offset + board_margin + 70
+    stats_x = STAT_HIS_X
     stats_y = ALG_GROUP_TOP
+    TOTAL_HEIGHT = TOTAL_GROUP_HEIGHT + TOTAL_LIST5_HEIGHT + PARENT_CHILD_SPACING
 
     # Background
-    stats_rect = pygame.Rect(stats_x, stats_y, 300, 635)
+    stats_rect = pygame.Rect(stats_x, stats_y, 300, TOTAL_HEIGHT)
     pygame.draw.rect(screen, LIGHT_GRAY, stats_rect)
     pygame.draw.rect(screen, BLACK, stats_rect, 2)
 

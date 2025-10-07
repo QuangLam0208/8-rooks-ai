@@ -1,7 +1,7 @@
 import time
 import pygame, sys, os, random
 from ui.board import BOARD_SIZE, SQUARE_SIZE
-from ui.layout import render_boards
+from ui.layout import render_boards, WINDOW_WIDTH, WINDOW_HEIGHT
 from ui.buttons import (
     draw_group_buttons,
     draw_algorithm_buttons,
@@ -12,7 +12,6 @@ from ui.stats_history import draw_stats_and_history
 from algorithms import *
 import itertools
 
-MARGIN = 120
 BG_COLOR = (221, 211, 211)
 
 class GameApp:
@@ -22,8 +21,8 @@ class GameApp:
         self.right_solution = random.choice(self.all_solutions)
         self.clock = pygame.time.Clock()
 
-        self.window_width = 1400
-        self.window_height = 800
+        self.window_width = WINDOW_WIDTH
+        self.window_height = WINDOW_HEIGHT
 
         pygame.init()
         self.screen = pygame.display.set_mode((self.window_width, self.window_height))

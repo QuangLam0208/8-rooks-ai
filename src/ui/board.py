@@ -1,9 +1,9 @@
 import pygame
-from .buttons import ALG_GROUP_HEIGHT, ALG_SPACING
+from .buttons import TOTAL_GROUP_HEIGHT
 
 # Kích thước bàn cờ
 BOARD_SIZE = 8
-SQUARE_SIZE = (6 * ALG_GROUP_HEIGHT + 5 * ALG_SPACING) // BOARD_SIZE
+SQUARE_SIZE = TOTAL_GROUP_HEIGHT // BOARD_SIZE
 
 # Màu sắc các ô
 WHITE = (238, 238, 210)   # ô sáng
@@ -70,14 +70,13 @@ def draw_coordinates(screen, font, x_offset, y_offset=0, margin=120, side="left"
             # Chỉ vẽ phía dưới
             text_rect_bottom = text.get_rect(center=(
                 x_offset + col * SQUARE_SIZE + SQUARE_SIZE // 2,
-                margin + BOARD_SIZE * SQUARE_SIZE + OFFSET_TEXT + y_offset
+                margin - OFFSET_TEXT + y_offset
             ))
             screen.blit(text, text_rect_bottom)
 
 
 def draw_shared_numbers(screen, font, left_x_offset, right_x_offset, y_offset=0, margin=120):
     """Vẽ trục số chung ở giữa hai bàn"""
-    OFFSET_TEXT = 20
     middle_x = (left_x_offset + BOARD_SIZE * SQUARE_SIZE + right_x_offset) // 2
 
     for row in range(BOARD_SIZE):
