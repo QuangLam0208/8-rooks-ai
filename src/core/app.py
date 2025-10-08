@@ -100,8 +100,14 @@ class GameApp:
                     # Xử lý click group
                     for i, r in enumerate(self.group_rects):
                         if r.collidepoint(mouse_pos):
-                            self.selected_group = i
-                            self.selected_algorithm = -1
+                            # Nếu nhóm này đã được chọn, nhấn lại sẽ bỏ chọn
+                            if self.selected_group == i:
+                                self.selected_group = -1
+                                self.selected_algorithm = -1
+                                self.selected_algorithm_name = None
+                            else:
+                                self.selected_group = i
+                                self.selected_algorithm = -1
                             break
 
                     # Xử lý click algorithm
