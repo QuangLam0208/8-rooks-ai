@@ -1,4 +1,4 @@
-from .bfs import breadth_first_search
+from .bfs import breadth_first_search, breadth_first_search_visual
 from .dfs import depth_first_search
 from .ucs import uniform_cost_search
 from .dls import depth_limited_search
@@ -22,4 +22,4 @@ __all__ = ["breadth_first_search", "depth_first_search", "uniform_cost_search",
            "h_misplaced", "greedy_best_search", "a_star_search", "simulated_annealing", 
            "hill_climbing", "genetic_algorithm", "beam_search", "and_or_search", 
            "extract_all_solutions", "dfs_belief_search", "dfs_partial_obs", "backtracking_search",
-           "forward_checking_search", "ac3_search"]
+           "forward_checking_search", "ac3_search", "breadth_first_search_visual"]

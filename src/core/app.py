@@ -1,8 +1,8 @@
-import time
 import pygame, sys, os, random
 from ui.board import BOARD_SIZE, SQUARE_SIZE
-from ui.layout import render_boards, WINDOW_WIDTH, WINDOW_HEIGHT
+from ui.layout import render_boards, draw_scrollable_panel, WINDOW_WIDTH, WINDOW_HEIGHT, LEFT_BOARD_X, RIGHT_BOARD_X
 from ui.buttons import (
+    TOTAL_LIST5_HEIGHT,
     draw_group_buttons,
     draw_algorithm_buttons,
     draw_action_buttons,
@@ -16,7 +16,7 @@ BG_COLOR = (221, 211, 211)
 
 class GameApp:
     def __init__(self, all_solutions):
-        self.all_solutions = list(itertools.permutations(range(8)))
+        self.all_solutions = list(itertools.permutations(range(BOARD_SIZE)))
         self.left_solution = None
         self.right_solution = random.choice(self.all_solutions)
         self.clock = pygame.time.Clock()
@@ -51,6 +51,10 @@ class GameApp:
         self.current_stats = None
         self.history = []
 
+        self.panel_logs = []
+        self.scroll_offset = 0
+        self.scroll_y = 0
+        self.scroll_x = 0
 
     def run(self):
         running = True
@@ -67,6 +71,12 @@ class GameApp:
                             self.run_algorithm_by_name(self.selected_algorithm_name)
 
                     elif self.rect_visual.collidepoint(mouse_pos):
+                        if BOARD_SIZE > 6:
+                            self.panel_logs.clear()
+                            self.panel_logs.append("⚠️ Visualization disabled for board size > 6.")
+                            self.scroll_y = 0
+                            self.scroll_x = 0
+                            continue
                         if self.selected_algorithm_name:
                             self.run_visualization_by_name(self.selected_algorithm_name)
 
@@ -96,6 +106,8 @@ class GameApp:
                         self.left_solution = None
                         self.steps = None
                         self.running_algorithms = False
+                        self.panel_logs.clear()
+                        self.scroll_offset = 0
 
                     # Xử lý click group
                     for i, r in enumerate(self.group_rects):
@@ -119,6 +131,22 @@ class GameApp:
                                 self.selected_algorithm_name = group["algorithms"][i]["name"]
                                 break
 
+                elif event.type == pygame.MOUSEWHEEL:
+                    SCROLL_SPEED_Y = 30   # tốc độ cuộn dọc
+                    SCROLL_SPEED_X = 50   # tốc độ cuộn ngang
+
+                    if pygame.key.get_mods() & pygame.KMOD_SHIFT:
+                        # Cuộn ngang khi giữ Shift
+                        self.scroll_x -= event.y * SCROLL_SPEED_X
+                        max_width = max((self.font.size(line)[0] for line in self.panel_logs), default=0)
+                        visible_width = (RIGHT_BOARD_X + BOARD_SIZE * SQUARE_SIZE) - LEFT_BOARD_X
+                        self.scroll_x = max(0, min(self.scroll_x, max(0, max_width - visible_width)))
+                    else:
+                        # Cuộn dọc
+                        self.scroll_y -= event.y * SCROLL_SPEED_Y
+                        max_height = len(self.panel_logs) * 22
+                        self.scroll_y = max(0, min(self.scroll_y, max(0, max_height - TOTAL_LIST5_HEIGHT)))
+
             # =================== UPDATE ANIMATION ===================
             if self.running_algorithms and self.steps:
                 if self.step_index < len(self.steps):
@@ -139,6 +167,8 @@ class GameApp:
                 self.right_solution,
                 self.window_width
             )
+
+            draw_scrollable_panel(self.screen, self.font, self.panel_logs, self.scroll_y, self.scroll_x)
 
             draw_stats_and_history(
                 self.screen,
@@ -167,54 +197,51 @@ class GameApp:
         sys.exit()
 
     def run_visualization_by_name(self, alg_name):
-        """Chạy thuật toán và lưu các bước để visualize"""
+        """Visualization từng bước: mỗi lần nhấn hiển thị 1 bước + log chi tiết"""
         goal = list(self.right_solution)
-        if "Breadth-First" in alg_name:
-            result, steps = breadth_first_search(BOARD_SIZE, goal, return_steps=True)
-        elif "Depth-First" in alg_name:
-            result, steps = depth_first_search(BOARD_SIZE, goal, return_steps=True)
-        elif "Depth Limited" in alg_name:
-            result, steps, steps_round = depth_limited_search(BOARD_SIZE, goal, return_steps=True)
-        elif "Iterative Deepening" in alg_name:
-            result, steps, steps_round = iterative_deepening_search(BOARD_SIZE, goal, return_steps=True)
-        elif "Uniform Cost" in alg_name:
-            result, steps, steps_round = uniform_cost_search(BOARD_SIZE, goal, return_steps=True)
-            
-        elif "A Star" in alg_name:
-            result, steps, steps_round = a_star_search(BOARD_SIZE, goal, return_steps=True)
-        elif "Greedy" in alg_name:
-            result, steps = greedy_best_search(BOARD_SIZE, goal, return_steps=True)
 
-        elif "Hill Climbing" in alg_name:
-            result, steps, steps_round = hill_climbing(BOARD_SIZE, goal, return_steps=True)
-        elif "Simulated Annealing" in alg_name:
-            result, steps, steps_round  = simulated_annealing(BOARD_SIZE, goal, return_steps=True)
-        elif "Genetic Algorithm" in alg_name:
-            result, steps, steps_round = genetic_algorithm(BOARD_SIZE, goal, return_steps=True)
-        elif "Beam" in alg_name:
-            result, steps, steps_round = beam_search(BOARD_SIZE, goal, return_steps=True)
+        # Nếu chưa có steps => chạy thuật toán 1 lần
+        if not self.steps:
+            if "Breadth-First" in alg_name:
+                result, steps, logs = breadth_first_search_visual(BOARD_SIZE, goal, return_steps=True, return_logs=True)
+            else:
+                print("Chức năng visualize chưa hỗ trợ thuật toán này nhá 😚")
+                return
 
-        elif "Unobservable" in alg_name:
-            result, steps = dfs_belief_search(BOARD_SIZE, goal, return_steps=True)
-        elif "Partial Observable" in alg_name:
-            result, steps = dfs_partial_obs(BOARD_SIZE, goal, return_steps=True)
-
-        elif "Backtracking" in alg_name:
-            result, steps = backtracking_search(BOARD_SIZE, goal, return_steps=True)
-        elif "Forward Checking" in alg_name:
-            result, steps = forward_checking_search(BOARD_SIZE, goal, return_steps=True)
-        elif "Arc" in alg_name:
-            result, steps = ac3_search(BOARD_SIZE, goal, return_steps=True)
-            
-        else:
-            print("Thuật toán chưa được gán!")
-            return
-        
-        if steps:
             self.steps = steps
+            self.logs = logs
             self.step_index = 0
             self.left_solution = []
-            self.running_algorithms = True
+            self.panel_logs.clear()
+            self.panel_logs.append("Visualization ready — press again to step through.")
+            self.scroll_offset = 0
+            return
+
+        # Hiển thị từng bước + log tương ứng
+        if self.step_index < len(self.steps):
+            current_state = self.steps[self.step_index]
+            self.left_solution = current_state
+
+            if self.step_index < len(self.logs):
+                self.panel_logs.append(self.logs[self.step_index])
+
+                # --- Auto scroll NGAY LẬP TỨC khi có log mới ---
+                line_height = 22
+                total_height = len(self.panel_logs) * line_height
+                visible_height = TOTAL_LIST5_HEIGHT
+                if total_height > visible_height:
+                    # Đặt scroll_y thẳng đến cuối
+                    self.scroll_y = total_height - visible_height
+
+            self.step_index += 1
+        else:
+            self.panel_logs.append(f"GOAL: {self.left_solution}")
+            # --- Khi đạt goal, cuộn thẳng xuống cuối ---
+            line_height = 22
+            total_height = len(self.panel_logs) * line_height
+            visible_height = TOTAL_LIST5_HEIGHT
+            if total_height > visible_height:
+                self.scroll_y = total_height - visible_height
 
     def run_algorithm_by_name(self, alg_name):
         """Chạy thuật toán dựa theo tên, cập nhật bảng thống kê & lịch sử"""
