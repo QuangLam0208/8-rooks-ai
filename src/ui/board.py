@@ -1,21 +1,14 @@
 import pygame
-from .buttons import TOTAL_GROUP_HEIGHT
+from .properties import *
 
-# Kích thước bàn cờ
-BOARD_SIZE = 8
-SQUARE_SIZE = TOTAL_GROUP_HEIGHT // BOARD_SIZE
-
-# Màu sắc các ô
-WHITE = (238, 238, 210)   # ô sáng
-BLACK = (118, 150, 86)    # ô tối
-TEXT_COLOR = (0, 0, 0)
+TEXT_COLOR = BLACK
 
 def draw_board(screen, rook_img, solution, x_offset, y_offset=0, show_rooks=False, margin=120):
     """Vẽ bàn cờ và quân xe (nếu có)"""
     for row in range(BOARD_SIZE):
         for col in range(BOARD_SIZE):
             # Màu ô
-            color = WHITE if (row + col) % 2 == 0 else BLACK
+            color = WHITE_CELL if (row + col) % 2 == 0 else BLACK_CELL
 
             rect = pygame.Rect(
                 x_offset + col * SQUARE_SIZE,
