@@ -110,7 +110,6 @@ def depth_limited_search_visual(n, goal=None, return_steps=False, return_stats=F
 
         # Cutoff (giới hạn độ sâu)
         if depth == 0:
-            logs.append(f"Cutoff at state {state}")
             return "cutoff"
 
         cutoff_occurred = False

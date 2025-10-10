@@ -223,7 +223,11 @@ class GameApp:
                         # Cuộn dọc
                         self.scroll_y -= event.y * SCROLL_SPEED_Y
                         max_height = len(self.panel_logs) * 22
-                        self.scroll_y = max(0, min(self.scroll_y, max(0, max_height - props.TOTAL_LIST5_HEIGHT)))
+                        
+                        # Chiều cao thực tế của vùng hiển thị log (trừ padding top & bottom)
+                        visible_height = props.TOTAL_LIST5_HEIGHT - (12 + 15) 
+                        
+                        self.scroll_y = max(0, min(self.scroll_y, max(0, max_height - visible_height)))
 
             # =================== UPDATE ANIMATION ===================
             if self.running_algorithms and self.steps:
@@ -282,6 +286,19 @@ class GameApp:
         if not self.steps:
             if "Breadth-First" in alg_name:
                 result, steps, logs = breadth_first_search_visual(props.BOARD_SIZE, goal, return_steps=True, return_logs=True)
+            elif "Depth-First" in alg_name:
+                result, steps, logs = depth_first_search_visual(props.BOARD_SIZE, goal, return_steps=True, return_logs=True)    
+            elif "Depth Limited" in alg_name:
+                result, steps, logs = depth_limited_search_visual(props.BOARD_SIZE, goal, return_steps=True, return_logs=True)
+            elif "Iterative Deepening" in alg_name:
+                result, steps, logs = iterative_deepening_search_visual(props.BOARD_SIZE, goal, return_steps=True, return_logs=True)
+            elif "Uniform Cost" in alg_name:
+                result, steps, logs = uniform_cost_search_visual(props.BOARD_SIZE, goal, return_steps=True, return_logs=True)
+            elif "A Star" in alg_name:
+                result, steps, logs = a_star_search_visual(props.BOARD_SIZE, goal, return_steps=True, return_logs=True)
+            elif "Greedy" in alg_name:
+                result, steps, logs = greedy_best_search_visual(props.BOARD_SIZE, goal, return_steps=True, return_logs=True)
+
             else:
                 print("Chức năng visualize chưa hỗ trợ thuật toán này nhá 😚")
                 return
@@ -306,7 +323,7 @@ class GameApp:
                 # --- Auto scroll NGAY LẬP TỨC khi có log mới ---
                 line_height = 22
                 total_height = len(self.panel_logs) * line_height
-                visible_height = props.TOTAL_LIST5_HEIGHT
+                visible_height = props.TOTAL_LIST5_HEIGHT - (12 + 15) # Sửa ở đây
                 if total_height > visible_height:
                     # Đặt scroll_y thẳng đến cuối
                     self.scroll_y = total_height - visible_height
@@ -317,7 +334,7 @@ class GameApp:
             # --- Khi đạt goal, cuộn thẳng xuống cuối ---
             line_height = 22
             total_height = len(self.panel_logs) * line_height
-            visible_height = props.TOTAL_LIST5_HEIGHT
+            visible_height = props.TOTAL_LIST5_HEIGHT - (12 + 15) # Sửa ở đây
             if total_height > visible_height:
                 self.scroll_y = total_height - visible_height
 
