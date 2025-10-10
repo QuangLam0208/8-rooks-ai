@@ -1,24 +1,21 @@
 import pygame
-from .buttons import LIGHT_GRAY, DARK_GRAY, BLACK, ALG_GROUP_TOP, PARENT_CHILD_SPACING, TOTAL_GROUP_HEIGHT, TOTAL_LIST5_HEIGHT
-from .layout import RIGHT_BOARD_X
-from .board import BOARD_SIZE, SQUARE_SIZE
-
-STAT_HIS_X = RIGHT_BOARD_X + BOARD_SIZE * SQUARE_SIZE + 90
+from ui import properties as props
 
 def draw_stats_and_history(screen, font, small_font, current_stats, history, running_algorithms):
-    """Vẽ bảng thống kê & lịch sử chạy thuật toán cho 8 Rooks"""
+    """Vẽ bảng thống kê & lịch sử chạy thuật toán cho 8 Rooks (tự cập nhật khi thay đổi BOARD_SIZE)"""
 
-    stats_x = STAT_HIS_X
-    stats_y = ALG_GROUP_TOP
-    TOTAL_HEIGHT = TOTAL_GROUP_HEIGHT + TOTAL_LIST5_HEIGHT + PARENT_CHILD_SPACING
+    # Tính lại vị trí động theo BOARD_SIZE hiện tại
+    stats_x = props.RIGHT_BOARD_X + props.BOARD_SIZE * props.SQUARE_SIZE + 90
+    stats_y = props.ALG_GROUP_TOP
+    total_height = props.TOTAL_GROUP_HEIGHT + props.TOTAL_LIST5_HEIGHT + props.PARENT_CHILD_SPACING
 
     # Background
-    stats_rect = pygame.Rect(stats_x, stats_y, 300, TOTAL_HEIGHT)
-    pygame.draw.rect(screen, LIGHT_GRAY, stats_rect)
-    pygame.draw.rect(screen, BLACK, stats_rect, 2)
+    stats_rect = pygame.Rect(stats_x, stats_y, 300, total_height)
+    pygame.draw.rect(screen, props.LIGHT_GRAY, stats_rect)
+    pygame.draw.rect(screen, props.BLACK, stats_rect, 2)
 
     # ====== PHẦN STATS HIỆN TẠI ======
-    title = font.render("CURRENT RUNING", True, BLACK)
+    title = font.render("CURRENT RUNNING", True, props.BLACK)
     screen.blit(title, (stats_x + 10, stats_y + 10))
 
     if current_stats:
@@ -34,28 +31,28 @@ def draw_stats_and_history(screen, font, small_font, current_stats, history, run
         stats_info = ["No data"]
 
     for i, info in enumerate(stats_info):
-        text = small_font.render(info, True, BLACK)
+        text = small_font.render(info, True, props.BLACK)
         screen.blit(text, (stats_x + 10, stats_y + 40 + i * 22))
 
     # Đường phân cách
     pygame.draw.line(
-        screen, DARK_GRAY,
+        screen, props.DARK_GRAY,
         (stats_x + 10, stats_y + 190),
         (stats_x + 290, stats_y + 190), 2
     )
 
     # ====== PHẦN HISTORY ======
-    history_title = font.render("HISTORY", True, BLACK)
+    history_title = font.render("HISTORY", True, props.BLACK)
     screen.blit(history_title, (stats_x + 10, stats_y + 210))
 
     if not history:
-        no_data = small_font.render("No data", True, DARK_GRAY)
+        no_data = small_font.render("No data", True, props.DARK_GRAY)
         screen.blit(no_data, (stats_x + 10, stats_y + 242))
     else:
         offset_y = 242
-        recent_entries = list(reversed(history[-8:]))  # hiển thị tối đa 7 dòng gần nhất, mới nhất trên cùng
+        recent_entries = list(reversed(history[-8:]))  # hiển thị tối đa 8 dòng gần nhất
         for i, entry in enumerate(recent_entries):
-            color = BLACK if i == 0 else DARK_GRAY  # chỉ dòng mới nhất tô đen
+            color = props.BLACK if i == 0 else props.DARK_GRAY  # dòng mới nhất tô đậm
 
             name_text = small_font.render(
                 f"#{len(history) - i}. {entry['name']}", True, color)

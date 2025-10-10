@@ -1,5 +1,8 @@
 import pygame
 from .properties import *
+from ui import properties as props
+
+BOARD_SIZE = props.BOARD_SIZE
 
 algorithm_groups = [
     {
@@ -127,26 +130,40 @@ def draw_algorithm_buttons(screen, font, selected_group, selected_algorithm):
     return rects
 
 def draw_action_buttons(screen, font, window_width, window_height):
+    """Vẽ hàng nút chức năng (Run, Visual, Random, Reset, Size)"""
     button_w, button_h = ACTION_WIDTH, ACTION_HEIGHT
     spacing = ACTION_SPACING
     y = ACTION_TOP
 
-    labels = ["Run", "Visual", "Random", "Reset"]
+    labels = ["Run", "Visual", "Random", "Reset", "Size"]
 
-    # Tổng chiều rộng
+    # Tổng chiều rộng để canh giữa
     total_width = button_w * len(labels) + spacing * (len(labels) - 1)
     start_x = (window_width - total_width) // 2
 
     rects = []
 
+    # --- Kiểm tra trạng thái BOARD_SIZE ---
+    board_size = props.BOARD_SIZE  # lấy trực tiếp từ properties để luôn đúng
+
     for i, label in enumerate(labels):
         x = start_x + i * (button_w + spacing)
         rect = pygame.Rect(x, y, button_w, button_h)
 
-        pygame.draw.rect(screen, LIGHT_GRAY, rect, border_radius=BORDER_RADIUS)
-        pygame.draw.rect(screen, BLACK, rect, 2, border_radius=BORDER_RADIUS)
+        # Nếu là nút Visual và board > 6 ⇒ disable
+        if label == "Visual" and board_size > 6:
+            bg_color = (180, 180, 180)
+            border_color = (150, 150, 150)
+            text_color = (230, 230, 230)
+        else:
+            bg_color = WHITE
+            border_color = DARK_GRAY
+            text_color = DARK_GRAY
 
-        text = font.render(label, True, BLACK)
+        pygame.draw.rect(screen, bg_color, rect, border_radius=BORDER_RADIUS)
+        pygame.draw.rect(screen, border_color, rect, 2, border_radius=BORDER_RADIUS)
+
+        text = font.render(label, True, text_color)
         screen.blit(text, text.get_rect(center=rect.center))
 
         rects.append(rect)

@@ -1,35 +1,42 @@
 import pygame
-from .properties import *
+from ui import properties as props
 from .board import draw_board, draw_coordinates, draw_shared_numbers
 
 def render_boards(screen, font, caption_font, rook_img,
                   left_solution, right_solution, window_width):
+    """Vẽ hai bàn cờ (trái - phải) theo kích thước hiện tại."""
     # Left board
-    left_offset = LEFT_BOARD_X
-    draw_board(screen, rook_img, left_solution,
-               x_offset=left_offset, y_offset=0,
-               show_rooks=True, margin=ALG_GROUP_TOP)
+    left_offset = props.LEFT_BOARD_X
+    draw_board(
+        screen, rook_img, left_solution,
+        x_offset=left_offset, y_offset=0,
+        show_rooks=True, margin=props.ALG_GROUP_TOP
+    )
 
     # Right board
-    right_offset = RIGHT_BOARD_X
-    draw_board(screen, rook_img, right_solution,
-               x_offset=right_offset, y_offset=0,
-               show_rooks=True, margin=ALG_GROUP_TOP)
-    
-    draw_coordinates(screen, font, x_offset=left_offset, y_offset=0, margin=ALG_GROUP_TOP, side="left")
-    draw_coordinates(screen, font, x_offset=right_offset, y_offset=0, margin=ALG_GROUP_TOP, side="right")
-    draw_shared_numbers(screen, font, left_offset, right_offset, y_offset=0, margin=ALG_GROUP_TOP)
+    right_offset = props.RIGHT_BOARD_X
+    draw_board(
+        screen, rook_img, right_solution,
+        x_offset=right_offset, y_offset=0,
+        show_rooks=True, margin=props.ALG_GROUP_TOP
+    )
+
+    draw_coordinates(screen, font, x_offset=left_offset, y_offset=0,
+                     margin=props.ALG_GROUP_TOP, side="left")
+    draw_coordinates(screen, font, x_offset=right_offset, y_offset=0,
+                     margin=props.ALG_GROUP_TOP, side="right")
+
+    draw_shared_numbers(screen, font, left_offset, right_offset,
+                        y_offset=0, margin=props.ALG_GROUP_TOP)
+
 
 def draw_scrollable_panel(screen, font, logs, scroll_y=0, scroll_x=0):
-    """
-    Vẽ bảng trắng có thể cuộn cả dọc và ngang hiển thị log Visualization.
-    Có padding thật và vùng clip để không bị tràn.
-    """
-    # ===== Kích thước bảng =====
-    panel_y = ALG_LIST_TOP
-    panel_height = TOTAL_LIST5_HEIGHT
-    panel_x = LEFT_BOARD_X
-    panel_width = (RIGHT_BOARD_X + BOARD_SIZE * SQUARE_SIZE) - LEFT_BOARD_X
+    """Vẽ bảng log có thể cuộn, đọc realtime từ props."""
+    # ===== Lấy kích thước hiện tại từ properties =====
+    panel_y = props.ALG_LIST_TOP
+    panel_height = props.TOTAL_LIST5_HEIGHT
+    panel_x = props.LEFT_BOARD_X
+    panel_width = (props.RIGHT_BOARD_X + props.BOARD_SIZE * props.SQUARE_SIZE) - props.LEFT_BOARD_X
 
     # ===== Padding =====
     pad_left = 12
@@ -42,7 +49,7 @@ def draw_scrollable_panel(screen, font, logs, scroll_y=0, scroll_x=0):
     pygame.draw.rect(screen, (255, 255, 255), panel_rect)
     pygame.draw.rect(screen, (0, 0, 0), panel_rect, 2)
 
-    # ===== Khu vực clip thật sự =====
+    # ===== Khu vực clip thật =====
     clip_rect = pygame.Rect(
         panel_x + pad_left,
         panel_y + pad_top,
@@ -58,7 +65,7 @@ def draw_scrollable_panel(screen, font, logs, scroll_y=0, scroll_x=0):
     visible_width = clip_rect.width
 
     if not logs:
-        msg = "Using the Visual button to see the states"
+        msg = "Using the Visualization button to see the states"
         text = font.render(msg, True, (0, 0, 0))
         text_rect = text.get_rect(center=clip_rect.center)
         screen.blit(text, text_rect)

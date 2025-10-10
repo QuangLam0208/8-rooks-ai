@@ -1,8 +1,6 @@
 import pygame, sys, os, random
-from ui.board import BOARD_SIZE, SQUARE_SIZE
-from ui.layout import render_boards, draw_scrollable_panel, WINDOW_WIDTH, WINDOW_HEIGHT, LEFT_BOARD_X, RIGHT_BOARD_X
+from ui.layout import render_boards, draw_scrollable_panel
 from ui.buttons import (
-    TOTAL_LIST5_HEIGHT,
     draw_group_buttons,
     draw_algorithm_buttons,
     draw_action_buttons,
@@ -10,19 +8,20 @@ from ui.buttons import (
 )
 from ui.stats_history import draw_stats_and_history
 from algorithms import *
+import ui.properties as props
 import itertools
 
 BG_COLOR = (221, 211, 211)
 
 class GameApp:
     def __init__(self, all_solutions):
-        self.all_solutions = list(itertools.permutations(range(BOARD_SIZE)))
+        self.all_solutions = list(itertools.permutations(range(props.BOARD_SIZE)))
         self.left_solution = None
         self.right_solution = random.choice(self.all_solutions)
         self.clock = pygame.time.Clock()
 
-        self.window_width = WINDOW_WIDTH
-        self.window_height = WINDOW_HEIGHT
+        self.window_width = props.WINDOW_WIDTH
+        self.window_height = props.WINDOW_HEIGHT
 
         pygame.init()
         self.screen = pygame.display.set_mode((self.window_width, self.window_height))
@@ -34,7 +33,7 @@ class GameApp:
         self.caption_font = pygame.font.Font(font_path, 20)  # font caption (to hơn tí)
 
         self.rook_img = pygame.image.load(os.path.join("assets", "pics", "rook.png"))
-        piece_size = int(SQUARE_SIZE * 0.8)  # 80% của ô
+        piece_size = int(props.SQUARE_SIZE * 0.8)  # 80% của ô
         self.rook_img = pygame.transform.scale(self.rook_img, (piece_size, piece_size))
 
         self.selected_algorithm_name = None  # tên thuật toán được chọn
@@ -56,6 +55,81 @@ class GameApp:
         self.scroll_y = 0
         self.scroll_x = 0
 
+    def prompt_board_size(self):
+        input_text = ""
+        box = pygame.Rect((self.window_width - 300)//2, (self.window_height - 80)//2, 300, 80)
+        active = True
+
+        while active:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        active = False
+                    elif event.key == pygame.K_BACKSPACE:
+                        input_text = input_text[:-1]
+                    elif event.unicode.isdigit():
+                        input_text += event.unicode
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if not box.collidepoint(event.pos):
+                        active = False
+
+            overlay = pygame.Surface((self.window_width, self.window_height))
+            overlay.set_alpha(200)
+            overlay.fill((0, 0, 0))
+            self.screen.blit(overlay, (0, 0))
+
+            pygame.draw.rect(self.screen, (255, 255, 255), box, border_radius=8)
+            pygame.draw.rect(self.screen, (0, 0, 0), box, 2, border_radius=8)
+            txt = input_text or "Enter size (3-8)"
+            self.screen.blit(self.font.render(txt, True, (0, 0, 0)), (box.x + 10, box.y + 30))
+            pygame.display.flip()
+            self.clock.tick(30)
+
+        # Khi người dùng nhập xong
+        if input_text.isdigit():
+            new_size = int(input_text)
+            if 3 <= new_size <= 8:
+                props.update_board_size(new_size)  # dùng props thay vì update_board_size trực tiếp
+                self.reset_after_resize()
+
+    def reset_after_resize(self):
+        """Reset lại giao diện và dữ liệu sau khi đổi kích thước."""
+        import itertools, random
+        from ui import layout, stats_history
+
+        self.all_solutions = list(itertools.permutations(range(props.BOARD_SIZE)))
+        self.right_solution = random.choice(self.all_solutions)
+        self.left_solution = None
+
+        # Resize quân xe
+        rook_path = os.path.join("assets", "pics", "rook.png")
+        rook_img = pygame.image.load(rook_path)
+        piece_size = int(props.SQUARE_SIZE * 0.8)
+        self.rook_img = pygame.transform.scale(rook_img, (piece_size, piece_size))
+
+        # Reset trạng thái
+        self.steps = []
+        self.step_index = 0
+        self.running_algorithms = False
+        self.panel_logs.clear()
+        self.scroll_x = 0
+        self.scroll_y = 0
+        self.history.clear()
+        self.current_stats = {
+            "name": "", "expanded": 0, "frontier": 0,
+            "visited": 0, "time": 0
+        }
+
+        # Reload lại các module layout phụ thuộc props
+        import importlib
+        importlib.reload(layout)
+        importlib.reload(stats_history)
+
+        print(f"UI reloaded with board {props.BOARD_SIZE}x{props.BOARD_SIZE}")
+
     def run(self):
         running = True
         while running:
@@ -71,9 +145,9 @@ class GameApp:
                             self.run_algorithm_by_name(self.selected_algorithm_name)
 
                     elif self.rect_visual.collidepoint(mouse_pos):
-                        if BOARD_SIZE > 6:
+                        if props.BOARD_SIZE > 6:
                             self.panel_logs.clear()
-                            self.panel_logs.append("⚠️ Visualization disabled for board size > 6.")
+                            self.panel_logs.append("Visualization disabled for board size > 6.")
                             self.scroll_y = 0
                             self.scroll_x = 0
                             continue
@@ -109,6 +183,10 @@ class GameApp:
                         self.panel_logs.clear()
                         self.scroll_offset = 0
 
+                    elif self.rect_size.collidepoint(mouse_pos):
+                        # Mở hộp nhập để đổi kích thước
+                        self.prompt_board_size()
+
                     # Xử lý click group
                     for i, r in enumerate(self.group_rects):
                         if r.collidepoint(mouse_pos):
@@ -139,13 +217,13 @@ class GameApp:
                         # Cuộn ngang khi giữ Shift
                         self.scroll_x -= event.y * SCROLL_SPEED_X
                         max_width = max((self.font.size(line)[0] for line in self.panel_logs), default=0)
-                        visible_width = (RIGHT_BOARD_X + BOARD_SIZE * SQUARE_SIZE) - LEFT_BOARD_X
+                        visible_width = (props.RIGHT_BOARD_X + props.BOARD_SIZE * props.SQUARE_SIZE) - props.LEFT_BOARD_X
                         self.scroll_x = max(0, min(self.scroll_x, max(0, max_width - visible_width)))
                     else:
                         # Cuộn dọc
                         self.scroll_y -= event.y * SCROLL_SPEED_Y
                         max_height = len(self.panel_logs) * 22
-                        self.scroll_y = max(0, min(self.scroll_y, max(0, max_height - TOTAL_LIST5_HEIGHT)))
+                        self.scroll_y = max(0, min(self.scroll_y, max(0, max_height - props.TOTAL_LIST5_HEIGHT)))
 
             # =================== UPDATE ANIMATION ===================
             if self.running_algorithms and self.steps:
@@ -185,7 +263,7 @@ class GameApp:
                 self.screen, self.font,
                 self.selected_group, self.selected_algorithm
             )
-            self.rect_run, self.rect_visual, self.rect_random, self.rect_reset = draw_action_buttons(
+            self.rect_run, self.rect_visual, self.rect_random, self.rect_reset, self.rect_size = draw_action_buttons(
                 self.screen, self.font,
                 self.window_width, self.window_height
             )
@@ -203,7 +281,7 @@ class GameApp:
         # Nếu chưa có steps => chạy thuật toán 1 lần
         if not self.steps:
             if "Breadth-First" in alg_name:
-                result, steps, logs = breadth_first_search_visual(BOARD_SIZE, goal, return_steps=True, return_logs=True)
+                result, steps, logs = breadth_first_search_visual(props.BOARD_SIZE, goal, return_steps=True, return_logs=True)
             else:
                 print("Chức năng visualize chưa hỗ trợ thuật toán này nhá 😚")
                 return
@@ -228,7 +306,7 @@ class GameApp:
                 # --- Auto scroll NGAY LẬP TỨC khi có log mới ---
                 line_height = 22
                 total_height = len(self.panel_logs) * line_height
-                visible_height = TOTAL_LIST5_HEIGHT
+                visible_height = props.TOTAL_LIST5_HEIGHT
                 if total_height > visible_height:
                     # Đặt scroll_y thẳng đến cuối
                     self.scroll_y = total_height - visible_height
@@ -239,7 +317,7 @@ class GameApp:
             # --- Khi đạt goal, cuộn thẳng xuống cuối ---
             line_height = 22
             total_height = len(self.panel_logs) * line_height
-            visible_height = TOTAL_LIST5_HEIGHT
+            visible_height = props.TOTAL_LIST5_HEIGHT
             if total_height > visible_height:
                 self.scroll_y = total_height - visible_height
 
@@ -249,43 +327,43 @@ class GameApp:
         result, steps, stats = None, None, None
 
         if "Breadth-First" in alg_name:
-            result, steps, stats = breadth_first_search(BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, steps, stats = breadth_first_search(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
         elif "Depth-First" in alg_name:
-            result, steps, stats = depth_first_search(BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, steps, stats = depth_first_search(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
         elif "Depth Limited" in alg_name:
-            result, steps, stats = depth_limited_search(BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, steps, stats = depth_limited_search(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
         elif "Iterative Deepening" in alg_name:
-            result, steps, stats = iterative_deepening_search(BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, steps, stats = iterative_deepening_search(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
         elif "Uniform Cost" in alg_name:
-            result, steps, stats = uniform_cost_search(BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, steps, stats = uniform_cost_search(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
             
         elif "A Star" in alg_name:
-            result, steps, stats = a_star_search(BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, steps, stats = a_star_search(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
         elif "Greedy" in alg_name:
-            result, steps, stats = greedy_best_search(BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, steps, stats = greedy_best_search(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
 
         elif "Hill" in alg_name:
-            result, steps, stats = hill_climbing(BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, steps, stats = hill_climbing(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
         elif "Simulated" in alg_name:
-            result, steps, stats = simulated_annealing(BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, steps, stats = simulated_annealing(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
         elif "Genetic" in alg_name:
-            result, steps, stats = genetic_algorithm(BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, steps, stats = genetic_algorithm(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
         elif "Beam" in alg_name:
-            result, steps, stats = beam_search(BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, steps, stats = beam_search(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
 
         elif "Nondeterministic" in alg_name:
-            result, steps, stats = and_or_search(BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, steps, stats = and_or_search(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
         elif "Unobservable" in alg_name:
-            result, steps, stats = dfs_belief_search(BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, steps, stats = dfs_belief_search(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
         elif "Partial Observable" in alg_name:
-            result, steps, stats = dfs_partial_obs(BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, steps, stats = dfs_partial_obs(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
 
         elif "Backtracking" in alg_name:
-            result, steps, stats = backtracking_search(BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, steps, stats = backtracking_search(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
         elif "Forward Checking" in alg_name:
-            result, steps, stats = forward_checking_search(BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, steps, stats = forward_checking_search(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
         elif "Arc" in alg_name:
-            result, steps, stats = ac3_search(BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, steps, stats = ac3_search(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
 
         else:
             print("Thuật toán chưa được gán!")
@@ -302,23 +380,15 @@ class GameApp:
         # ==================== CẬP NHẬT THỐNG KÊ & LỊCH SỬ ====================
         if stats:  # chỉ có BFS, DFS mới có stats lúc này
             self.current_stats = {
-                "name": alg_name,
-                "expanded": stats["expanded"],
-                "frontier": stats["frontier"],
-                "visited": stats["visited"],
-                "time": stats["time"]
+                "name": alg_name, "expanded": stats["expanded"],"frontier": stats["frontier"], 
+                "visited": stats["visited"], "time": stats["time"]
             }
             self.history.append({
-                "name": alg_name,
-                "visited": stats["visited"],
-                "time": stats["time"]
+                "name": alg_name, "visited": stats["visited"],"time": stats["time"]
             })
         else:
             # Thuật toán chưa có thống kê (các loại khác)
             self.current_stats = {
-                "name": alg_name,
-                "expanded": 0,
-                "frontier": 0,
-                "visited": 0,
-                "time": 0
+                "name": alg_name, "expanded": 0, "frontier": 0,
+                "visited": 0, "time": 0
             }
