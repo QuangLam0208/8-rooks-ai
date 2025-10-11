@@ -142,7 +142,7 @@ def a_star_search_visual(n=8, goal=None, return_steps=False, return_stats=False,
                 print(f"→ Push: {new_state} | g={new_g:.1f}, h={new_h:.1f}, f={new_f:.1f}")
 
         queue_view = [f"{f}:{s}" for f, _, _, _, s in open_list]
-        s += f" | Frontier After Push: {queue_view}"
+        s += f" | Updated Frontier: {queue_view}"
         logs.append(s)
 
     # Không tìm thấy lời giải

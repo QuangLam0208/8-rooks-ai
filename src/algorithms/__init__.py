@@ -1,12 +1,12 @@
 from .bfs import breadth_first_search, breadth_first_search_visual
-from .dfs import depth_first_search
-from .ucs import uniform_cost_search
-from .dls import depth_limited_search
-from .ids import iterative_deepening_search
+from .dfs import depth_first_search, depth_first_search_visual
+from .ucs import uniform_cost_search, uniform_cost_search_visual
+from .dls import depth_limited_search, depth_limited_search_visual
+from .ids import iterative_deepening_search, iterative_deepening_search_visual
 from .cost import placement_cost_goal
 from .heuristic import h_misplaced
-from .gs import greedy_best_search
-from .astar import a_star_search
+from .gs import greedy_best_search, greedy_best_search_visual
+from .astar import a_star_search, a_star_search_visual
 from .sa import simulated_annealing
 from .hc import hill_climbing
 from .ga import genetic_algorithm
@@ -22,4 +22,6 @@ __all__ = ["breadth_first_search", "depth_first_search", "uniform_cost_search",
            "h_misplaced", "greedy_best_search", "a_star_search", "simulated_annealing", 
            "hill_climbing", "genetic_algorithm", "beam_search", "and_or_search", 
            "extract_all_solutions", "dfs_belief_search", "dfs_partial_obs", "backtracking_search",
-           "forward_checking_search", "ac3_search", "breadth_first_search_visual"]
+           "forward_checking_search", "ac3_search", "breadth_first_search_visual", "depth_first_search_visual", 
+           "depth_limited_search_visual", "iterative_deepening_search_visual", "uniform_cost_search_visual",
+           "a_star_search_visual", "greedy_best_search_visual"]

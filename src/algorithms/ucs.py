@@ -129,7 +129,7 @@ def uniform_cost_search_visual(n, goal, return_steps=False, return_stats=False, 
                 print(f"→ Push: {new_state} (cost={new_cost:.2f})")
         
         heap_snapshot = [f"{c}:{s}" for c, _, s in heap]
-        s += f" | Frontier After Push: {heap_snapshot}"
+        s += f" | Updated Frontier: {heap_snapshot}"
         logs.append(s)
 
     # Nếu không tìm thấy lời giải

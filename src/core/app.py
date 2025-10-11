@@ -210,14 +210,18 @@ class GameApp:
                                 break
 
                 elif event.type == pygame.MOUSEWHEEL:
-                    SCROLL_SPEED_Y = 30   # tốc độ cuộn dọc
+                    SCROLL_SPEED_Y = 50   # tốc độ cuộn dọc
                     SCROLL_SPEED_X = 50   # tốc độ cuộn ngang
 
                     if pygame.key.get_mods() & pygame.KMOD_SHIFT:
                         # Cuộn ngang khi giữ Shift
                         self.scroll_x -= event.y * SCROLL_SPEED_X
                         max_width = max((self.font.size(line)[0] for line in self.panel_logs), default=0)
-                        visible_width = (props.RIGHT_BOARD_X + props.BOARD_SIZE * props.SQUARE_SIZE) - props.LEFT_BOARD_X
+                        
+                        # Tính tổng chiều rộng panel, sau đó trừ đi padding ngang (12px trái + 15px phải)
+                        total_panel_width = (props.RIGHT_BOARD_X + props.BOARD_SIZE * props.SQUARE_SIZE) - props.LEFT_BOARD_X
+                        visible_width = total_panel_width - (12 + 15)
+                        
                         self.scroll_x = max(0, min(self.scroll_x, max(0, max_width - visible_width)))
                     else:
                         # Cuộn dọc
@@ -344,20 +348,20 @@ class GameApp:
         result, steps, stats = None, None, None
 
         if "Breadth-First" in alg_name:
-            result, steps, stats = breadth_first_search(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, steps, stats = breadth_first_search(props.BOARD_SIZE, goal)
         elif "Depth-First" in alg_name:
-            result, steps, stats = depth_first_search(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, steps, stats = depth_first_search(props.BOARD_SIZE, goal)
         elif "Depth Limited" in alg_name:
-            result, steps, stats = depth_limited_search(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, steps, stats = depth_limited_search(props.BOARD_SIZE, goal)
         elif "Iterative Deepening" in alg_name:
-            result, steps, stats = iterative_deepening_search(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, steps, stats = iterative_deepening_search(props.BOARD_SIZE, goal)
         elif "Uniform Cost" in alg_name:
-            result, steps, stats = uniform_cost_search(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, steps, stats = uniform_cost_search(props.BOARD_SIZE, goal)
             
         elif "A Star" in alg_name:
-            result, steps, stats = a_star_search(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, steps, stats = a_star_search(props.BOARD_SIZE, goal)
         elif "Greedy" in alg_name:
-            result, steps, stats = greedy_best_search(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, steps, stats = greedy_best_search(props.BOARD_SIZE, goal)
 
         elif "Hill" in alg_name:
             result, steps, stats = hill_climbing(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
@@ -395,7 +399,7 @@ class GameApp:
             self.running_algorithms = True
 
         # ==================== CẬP NHẬT THỐNG KÊ & LỊCH SỬ ====================
-        if stats:  # chỉ có BFS, DFS mới có stats lúc này
+        if stats:  # 
             self.current_stats = {
                 "name": alg_name, "expanded": stats["expanded"],"frontier": stats["frontier"], 
                 "visited": stats["visited"], "time": stats["time"]
