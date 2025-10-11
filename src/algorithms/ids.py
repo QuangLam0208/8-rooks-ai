@@ -1,7 +1,7 @@
 from .dls import depth_limited_search, depth_limited_search_visual
 import time
 
-def iterative_deepening_search(n, goal=None, return_steps=False, return_stats=False):
+def iterative_deepening_search(n, goal=None):
     """
     Iterative Deepening Search (IDS)
     - Gọi DLS với limit tăng dần từ 0 đến n
@@ -12,7 +12,6 @@ def iterative_deepening_search(n, goal=None, return_steps=False, return_stats=Fa
         goal = list(goal)
 
     steps_visual_all = []  # toàn bộ các state expand được
-    steps_round_all  = []  # snapshot mỗi vòng lặp
 
     total_expanded = 0
     total_visited = 0
@@ -27,9 +26,6 @@ def iterative_deepening_search(n, goal=None, return_steps=False, return_stats=Fa
             n, goal, return_steps=True, return_stats=True, limit=limit
         )
 
-        # Ghi lại các bước cho visualize
-        steps_round_all.append([f"--- LIMIT {limit} ---"])
-        steps_round_all.extend(dls_steps)
         steps_visual_all.extend(dls_steps)
 
         # Cộng dồn thống kê
@@ -49,17 +45,7 @@ def iterative_deepening_search(n, goal=None, return_steps=False, return_stats=Fa
         "frontier": 0,
         "time": elapsed
     }
-
-    # --- TRẢ VỀ ĐÚNG ĐỊNH DẠNG ---
-    if return_stats:
-        if return_steps:
-            return result, steps_visual_all, final_stats
-        return result, final_stats
-
-    if return_steps:
-        return result, steps_visual_all, steps_round_all
-
-    return result
+    return result, steps_visual_all, final_stats
 
 def iterative_deepening_search_visual(n, goal=None, return_steps=False, return_stats=False, return_logs=False):
     """
