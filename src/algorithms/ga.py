@@ -27,35 +27,24 @@ def mutate(state, rate=0.1):
         s[i], s[j] = s[j], s[i]
     return s
 
-def genetic_algorithm(
-    n,
-    goal,
-    return_steps=False,
-    return_stats=False,
-    heuristic=h_misplaced,
-    pop_size=50,
-    generations=500,
-    crossover_rate=0.9,
-    mutation_rate=0.1
+def genetic_algorithm(n, goal, heuristic=h_misplaced,
+    pop_size=50, generations=500, crossover_rate=0.9,mutation_rate=0.1
 ):
-    """Genetic Algorithm có thống kê đầy đủ."""
     start_time = time.time()
-
     population = [random.sample(range(n), n) for _ in range(pop_size)]
 
     steps_visual = []
-    steps_console = []
+    # steps_console = []
     expanded = 0
     visited = 0
 
-    result = None  # đảm bảo luôn tồn tại biến này
+    result = None
 
     for g in range(1, generations + 1):
-        if return_steps:
-            best_curr = min(population, key=lambda s: heuristic(s, goal))
-            h_best = heuristic(best_curr, goal)
-            steps_visual.append(best_curr[:])
-            steps_console.append((g, best_curr[:], h_best))
+        best_curr = min(population, key=lambda s: heuristic(s, goal))
+        h_best = heuristic(best_curr, goal)
+        steps_visual.append(best_curr[:])
+        # steps_console.append((g, best_curr[:], h_best))
 
         # Duyệt toàn bộ quần thể hiện tại
         for s in population:
@@ -96,13 +85,90 @@ def genetic_algorithm(
         "frontier": 0,
         "time": elapsed
     }
+    return best, steps_visual, stats
 
-    # ==== TRẢ KẾT QUẢ THEO FORMAT CHUẨN ====
-    if return_stats and return_steps:
-        return best, steps_visual, stats
+def genetic_algorithm_visual(n, goal, heuristic=h_misplaced,
+    pop_size=50, generations=200, crossover_rate=0.9, mutation_rate=0.1,
+    return_steps=False, return_stats=False, return_logs=False
+):
+    start_time = time.time()
+    goal = list(goal) if isinstance(goal, tuple) else goal
+
+    population = [random.sample(range(n), n) for _ in range(pop_size)]
+
+    steps_visual = []
+    logs = []
+    expanded = 0
+    visited = 0
+    result = None
+
+    for g in range(1, generations + 1):
+        best_curr = min(population, key=lambda s: heuristic(s, goal))
+        h_best = heuristic(best_curr, goal)
+        steps_visual.append(best_curr[:])
+        show = ""
+        show += f"Gen {g}. Pops: {population}"
+        logs.append(show)
+        # Kiểm tra goal
+        for s in population:
+            visited += 1
+            if s == goal:
+                result = s
+                show += f"GOAL: {s}"
+                logs.append(show)
+                elapsed = (time.time() - start_time) * 1000
+                stats = {
+                    "expanded": expanded,
+                    "visited": visited,
+                    "frontier": 0,
+                    "time": elapsed
+                }
+                if return_stats and return_logs:
+                    return s, steps_visual, stats, logs
+                elif return_logs:
+                    return s, steps_visual, logs
+                elif return_stats:
+                    return s, steps_visual, stats
+                return (s, steps_visual) if return_steps else s
+
+        # Sinh thế hệ mới
+        new_pop = []
+        while len(new_pop) < pop_size:
+            p1 = tournament_selection(population, goal, heuristic)
+            p2 = tournament_selection(population, goal, heuristic)
+
+            if random.random() < crossover_rate:
+                c1 = order_crossover(p1, p2)
+                c2 = order_crossover(p2, p1)
+            else:
+                c1, c2 = p1[:], p2[:]
+
+            c1 = mutate(c1, mutation_rate)
+            c2 = mutate(c2, mutation_rate)
+
+            new_pop.extend([c1, c2])
+            expanded += 2
+
+        population = new_pop
+
+    # Kết thúc sau khi hết thế hệ
+    elapsed = (time.time() - start_time) * 1000
+    best = result if result else min(population, key=lambda s: heuristic(s, goal))
+    h_best = heuristic(best, goal)
+    logs.append(f"No goal found after {generations} generations.")
+    logs.append(f"Best found: {best} | h={h_best}")
+
+    stats = {
+        "expanded": expanded,
+        "visited": visited,
+        "frontier": 0,
+        "time": elapsed
+    }
+
+    if return_stats and return_logs:
+        return best, steps_visual, stats, logs
+    elif return_logs:
+        return best, steps_visual, logs
     elif return_stats:
-        return best, [], stats
-    elif return_steps:
-        return best, steps_visual, steps_console
-    else:
-        return best
+        return best, steps_visual, stats
+    return (best, steps_visual) if return_steps else best
