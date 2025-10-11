@@ -23,7 +23,7 @@ def iterative_deepening_search(n, goal=None):
     for limit in range(n + 1):
         # chạy DLS với giới hạn độ sâu
         dls_result, dls_steps, dls_stats = depth_limited_search(
-            n, goal, return_steps=True, return_stats=True, limit=limit
+            n, goal, limit=limit
         )
 
         steps_visual_all.extend(dls_steps)
