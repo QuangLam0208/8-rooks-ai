@@ -2,8 +2,6 @@ import pygame
 from .properties import *
 from ui import properties as props
 
-BOARD_SIZE = props.BOARD_SIZE
-
 algorithm_groups = [
     {
         "name": "Uninformed Search",
