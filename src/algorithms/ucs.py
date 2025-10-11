@@ -88,8 +88,7 @@ def uniform_cost_search_visual(n, goal, return_steps=False, return_stats=False, 
         s = ""
         # Log trạng thái hiện tại
         heap_snapshot = [f"{c}:{s}" for c, _, s in heap]
-        s = f"Pop: {state} (cost={cost}) | "
-        # logs.append(f"Pop: {state} (cost={cost}) | Frontier: {heap_snapshot}")
+        s += f"Pop: {state} (cost={cost}) | Frontier: {heap_snapshot}"
         print(f"Pop: {state} (cost={cost}) | Frontier: {heap_snapshot}")
 
         row = len(state)
@@ -102,8 +101,8 @@ def uniform_cost_search_visual(n, goal, return_steps=False, return_stats=False, 
                     "frontier": len(heap),
                     "time": elapsed
                 }
-
-                logs.append(f"FOUND GOAL: {state} (total cost={cost:.2f})")
+                logs.append(s)
+                print(f"FOUND GOAL: {state} (total cost={cost:.2f})")
                 if return_stats and return_logs:
                     return state, steps, stats, logs
                 elif return_logs:
@@ -130,7 +129,7 @@ def uniform_cost_search_visual(n, goal, return_steps=False, return_stats=False, 
                 print(f"→ Push: {new_state} (cost={new_cost:.2f})")
         
         heap_snapshot = [f"{c}:{s}" for c, _, s in heap]
-        s += f"Frontier: {heap_snapshot}"
+        s += f" | Frontier After Push: {heap_snapshot}"
         logs.append(s)
 
     # Nếu không tìm thấy lời giải
