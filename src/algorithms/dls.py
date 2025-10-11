@@ -1,6 +1,6 @@
 import time
 
-def depth_limited_search(n, goal=None, return_steps=False, return_stats=False, limit=None):
+def depth_limited_search(n, goal=None, limit=None):
     """
     Depth-Limited Search (TREE-SEARCH version)
     - visited: số trạng thái đã được xét (được lấy ra để mở rộng)
@@ -14,7 +14,6 @@ def depth_limited_search(n, goal=None, return_steps=False, return_stats=False, l
         limit = n
 
     steps_visual = []   # dùng để animate
-    steps_round  = []   # snapshot trạng thái "ngăn xếp"
     expanded_count = 0
     visited_count = 0
 
@@ -25,7 +24,6 @@ def depth_limited_search(n, goal=None, return_steps=False, return_stats=False, l
         visited_count += 1
 
         # Lưu snapshot (dùng cho visualize)
-        steps_round.append(frontier[:])
         steps_visual.append(state[:])
 
         # Goal test
@@ -63,16 +61,7 @@ def depth_limited_search(n, goal=None, return_steps=False, return_stats=False, l
         "frontier": 0,  # DLS dùng đệ quy, frontier không thể đếm chính xác => để 0 hoặc len(frontier cuối)
         "time": elapsed
     }
-
-    if return_stats:
-        if return_steps:
-            return result, steps_visual, stats
-        return result, stats
-
-    if return_steps:
-        return result, steps_visual, steps_round
-
-    return result
+    return result, steps_visual, stats
 
 def depth_limited_search_visual(n, goal=None, return_steps=False, return_stats=False, return_logs=False, limit=None):
     """
