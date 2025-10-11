@@ -60,14 +60,7 @@ def greedy_best_search(n=8, goal=None, heuristic=h_misplaced):
     }
     return None, steps_visual, stats
 
-def greedy_best_search_visual(
-    n=8, goal=None, return_steps=False, return_stats=False,
-    return_logs=False, heuristic=h_misplaced
-):
-    """
-    Greedy Best-First Search (visual version)
-    - Log chi tiết Pop / Push / Frontier mỗi vòng.
-    """
+def greedy_best_search_visual(n=8, goal=None, return_steps=False, return_stats=False, return_logs=False, heuristic=h_misplaced):
     if goal is not None and isinstance(goal, tuple):
         goal = list(goal)
 
@@ -75,8 +68,8 @@ def greedy_best_search_visual(
     open_list = []
     visited = set()
 
-    steps = []  # lưu state pop ra (để visualize)
-    logs = []   # log chi tiết từng bước
+    steps = []
+    logs = []
     expanded_count = 0
     visited_count = 0
     counter = itertools.count()
@@ -130,7 +123,6 @@ def greedy_best_search_visual(
         s += f" | Updated Frontier: {queue_view}"
         logs.append(s)
 
-    # --- Không tìm thấy ---
     elapsed = (time.time() - start_time) * 1000
     stats = {
         "expanded": expanded_count,
@@ -138,6 +130,7 @@ def greedy_best_search_visual(
         "frontier": len(open_list),
         "time": elapsed
     }
+    
     logs.append("No solution found.")
 
     if return_stats and return_logs:

@@ -2,12 +2,6 @@ from .dls import depth_limited_search, depth_limited_search_visual
 import time
 
 def iterative_deepening_search(n, goal=None):
-    """
-    Iterative Deepening Search (IDS)
-    - Gọi DLS với limit tăng dần từ 0 đến n
-    - Cộng dồn số liệu từ các lần chạy DLS
-    - Trả về (result, steps, stats) nếu return_stats=True
-    """
     if goal is not None and isinstance(goal, tuple):
         goal = list(goal)
 
@@ -48,11 +42,6 @@ def iterative_deepening_search(n, goal=None):
     return result, steps_visual_all, final_stats
 
 def iterative_deepening_search_visual(n, goal=None, return_steps=False, return_stats=False, return_logs=False):
-    """
-    Iterative Deepening Search (IDS) có visualization.
-    - Gọi depth_limited_search_visual với limit tăng dần từ 0 đến n.
-    - Gộp toàn bộ steps và logs lại.
-    """
     if goal is not None and isinstance(goal, tuple):
         goal = list(goal)
 
@@ -69,11 +58,9 @@ def iterative_deepening_search_visual(n, goal=None, return_steps=False, return_s
             n, goal, return_steps=True, return_stats=True, return_logs=True, limit=limit
         )
 
-        # Chỉ thêm các state thực sự được xét (không thêm snapshot stack)
         steps.extend([s for s in dls_steps if isinstance(s, list)])
         logs.extend(dls_logs)
 
-        # Cộng thống kê
         total_expanded += dls_stats["expanded"]
         total_visited += dls_stats["visited"]
 
@@ -89,7 +76,6 @@ def iterative_deepening_search_visual(n, goal=None, return_steps=False, return_s
         "time": elapsed
     }
 
-    # --- Trả về theo các chế độ ---
     if return_stats and return_logs:
         return (result, steps, stats, logs)
     elif return_logs:

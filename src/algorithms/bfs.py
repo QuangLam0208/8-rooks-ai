@@ -45,9 +45,6 @@ def breadth_first_search(n, goal=None):
     return (None, steps, stats)
 
 def breadth_first_search_visual(n, goal=None, return_steps=False, return_stats=False, return_logs=False):
-    """
-    BFS đặt n quân xe, thêm log chi tiết để visualize từng bước.
-    """
     start_time = time.time()
     queue = deque([[]])
     visited_count = 0
@@ -60,7 +57,6 @@ def breadth_first_search_visual(n, goal=None, return_steps=False, return_stats=F
         visited_count += 1
         steps.append(state)
 
-        # Ghi log state hiện tại + queue hiện tại
         queue_snapshot = list(queue)
         logs.append(f"State {visited_count - 1}: {state} | Queue: {queue_snapshot}")
 
@@ -85,7 +81,6 @@ def breadth_first_search_visual(n, goal=None, return_steps=False, return_stats=F
                 return (state, steps) if return_steps else state
             continue
 
-        # mở rộng node hiện tại
         for col in range(n):
             if col not in state:
                 new_state = state + [col]

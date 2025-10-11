@@ -4,12 +4,6 @@ import time
 from .cost import placement_cost_goal
 
 def uniform_cost_search(n, goal, placement_cost_goal=placement_cost_goal):
-    """
-    Uniform Cost Search (UCS)
-    - visited: số trạng thái đã được lấy ra khỏi hàng đợi để xét
-    - expanded: tổng số trạng thái con đã được sinh ra
-    - frontier: số trạng thái còn lại trong hàng đợi (heap)
-    """
     if isinstance(goal, tuple):
         goal = list(goal)
 
@@ -63,11 +57,6 @@ def uniform_cost_search(n, goal, placement_cost_goal=placement_cost_goal):
     return None, steps_visual, stats
 
 def uniform_cost_search_visual(n, goal, return_steps=False, return_stats=False, return_logs=False, placement_cost_goal=placement_cost_goal):
-    """
-    Uniform Cost Search (UCS) có Visualization.
-    - Ghi lại toàn bộ log và bước mở rộng.
-    - Cho phép hiển thị trong panel visualize từng bước.
-    """
     if isinstance(goal, tuple):
         goal = list(goal)
 
@@ -76,8 +65,8 @@ def uniform_cost_search_visual(n, goal, return_steps=False, return_stats=False, 
 
     heap = [(0, next(counter), [])]
     visited = set()
-    steps = []         # các state được lấy ra khỏi heap
-    logs = []          # log chi tiết
+    steps = []
+    logs = []
     expanded_count = 0
     visited_count = 0
 
@@ -86,7 +75,6 @@ def uniform_cost_search_visual(n, goal, return_steps=False, return_stats=False, 
         steps.append(state)
         visited_count += 1
         s = ""
-        # Log trạng thái hiện tại
         heap_snapshot = [f"{c}:{s}" for c, _, s in heap]
         s += f"Pop: {state} (cost={cost}) | Frontier: {heap_snapshot}"
         print(f"Pop: {state} (cost={cost}) | Frontier: {heap_snapshot}")
@@ -112,13 +100,11 @@ def uniform_cost_search_visual(n, goal, return_steps=False, return_stats=False, 
                 return (state, steps) if return_steps else state
             continue
 
-        # Bỏ qua nếu đã thăm
         if tuple(state) in visited:
             print(f"Skip visited: {state}")
             continue
         visited.add(tuple(state))
 
-        # Mở rộng node hiện tại
         for col in range(n):
             if col not in state:
                 step_cost = placement_cost_goal(state, row, col, goal)
@@ -132,7 +118,6 @@ def uniform_cost_search_visual(n, goal, return_steps=False, return_stats=False, 
         s += f" | Updated Frontier: {heap_snapshot}"
         logs.append(s)
 
-    # Nếu không tìm thấy lời giải
     elapsed = (time.time() - start_time) * 1000
     stats = {
         "expanded": expanded_count,

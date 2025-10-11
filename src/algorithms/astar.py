@@ -4,8 +4,7 @@ import time
 from .cost import placement_cost_goal
 from .heuristic import h_misplaced
 
-def a_star_search(n=8, goal=None,
-                  placement_cost=placement_cost_goal, heuristic=h_misplaced):
+def a_star_search(n=8, goal=None, placement_cost=placement_cost_goal, heuristic=h_misplaced):
     if goal is not None and isinstance(goal, tuple):
         goal = list(goal)
 
@@ -68,14 +67,7 @@ def a_star_search(n=8, goal=None,
     }
     return None, steps_visual, stats
 
-def a_star_search_visual(n=8, goal=None, return_steps=False, return_stats=False,
-                         return_logs=False,
-                         placement_cost=placement_cost_goal, heuristic=h_misplaced):
-    """
-    A* Search có Visualization cho bài toán n quân xe.
-    - Ghi log chi tiết từng bước (f = g + h).
-    - Dùng cho animation & hiển thị log trong giao diện.
-    """
+def a_star_search_visual(n=8, goal=None, return_steps=False, return_stats=False, return_logs=False, placement_cost=placement_cost_goal, heuristic=h_misplaced):
     if goal is not None and isinstance(goal, tuple):
         goal = list(goal)
 
@@ -84,8 +76,8 @@ def a_star_search_visual(n=8, goal=None, return_steps=False, return_stats=False,
     heapq.heappush(open_list, (0, next(counter), 0, 0, []))  # (f=0, count, g=0, h=0, state rỗng)
     visited = set()
 
-    steps = []  # Các state được pop ra để visualize
-    logs = []   # Các dòng log chi tiết
+    steps = []
+    logs = []
     expanded_count = 0
     visited_count = 0
 
@@ -127,7 +119,6 @@ def a_star_search_visual(n=8, goal=None, return_steps=False, return_stats=False,
             continue
         visited.add(tuple(state))
 
-        # Mở rộng các node con
         for col in range(n):
             if col not in state:
                 step_cost = placement_cost(state, row, col, goal) if placement_cost else 1
@@ -145,7 +136,6 @@ def a_star_search_visual(n=8, goal=None, return_steps=False, return_stats=False,
         s += f" | Updated Frontier: {queue_view}"
         logs.append(s)
 
-    # Không tìm thấy lời giải
     elapsed = (time.time() - start_time) * 1000
     stats = {
         "expanded": expanded_count,
@@ -153,6 +143,7 @@ def a_star_search_visual(n=8, goal=None, return_steps=False, return_stats=False,
         "frontier": len(open_list),
         "time": elapsed
     }
+
     logs.append("No solution found.")
 
     if return_stats and return_logs:

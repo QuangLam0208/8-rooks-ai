@@ -1,19 +1,13 @@
 import time
 
 def depth_limited_search(n, goal=None, limit=None):
-    """
-    Depth-Limited Search (TREE-SEARCH version)
-    - visited: số trạng thái đã được xét (được lấy ra để mở rộng)
-    - expanded: tổng số trạng thái con đã được sinh ra
-    - frontier: số trạng thái đang nằm trong stack (ước lượng theo lần gọi đệ quy)
-    """
     if goal is not None and isinstance(goal, tuple):
         goal = list(goal)
 
     if limit is None:
         limit = n
 
-    steps_visual = []   # dùng để animate
+    steps_visual = [] 
     expanded_count = 0
     visited_count = 0
 
@@ -23,7 +17,6 @@ def depth_limited_search(n, goal=None, limit=None):
         nonlocal expanded_count, visited_count
         visited_count += 1
 
-        # Lưu snapshot (dùng cho visualize)
         steps_visual.append(state[:])
 
         # Goal test
@@ -64,22 +57,16 @@ def depth_limited_search(n, goal=None, limit=None):
     return result, steps_visual, stats
 
 def depth_limited_search_visual(n, goal=None, return_steps=False, return_stats=False, return_logs=False, limit=None):
-    """
-    Depth-Limited Search (DLS) có visualization.
-    - Hiển thị log từng bước và stack đệ quy.
-    - return_logs: trả về log chi tiết để visualize từng bước.
-    """
     if goal is not None and isinstance(goal, tuple):
         goal = list(goal)
 
     if limit is None:
         limit = n
 
-    steps = []   # các state đã xét (cho visualization)
-    logs = []    # mô tả từng bước
+    steps = []
+    logs = []
     visited_count = 0
     expanded_count = 0
-
     start_time = time.time()
 
     def recursive_dls(state, depth, frontier):
@@ -87,23 +74,19 @@ def depth_limited_search_visual(n, goal=None, return_steps=False, return_stats=F
         visited_count += 1
         steps.append(state[:])
 
-        # Ghi log trạng thái hiện tại và ngăn xếp
         logs.append(f"Visiting: {state} | Depth left: {depth} | Stack: {frontier}")
 
-        # Goal test
         if len(state) == n:
             if goal is None or state == goal:
                 logs.append(f"GOAL FOUND at state {state}")
                 return state
             return None
 
-        # Cutoff (giới hạn độ sâu)
         if depth == 0:
             return "cutoff"
 
         cutoff_occurred = False
 
-        # Sinh các action (cột chưa được chọn)
         for col in range(n):
             if col not in state:
                 child = state + [col]
@@ -123,7 +106,7 @@ def depth_limited_search_visual(n, goal=None, return_steps=False, return_stats=F
     stats = {
         "expanded": expanded_count,
         "visited": visited_count,
-        "frontier": 0,  # DLS dùng đệ quy nên frontier không đếm chính xác
+        "frontier": 0,
         "time": elapsed
     }
 
