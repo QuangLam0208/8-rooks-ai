@@ -1,13 +1,7 @@
 from collections import deque
 import time
 
-def breadth_first_search(n, goal=None, return_steps=False, return_stats=False):
-    """
-    BFS đặt n quân xe.
-    - visited: số trạng thái đã được xét (lấy ra khỏi queue)
-    - expanded: tổng số trạng thái con đã sinh ra
-    - frontier: số trạng thái còn lại trong queue
-    """
+def breadth_first_search(n, goal=None):
     start_time = time.time()
     queue = deque([[]])  
     visited_count = 0     # số node đã được xét
@@ -31,9 +25,7 @@ def breadth_first_search(n, goal=None, return_steps=False, return_stats=False):
                     "frontier": len(queue),
                     "time": elapsed
                 }
-                if return_stats:
-                    return (state, steps, stats)
-                return (state, steps) if return_steps else state
+                return (state, steps, stats)
             continue
 
         # mở rộng node hiện tại
@@ -50,10 +42,7 @@ def breadth_first_search(n, goal=None, return_steps=False, return_stats=False):
         "frontier": len(queue),
         "time": elapsed
     }
-
-    if return_stats:
-        return (None, steps, stats)
-    return (None, steps) if return_steps else None
+    return (None, steps, stats)
 
 def breadth_first_search_visual(n, goal=None, return_steps=False, return_stats=False, return_logs=False):
     """
