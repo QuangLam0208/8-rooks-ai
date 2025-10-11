@@ -7,7 +7,7 @@ from .cost import placement_cost_goal
 from .heuristic import h_misplaced
 from .gs import greedy_best_search, greedy_best_search_visual
 from .astar import a_star_search, a_star_search_visual
-from .sa import simulated_annealing
+from .sa import simulated_annealing, simulated_annealing_visual
 from .hc import hill_climbing, hill_climbing_visual
 from .ga import genetic_algorithm
 from .beam import beam_search
@@ -24,5 +24,5 @@ __all__ = ["breadth_first_search", "depth_first_search", "uniform_cost_search",
            "extract_all_solutions", "dfs_belief_search", "dfs_partial_obs", "backtracking_search",
            "forward_checking_search", "ac3_search", "breadth_first_search_visual", "depth_first_search_visual", 
            "depth_limited_search_visual", "iterative_deepening_search_visual", "uniform_cost_search_visual",
-           "a_star_search_visual", "greedy_best_search_visual", "hill_climbing_visual"
-           ]
+           "a_star_search_visual", "greedy_best_search_visual", "hill_climbing_visual",
+           "simulated_annealing_visual"]

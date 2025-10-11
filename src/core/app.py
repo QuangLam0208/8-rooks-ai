@@ -306,7 +306,9 @@ class GameApp:
 
             elif "Hill" in alg_name:
                 result, steps, logs = hill_climbing_visual(props.BOARD_SIZE, goal, return_steps=True, return_logs=True)
-
+            elif "Simulated" in alg_name:
+                result, steps, logs = simulated_annealing_visual(props.BOARD_SIZE, goal, return_steps=True, return_logs=True)
+            
             else:
                 print("Chức năng visualize chưa hỗ trợ thuật toán này nhá 😚")
                 return
@@ -370,7 +372,7 @@ class GameApp:
         elif "Hill" in alg_name:
             result, steps, stats = hill_climbing(props.BOARD_SIZE, goal)
         elif "Simulated" in alg_name:
-            result, steps, stats = simulated_annealing(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, steps, stats = simulated_annealing(props.BOARD_SIZE, goal)
         elif "Genetic" in alg_name:
             result, steps, stats = genetic_algorithm(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
         elif "Beam" in alg_name:
