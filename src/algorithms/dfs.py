@@ -1,12 +1,6 @@
 import time
 
-def depth_first_search(n, goal=None, return_steps=False, return_stats=False):
-    """
-    DFS đặt n quân xe.
-    - visited: số trạng thái đã được xét (được lấy ra khỏi stack)
-    - expanded: tổng số trạng thái con đã được sinh ra (thêm vào stack)
-    - frontier: số trạng thái còn lại trong stack
-    """
+def depth_first_search(n, goal=None):
     start_time = time.time()
     stack = [[]]
     steps = []
@@ -31,9 +25,7 @@ def depth_first_search(n, goal=None, return_steps=False, return_stats=False):
                     "frontier": len(stack),
                     "time": elapsed
                 }
-                if return_stats:
-                    return (state, steps, stats)
-                return (state, steps) if return_steps else state
+                return (state, steps, stats)
             continue
 
         # mở rộng node hiện tại theo DFS
@@ -50,11 +42,8 @@ def depth_first_search(n, goal=None, return_steps=False, return_stats=False):
         "frontier": len(stack),
         "time": elapsed
     }
-
-    if return_stats:
-        return (None, steps, stats)
-    return (None, steps) if return_steps else None
-
+    return (None, steps, stats)
+    
 def depth_first_search_visual(n, goal=None, return_steps=False, return_stats=False, return_logs=False):
     """
     DFS đặt n quân xe, có log chi tiết cho Visualization.
