@@ -298,10 +298,14 @@ class GameApp:
                 result, steps, logs = iterative_deepening_search_visual(props.BOARD_SIZE, goal, return_steps=True, return_logs=True)
             elif "Uniform Cost" in alg_name:
                 result, steps, logs = uniform_cost_search_visual(props.BOARD_SIZE, goal, return_steps=True, return_logs=True)
+
             elif "A Star" in alg_name:
                 result, steps, logs = a_star_search_visual(props.BOARD_SIZE, goal, return_steps=True, return_logs=True)
             elif "Greedy" in alg_name:
                 result, steps, logs = greedy_best_search_visual(props.BOARD_SIZE, goal, return_steps=True, return_logs=True)
+
+            elif "Hill" in alg_name:
+                result, steps, logs = hill_climbing_visual(props.BOARD_SIZE, goal, return_steps=True, return_logs=True)
 
             else:
                 print("Chức năng visualize chưa hỗ trợ thuật toán này nhá 😚")
@@ -364,7 +368,7 @@ class GameApp:
             result, steps, stats = greedy_best_search(props.BOARD_SIZE, goal)
 
         elif "Hill" in alg_name:
-            result, steps, stats = hill_climbing(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, steps, stats = hill_climbing(props.BOARD_SIZE, goal)
         elif "Simulated" in alg_name:
             result, steps, stats = simulated_annealing(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
         elif "Genetic" in alg_name:
