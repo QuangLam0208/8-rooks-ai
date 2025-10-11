@@ -129,17 +129,19 @@ def draw_algorithm_buttons(screen, font, selected_group, selected_algorithm):
 
     return rects
 
-def draw_action_buttons(screen, font, window_width, window_height):
+def draw_action_buttons(screen, font, left_board_x, right_board_x, board_width):
     """Vẽ hàng nút chức năng (Run, Visual, Random, Reset, Size)"""
     button_w, button_h = ACTION_WIDTH, ACTION_HEIGHT
     spacing = ACTION_SPACING
     y = ACTION_TOP
 
-    labels = ["Run", "Visual", "Random", "Reset", "Size"]
+    labels = ["Run", "Visual", "Random", "Reset", "Resize"]
 
     # Tổng chiều rộng để canh giữa
     total_width = button_w * len(labels) + spacing * (len(labels) - 1)
-    start_x = (window_width - total_width) // 2
+    # --- Tính tâm giữa 2 bàn cờ ---
+    center_boards_x = (left_board_x + right_board_x + board_width) // 2
+    start_x = center_boards_x - total_width // 2
 
     rects = []
 

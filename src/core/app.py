@@ -273,7 +273,7 @@ class GameApp:
             )
             self.rect_run, self.rect_visual, self.rect_random, self.rect_reset, self.rect_size = draw_action_buttons(
                 self.screen, self.font,
-                self.window_width, self.window_height
+                props.LEFT_BOARD_X, props.RIGHT_BOARD_X, props.BOARD_SIZE * props.SQUARE_SIZE
             )
 
             pygame.display.flip()
