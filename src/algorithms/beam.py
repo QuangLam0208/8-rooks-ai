@@ -3,32 +3,23 @@ from .heuristic import h_misplaced
 
 def successors(state, n):
     succ = []
-    for i in range(n):
+    if len(state) < n:
         for j in range(n):
-            if j != state[i]:
-                s = state[:]
-                s[i] = j
-                succ.append(s)
+            if j not in state:
+                succ.append(state + [j])
+    else:
+        return []
     return succ
 
-def beam_search(n, goal, return_steps=False, return_stats=False,
-                beam_width=10, max_steps=1000, heuristic=h_misplaced):
-    """
-    Beam Search có thống kê tương tự BFS, nhưng frontier thường nhỏ.
-    """
+def beam_search(n, goal, beam_width=10, max_steps=1000, heuristic=h_misplaced):
     start_time = time.time()
 
-    beam = [random.sample(range(n), n) for _ in range(beam_width)]
+    beam = [[]]
     steps_visual = []
-    steps_beam = []
-
     expanded = 0
     visited = 0
 
     for step in range(1, max_steps + 1):
-        steps_beam.append([s[:] for s in beam])
-
-        # Kiểm tra goal trong beam
         for s in beam:
             visited += 1
             if s == goal:
@@ -39,13 +30,7 @@ def beam_search(n, goal, return_steps=False, return_stats=False,
                     "frontier": len(beam),
                     "time": elapsed
                 }
-                if return_stats:
-                    if return_steps:
-                        return s, steps_visual, stats
-                    return s, stats
-                if return_steps:
-                    return s, steps_visual, steps_beam
-                return s
+                return s, steps_visual, stats
 
         all_succ = []
         for s in beam:
@@ -67,11 +52,73 @@ def beam_search(n, goal, return_steps=False, return_stats=False,
         "frontier": len(beam),
         "time": elapsed
     }
+    return best, steps_visual, stats
 
-    if return_stats:
-        if return_steps:
-            return best, steps_visual, stats
-        return best, stats
-    if return_steps:
-        return best, steps_visual, steps_beam
-    return best
+def beam_search_visual(n, goal, beam_width=10, max_steps=1000, heuristic=h_misplaced,
+    return_steps=False, return_stats=False, return_logs=False
+):
+    start_time = time.time()
+    goal = list(goal) if isinstance(goal, tuple) else goal
+
+    beam = [[]]
+    steps_visual = []
+    logs = []
+    expanded = 0
+    visited = 0
+
+    for step in range(1, max_steps + 1):
+        new_beam = []
+        show = ""
+        show += f"Beam: {beam}"
+        logs.append(show)
+        for s in beam:
+            steps_visual.append(s)
+            visited += 1
+
+            if s == goal:
+                elapsed = (time.time() - start_time) * 1000
+                stats = {
+                    "expanded": expanded,
+                    "visited": visited,
+                    "frontier": len(beam),
+                    "time": elapsed
+                }
+                logs.append(f"GOAL FOUND at step {step}: {s}")
+                if return_stats and return_logs:
+                    return s, steps_visual, stats, logs
+                elif return_logs:
+                    return s, steps_visual, logs
+                elif return_stats:
+                    return s, steps_visual, stats
+                return (s, steps_visual) if return_steps else s
+
+            succ = successors(s, n)
+            expanded += len(succ)
+            if succ:
+                new_beam.extend(succ)
+
+        if not new_beam:
+            logs.append("No more successors — stopping search.")
+            break
+
+        ranked = sorted(new_beam, key=lambda s: heuristic(s, goal))
+        beam = ranked[:beam_width]
+
+    elapsed = (time.time() - start_time) * 1000
+    best = min(beam, key=lambda s: heuristic(s, goal)) if beam else []
+    logs.append(f"Best found: {best} | h={heuristic(best, goal)}")
+
+    stats = {
+        "expanded": expanded,
+        "visited": visited,
+        "frontier": len(beam),
+        "time": elapsed
+    }
+
+    if return_stats and return_logs:
+        return best, steps_visual, stats, logs
+    elif return_logs:
+        return best, steps_visual, logs
+    elif return_stats:
+        return best, steps_visual, stats
+    return (best, steps_visual) if return_steps else best
