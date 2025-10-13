@@ -1,80 +1,86 @@
 import pygame
+from ui import properties as props
 
-# Kích thước bàn cờ
-SQUARE_SIZE = 50
-BOARD_SIZE = 8
+TEXT_COLOR = props.BLACK
 
-# Màu sắc các ô
-WHITE = (238, 238, 210)   # ô sáng
-BLACK = (118, 150, 86)    # ô tối
-TEXT_COLOR = (0, 0, 0)
 
 def draw_board(screen, rook_img, solution, x_offset, y_offset=0, show_rooks=False, margin=120):
-    """Vẽ bàn cờ và quân xe (nếu có)"""
-    for row in range(BOARD_SIZE):
-        for col in range(BOARD_SIZE):
+    """Vẽ bàn cờ và quân xe (nếu có), tự động theo BOARD_SIZE & SQUARE_SIZE mới nhất"""
+    board_size = props.BOARD_SIZE
+    square_size = props.SQUARE_SIZE
+
+    for row in range(board_size):
+        for col in range(board_size):
             # Màu ô
-            color = WHITE if (row + col) % 2 == 0 else BLACK
+            color = props.WHITE_CELL if (row + col) % 2 == 0 else props.BLACK_CELL
 
             rect = pygame.Rect(
-                x_offset + col * SQUARE_SIZE,
-                margin + row * SQUARE_SIZE + y_offset,
-                SQUARE_SIZE,
-                SQUARE_SIZE,
+                x_offset + col * square_size,
+                margin + row * square_size + y_offset,
+                square_size,
+                square_size,
             )
+
             # Vẽ ô
             pygame.draw.rect(screen, color, rect)
 
             # Nếu cần hiển thị quân xe
             if show_rooks and solution and row < len(solution) and solution[row] == col:
-                # Lấy kích thước ảnh hiện tại (đã scale nhỏ)
                 piece_w, piece_h = rook_img.get_size()
-
-                # Tính lề để căn giữa trong ô
-                dx = (SQUARE_SIZE - piece_w) // 2
-                dy = (SQUARE_SIZE - piece_h) // 2
-
-                # Vẽ quân cờ ở vị trí giữa ô
+                dx = (square_size - piece_w) // 2
+                dy = (square_size - piece_h) // 2
                 screen.blit(rook_img, (rect.x + dx, rect.y + dy))
 
     # Vẽ viền bàn cờ
     pygame.draw.rect(
         screen,
         (0, 0, 0),
-        (x_offset, margin + y_offset, BOARD_SIZE * SQUARE_SIZE, BOARD_SIZE * SQUARE_SIZE),
+        (x_offset, margin + y_offset, board_size * square_size, board_size * square_size),
         2
     )
 
-def draw_coordinates(screen, font, x_offset, y_offset=0, margin=120):
-    """Vẽ tọa độ xung quanh bàn cờ"""
+
+def draw_coordinates(screen, font, x_offset, y_offset=0, margin=120, side="left"):
+    """
+    Vẽ tọa độ quanh bàn cờ
+    side = "left"  -> vẽ trên + trái
+    side = "right" -> vẽ dưới + phải
+    """
+    board_size = props.BOARD_SIZE
+    square_size = props.SQUARE_SIZE
     OFFSET_TEXT = 20
 
-    # Vẽ chữ a-h (cột)
-    for col in range(BOARD_SIZE):
+    for col in range(board_size):
         letter = chr(ord("a") + col)
         text = font.render(letter, True, TEXT_COLOR)
 
-        # Trên
-        text_rect_top = text.get_rect(center=(x_offset + col * SQUARE_SIZE + SQUARE_SIZE // 2,
-                                              margin - OFFSET_TEXT + y_offset))
-        screen.blit(text, text_rect_top)
+        if side == "left":
+            text_rect_top = text.get_rect(center=(
+                x_offset + col * square_size + square_size // 2,
+                margin - OFFSET_TEXT + y_offset
+            ))
+            screen.blit(text, text_rect_top)
 
-        # Dưới
-        text_rect_bottom = text.get_rect(center=(x_offset + col * SQUARE_SIZE + SQUARE_SIZE // 2,
-                                                 margin + BOARD_SIZE * SQUARE_SIZE + OFFSET_TEXT + y_offset))
-        screen.blit(text, text_rect_bottom)
+        elif side == "right":
+            text_rect_bottom = text.get_rect(center=(
+                x_offset + col * square_size + square_size // 2,
+                margin - OFFSET_TEXT + y_offset
+            ))
+            screen.blit(text, text_rect_bottom)
 
-    # Vẽ số 1–8 (hàng)
-    for row in range(BOARD_SIZE):
-        number = str(BOARD_SIZE - row)
+
+def draw_shared_numbers(screen, font, left_x_offset, right_x_offset, y_offset=0, margin=120):
+    """Vẽ trục số chung ở giữa hai bàn"""
+    board_size = props.BOARD_SIZE
+    square_size = props.SQUARE_SIZE
+
+    middle_x = (left_x_offset + board_size * square_size + right_x_offset) // 2
+
+    for row in range(board_size):
+        number = str(board_size - row)
         text = font.render(number, True, TEXT_COLOR)
-
-        # Trái
-        text_rect_left = text.get_rect(center=(x_offset - OFFSET_TEXT,
-                                               margin + row * SQUARE_SIZE + SQUARE_SIZE // 2 + y_offset))
-        screen.blit(text, text_rect_left)
-
-        # Phải
-        text_rect_right = text.get_rect(center=(x_offset + BOARD_SIZE * SQUARE_SIZE + OFFSET_TEXT,
-                                                margin + row * SQUARE_SIZE + SQUARE_SIZE // 2 + y_offset))
-        screen.blit(text, text_rect_right)
+        text_rect = text.get_rect(center=(
+            middle_x,
+            margin + row * square_size + square_size // 2 + y_offset
+        ))
+        screen.blit(text, text_rect)

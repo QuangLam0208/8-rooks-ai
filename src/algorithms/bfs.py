@@ -1,16 +1,16 @@
 from collections import deque
+import time
 
-def breadth_first_search(n, goal=None, return_steps=False):
-    """
-    BFS đặt n quân xe.
-    - Nếu return_steps = False: trả về state cuối cùng (như cũ).
-    - Nếu return_steps = True: trả về (goal_state, steps)
-    """
+def breadth_first_search(n, goal=None):
+    start_time = time.time()
     queue = deque([[]])  
+    visited_count = 0     # số node đã được xét
+    expanded_count = 0    # số node được sinh ra
     steps = []  
 
     while queue:
         state = queue.popleft()
+        visited_count += 1
         steps.append(state)
 
         row = len(state)
@@ -18,12 +18,87 @@ def breadth_first_search(n, goal=None, return_steps=False):
             if goal is not None and isinstance(goal, tuple):
                 goal = list(goal)
             if state == goal:
-                return (state, steps) if return_steps else state
-            continue  # nếu khác goal thì bỏ qua
+                elapsed = (time.time() - start_time) * 1000
+                stats = {
+                    "expanded": expanded_count,
+                    "visited": visited_count,
+                    "frontier": len(queue),
+                    "time": elapsed
+                }
+                return (state, steps, stats)
+            continue
 
-        # mở rộng
+        # mở rộng node hiện tại
         for col in range(n):
             if col not in state:
-                queue.append(state + [col])
+                new_state = state + [col]
+                queue.append(new_state)
+                expanded_count += 1  # tăng số node sinh ra
 
+    elapsed = (time.time() - start_time) * 1000
+    stats = {
+        "expanded": expanded_count,
+        "visited": visited_count,
+        "frontier": len(queue),
+        "time": elapsed
+    }
+    return (None, steps, stats)
+
+def breadth_first_search_visual(n, goal=None, return_steps=False, return_stats=False, return_logs=False):
+    start_time = time.time()
+    queue = deque([[]])
+    visited_count = 0
+    expanded_count = 0
+    steps = []
+    logs = []
+
+    while queue:
+        state = queue.popleft()
+        visited_count += 1
+        steps.append(state)
+
+        queue_snapshot = list(queue)
+        logs.append(f"State {visited_count - 1}: {state} | Queue: {queue_snapshot}")
+
+        row = len(state)
+        if row == n:
+            if goal is not None and isinstance(goal, tuple):
+                goal = list(goal)
+            if state == goal:
+                elapsed = (time.time() - start_time) * 1000
+                stats = {
+                    "expanded": expanded_count,
+                    "visited": visited_count,
+                    "frontier": len(queue),
+                    "time": elapsed
+                }
+                if return_stats and return_logs:
+                    return (state, steps, stats, logs)
+                elif return_logs:
+                    return (state, steps, logs)
+                elif return_stats:
+                    return (state, steps, stats)
+                return (state, steps) if return_steps else state
+            continue
+
+        for col in range(n):
+            if col not in state:
+                new_state = state + [col]
+                queue.append(new_state)
+                expanded_count += 1
+
+    elapsed = (time.time() - start_time) * 1000
+    stats = {
+        "expanded": expanded_count,
+        "visited": visited_count,
+        "frontier": len(queue),
+        "time": elapsed
+    }
+
+    if return_stats and return_logs:
+        return (None, steps, stats, logs)
+    elif return_logs:
+        return (None, steps, logs)
+    elif return_stats:
+        return (None, steps, stats)
     return (None, steps) if return_steps else None
