@@ -1,18 +1,6 @@
 import pygame
-
-WHITE       = (255, 255, 255)
-BLACK       = (0, 0, 0)
-LIGHT_GRAY  = (200, 200, 200)
-DARK_GRAY   = (64, 64, 64)
-MYOSOTIS = (0x64, 0x74, 0x7B)
-CADETGRAY = (0x93, 0xA8, 0xAC)
-STONE = (0xA3, 0xAC, 0xA9)
-COTTON = (0xE2, 0xDC, 0xD0)
-ECRU = (0xBD, 0xBB, 0xA5)
-SAGE = (0x8D, 0x9B, 0x86)
-
-ALGORITHM_LIST_TOP = 380
-BORDER_RADIUS = 10
+from .properties import *
+from ui import properties as props
 
 algorithm_groups = [
     {
@@ -20,11 +8,11 @@ algorithm_groups = [
         "color": MYOSOTIS,
         "text_color": WHITE,
         "algorithms": [
-            {"name": "Breadth-First Search", "desc": "Tìm theo chiều rộng"},
-            {"name": "Depth-First Search", "desc": "Tìm theo chiều sâu"},
-            {"name": "Depth Limited Search", "desc": "Giới hạn độ sâu"},
-            {"name": "Iterative Deepening Search", "desc": "Lặp tăng dần độ sâu"},
-            {"name": "Uniform Cost Search", "desc": "Chi phí đồng đều"}
+            {"name": "Breadth-First", "desc": "Tìm theo chiều rộng"},
+            {"name": "Depth-First", "desc": "Tìm theo chiều sâu"},
+            {"name": "Depth Limited", "desc": "Giới hạn độ sâu"},
+            {"name": "Iterative Deepening", "desc": "Lặp tăng dần độ sâu"},
+            {"name": "Uniform Cost", "desc": "Chi phí đồng đều"}
         ]
     },
     {
@@ -32,7 +20,7 @@ algorithm_groups = [
         "color": CADETGRAY,
         "text_color": WHITE,
         "algorithms": [
-            {"name": "A* Search", "desc": "Tối ưu với heuristic"},
+            {"name": "A Star", "desc": "Tối ưu với heuristic"},
             {"name": "Greedy Best-First", "desc": "Tham lam heuristic"}
         ]
     },
@@ -44,7 +32,7 @@ algorithm_groups = [
             {"name": "Hill Climbing", "desc": "Leo đồi tối ưu"},
             {"name": "Simulated Annealing", "desc": "Mô phỏng ủ kim loại"},
             {"name": "Genetic Algorithm", "desc": "Tiến hóa tự nhiên"},
-            {"name": "Beam Search", "desc": "Giới hạn node"}
+            {"name": "Beam", "desc": "Giới hạn node"}
         ]
     },
     {
@@ -58,7 +46,7 @@ algorithm_groups = [
         ]
     },
     {
-        "name": "Constraint Satisfied Problem",
+        "name": "Constraint Satisfied",
         "color": ECRU,
         "text_color": WHITE,
         "algorithms": [
@@ -68,22 +56,22 @@ algorithm_groups = [
         ]
     },
     {
-        "name": "Machine Learning",
+        "name": "Coming Soon",
         "color": SAGE,
         "text_color": WHITE,
         "algorithms": [
-            {"name": "Q-Learning", "desc": "Học tăng cường"},
-            {"name": "Neural Network Path", "desc": "Mạng neural"},
-            {"name": "Random Forest Path", "desc": "Ensemble learning"}
+            {"name": "Coming Soon", "desc": "Coming Soon"},
+            {"name": "Coming Soon", "desc": "Coming Soon"},
+            {"name": "Coming Soon", "desc": "Coming Soon"}
         ]
     }
 ]
 
 # ===================== DRAW FUNCTIONS =====================
 def draw_group_buttons(screen, font, selected_group):
-    button_width, button_height = 250, 40
-    start_x, start_y = 20, 20
-    spacing = 8
+    button_width, button_height = ALG_WIDTH, ALG_GROUP_HEIGHT
+    start_x, start_y = ALG_LEFT, ALG_GROUP_TOP
+    spacing = ALG_SPACING
     rects = [] 
 
     for i, group in enumerate(algorithm_groups):
@@ -96,13 +84,12 @@ def draw_group_buttons(screen, font, selected_group):
         pygame.draw.rect(screen, BLACK, rect, 2, border_radius=BORDER_RADIUS)
 
         txt_color = group["text_color"] if i == selected_group else BLACK
-        for j, line in enumerate(group["name"].split("\n")):
-            text = font.render(line, True, txt_color)
-            screen.blit(
-                text,
-                (x + (button_width - text.get_width()) // 2,
-                 y + 8 + j * 18)
-            )
+        text = font.render(group["name"], True, txt_color)
+
+        # ---- canh giữa cả dọc và ngang ----
+        text_rect = text.get_rect(center=rect.center)
+        screen.blit(text, text_rect)
+
         rects.append(rect)  
     return rects     
 
@@ -113,9 +100,9 @@ def draw_algorithm_buttons(screen, font, selected_group, selected_algorithm):
     
     group = algorithm_groups[selected_group]
 
-    start_x, start_y = 20, ALGORITHM_LIST_TOP
-    button_width, button_height = 250, 60
-    spacing = 8
+    start_x, start_y = ALG_LEFT, ALG_LIST_TOP
+    button_width, button_height = ALG_WIDTH, ALG_LIST_HEIGHT
+    spacing = ALG_SPACING
     rects = []
 
     for i, alg in enumerate(group["algorithms"]):
@@ -131,32 +118,52 @@ def draw_algorithm_buttons(screen, font, selected_group, selected_algorithm):
             text_color = SAGE
 
         text = font.render(alg["name"], True, text_color)
-        screen.blit(text, (start_x + 10, y + 18))
+
+        # ---- canh giữa cả dọc và ngang ----
+        text_rect = text.get_rect(center=rect.center)
+        screen.blit(text, text_rect)
+
         rects.append(rect)
 
     return rects
 
-def draw_action_buttons(screen, font, window_width, window_height):
-    button_w, button_h = 100, 50
-    spacing = 20
-    y = window_height - 80
+def draw_action_buttons(screen, font, left_board_x, right_board_x, board_width):
+    """Vẽ hàng nút chức năng (Run, Visual, Random, Reset, Size)"""
+    button_w, button_h = ACTION_WIDTH, ACTION_HEIGHT
+    spacing = ACTION_SPACING
+    y = ACTION_TOP
 
-    labels = ["Run", "Visual", "Random", "Reset"]
+    labels = ["Run", "Visual", "Random", "Reset", "Resize"]
 
-    # Tổng chiều rộng
+    # Tổng chiều rộng để canh giữa
     total_width = button_w * len(labels) + spacing * (len(labels) - 1)
-    start_x = (window_width - total_width) // 2
+    # --- Tính tâm giữa 2 bàn cờ ---
+    center_boards_x = (left_board_x + right_board_x + board_width) // 2
+    start_x = center_boards_x - total_width // 2
 
     rects = []
+
+    # --- Kiểm tra trạng thái BOARD_SIZE ---
+    board_size = props.BOARD_SIZE  # lấy trực tiếp từ properties để luôn đúng
 
     for i, label in enumerate(labels):
         x = start_x + i * (button_w + spacing)
         rect = pygame.Rect(x, y, button_w, button_h)
 
-        pygame.draw.rect(screen, LIGHT_GRAY, rect, border_radius=BORDER_RADIUS)
-        pygame.draw.rect(screen, BLACK, rect, 2, border_radius=BORDER_RADIUS)
+        # Nếu là nút Visual và board > 6 ⇒ disable
+        if label == "Visual" and board_size > 6:
+            bg_color = (180, 180, 180)
+            border_color = (150, 150, 150)
+            text_color = (230, 230, 230)
+        else:
+            bg_color = WHITE
+            border_color = DARK_GRAY
+            text_color = DARK_GRAY
 
-        text = font.render(label, True, BLACK)
+        pygame.draw.rect(screen, bg_color, rect, border_radius=BORDER_RADIUS)
+        pygame.draw.rect(screen, border_color, rect, 2, border_radius=BORDER_RADIUS)
+
+        text = font.render(label, True, text_color)
         screen.blit(text, text.get_rect(center=rect.center))
 
         rects.append(rect)

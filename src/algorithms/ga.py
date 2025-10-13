@@ -1,22 +1,13 @@
-import random
+import random, time
 from .heuristic import h_misplaced, h_partial
 
 def fitness(state, goal, heuristic):
-    """
-    Chuyển heuristic (h càng nhỏ càng tốt) -> fitness (càng lớn càng tốt)
-    Ở đây: fitness = -h
-    """
     return -heuristic(state, goal)
 
 def tournament_selection(pop, goal, heuristic, k=3):
-    """
-    Chọn 1 cá thể tốt nhất trong k cá thể ngẫu nhiên
-    => cá thể có h nhỏ nhất (fitness cao nhất).
-    """
     return max(random.sample(pop, k), key=lambda s: fitness(s, goal, heuristic))
 
 def order_crossover(p1, p2):
-    """Order Crossover (OX) giữ dạng hoán vị"""
     n = len(p1)
     a, b = sorted(random.sample(range(n), 2))
     child = [None] * n
@@ -30,45 +21,42 @@ def order_crossover(p1, p2):
     return child
 
 def mutate(state, rate=0.1):
-    """Đột biến: hoán đổi 2 vị trí"""
     s = state[:]
     if random.random() < rate:
         i, j = random.sample(range(len(s)), 2)
         s[i], s[j] = s[j], s[i]
     return s
 
-def genetic_algorithm(n, goal, return_steps=False, heuristic=h_misplaced,
-                      pop_size=50, generations=500,
-                      crossover_rate=0.9, mutation_rate=0.1):
-    """
-    GA sử dụng heuristic h(state, goal) (càng nhỏ càng tốt).
-    Trả về:
-        - Nếu return_steps=False: best solution
-        - Nếu return_steps=True : (best solution, steps_visual, steps_console)
-    """
-    # 1. Khởi tạo quần thể ban đầu (các hoán vị cột)
+def genetic_algorithm(n, goal, heuristic=h_misplaced,
+    pop_size=50, generations=500, crossover_rate=0.9,mutation_rate=0.1
+):
+    start_time = time.time()
     population = [random.sample(range(n), n) for _ in range(pop_size)]
-    # Mảng lưu quá trình
+
     steps_visual = []
-    steps_console = []
+    # steps_console = []
+    expanded = 0
+    visited = 0
+
+    result = None
 
     for g in range(1, generations + 1):
-        # Lưu trạng thái tốt nhất hiện tại
-        if return_steps:
-            best_curr = min(population, key=lambda s: heuristic(s, goal))
-            h_best = heuristic(best_curr, goal)
-            steps_visual.append(best_curr[:])                   # copy để tránh mutate
-            steps_console.append((g, best_curr[:], h_best))      # (generation, best_state, h)
+        best_curr = min(population, key=lambda s: heuristic(s, goal))
+        h_best = heuristic(best_curr, goal)
+        steps_visual.append(best_curr[:])
+        # steps_console.append((g, best_curr[:], h_best))
 
-        # Kiểm tra xem có cá thể nào = goal chưa
+        # Duyệt toàn bộ quần thể hiện tại
         for s in population:
+            visited += 1
             if s == goal:
-                # print(f"Goal found at generation {g}: {s}")
-                if return_steps:
-                    return s, steps_visual, steps_console
-                return s
+                result = s
+                break
 
-        # 2. Sinh thế hệ mới
+        if result is not None:
+            break  # dừng vòng ngoài
+
+        # Sinh thế hệ mới
         new_pop = []
         while len(new_pop) < pop_size:
             p1 = tournament_selection(population, goal, heuristic)
@@ -83,17 +71,104 @@ def genetic_algorithm(n, goal, return_steps=False, heuristic=h_misplaced,
             c1 = mutate(c1, mutation_rate)
             c2 = mutate(c2, mutation_rate)
             new_pop.extend([c1, c2])
+            expanded += 2
 
         population = new_pop
 
-    # Hết thế hệ mà chưa gặp goal
-    best = min(population, key=lambda s: heuristic(s, goal))
-    if return_steps:
-        h_best = heuristic(best, goal)
-        steps_visual.append(best[:])
-        steps_console.append((generations + 1, best[:], h_best))
-        return best, steps_visual, steps_console
+    # Tính thống kê cuối
+    elapsed = (time.time() - start_time) * 1000
+    best = result if result else min(population, key=lambda s: heuristic(s, goal))
 
-    print(f"No exact goal after {generations} generations.")
-    print(f"Best found: {best} (h={heuristic(best, goal)})")
-    return best
+    stats = {
+        "expanded": expanded,
+        "visited": visited,
+        "frontier": 0,
+        "time": elapsed
+    }
+    return best, steps_visual, stats
+
+def genetic_algorithm_visual(n, goal, heuristic=h_misplaced,
+    pop_size=50, generations=200, crossover_rate=0.9, mutation_rate=0.1,
+    return_steps=False, return_stats=False, return_logs=False
+):
+    start_time = time.time()
+    goal = list(goal) if isinstance(goal, tuple) else goal
+
+    population = [random.sample(range(n), n) for _ in range(pop_size)]
+
+    steps_visual = []
+    logs = []
+    expanded = 0
+    visited = 0
+    result = None
+
+    for g in range(1, generations + 1):
+        best_curr = min(population, key=lambda s: heuristic(s, goal))
+        h_best = heuristic(best_curr, goal)
+        steps_visual.append(best_curr[:])
+        show = ""
+        show += f"Gen {g}. Pops: {population}"
+        logs.append(show)
+        # Kiểm tra goal
+        for s in population:
+            visited += 1
+            if s == goal:
+                result = s
+                show += f"GOAL: {s}"
+                logs.append(show)
+                elapsed = (time.time() - start_time) * 1000
+                stats = {
+                    "expanded": expanded,
+                    "visited": visited,
+                    "frontier": 0,
+                    "time": elapsed
+                }
+                if return_stats and return_logs:
+                    return s, steps_visual, stats, logs
+                elif return_logs:
+                    return s, steps_visual, logs
+                elif return_stats:
+                    return s, steps_visual, stats
+                return (s, steps_visual) if return_steps else s
+
+        # Sinh thế hệ mới
+        new_pop = []
+        while len(new_pop) < pop_size:
+            p1 = tournament_selection(population, goal, heuristic)
+            p2 = tournament_selection(population, goal, heuristic)
+
+            if random.random() < crossover_rate:
+                c1 = order_crossover(p1, p2)
+                c2 = order_crossover(p2, p1)
+            else:
+                c1, c2 = p1[:], p2[:]
+
+            c1 = mutate(c1, mutation_rate)
+            c2 = mutate(c2, mutation_rate)
+
+            new_pop.extend([c1, c2])
+            expanded += 2
+
+        population = new_pop
+
+    # Kết thúc sau khi hết thế hệ
+    elapsed = (time.time() - start_time) * 1000
+    best = result if result else min(population, key=lambda s: heuristic(s, goal))
+    h_best = heuristic(best, goal)
+    logs.append(f"No goal found after {generations} generations.")
+    logs.append(f"Best found: {best} | h={h_best}")
+
+    stats = {
+        "expanded": expanded,
+        "visited": visited,
+        "frontier": 0,
+        "time": elapsed
+    }
+
+    if return_stats and return_logs:
+        return best, steps_visual, stats, logs
+    elif return_logs:
+        return best, steps_visual, logs
+    elif return_stats:
+        return best, steps_visual, stats
+    return (best, steps_visual) if return_steps else best
