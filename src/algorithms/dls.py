@@ -7,7 +7,6 @@ def depth_limited_search(n, goal=None, limit=None):
     if limit is None:
         limit = n
 
-    steps_visual = [] 
     expanded_count = 0
     visited_count = 0
 
@@ -16,8 +15,6 @@ def depth_limited_search(n, goal=None, limit=None):
     def recursive_dls(state, depth, frontier):
         nonlocal expanded_count, visited_count
         visited_count += 1
-
-        steps_visual.append(state[:])
 
         # Goal test
         if len(state) == n:
@@ -54,7 +51,7 @@ def depth_limited_search(n, goal=None, limit=None):
         "frontier": 0,  # DLS dùng đệ quy, frontier không thể đếm chính xác => để 0 hoặc len(frontier cuối)
         "time": elapsed
     }
-    return result, steps_visual, stats
+    return result, stats
 
 def depth_limited_search_visual(n, goal=None, return_steps=False, return_stats=False, return_logs=False, limit=None):
     if goal is not None and isinstance(goal, tuple):

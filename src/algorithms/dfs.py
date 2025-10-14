@@ -3,7 +3,6 @@ import time
 def depth_first_search(n, goal=None):
     start_time = time.time()
     stack = [[]]
-    steps = []
     visited_count = 0
     expanded_count = 0
 
@@ -13,7 +12,6 @@ def depth_first_search(n, goal=None):
     while stack:
         state = stack.pop()
         visited_count += 1
-        steps.append(state)
 
         row = len(state)
         if row == n:
@@ -25,7 +23,7 @@ def depth_first_search(n, goal=None):
                     "frontier": len(stack),
                     "time": elapsed
                 }
-                return (state, steps, stats)
+                return (state, stats)
             continue
 
         # mở rộng node hiện tại theo DFS
@@ -42,7 +40,7 @@ def depth_first_search(n, goal=None):
         "frontier": len(stack),
         "time": elapsed
     }
-    return (None, steps, stats)
+    return (None, stats)
     
 def depth_first_search_visual(n, goal=None, return_steps=False, return_stats=False, return_logs=False):
     start_time = time.time()

@@ -52,12 +52,12 @@ def and_or_search(n, goal=None):
     Phải tất cả các And node (kết quả của action) đúng thì Or node mới đúng. 
     '''
     start_time = time.time()
-    steps_visual = []
+    visited = []
     expanded = 0
 
     def recursive_search(state, path):
         nonlocal expanded
-        steps_visual.append(state[:])
+        visited.append(state[:])
 
         # Goal reached
         if len(state) == n:
@@ -100,7 +100,7 @@ def and_or_search(n, goal=None):
     elapsed = (time.time() - start_time) * 1000
     stats = {
         "expanded": expanded,
-        "visited": len(steps_visual),
+        "visited": len(visited),
         "frontier": 0,
         "time": elapsed
     }
@@ -119,7 +119,7 @@ def and_or_search(n, goal=None):
         print("\nKhông có kế hoạch khả thi nào.")
         result = None
 
-    return result, steps_visual, stats
+    return result, stats
 
 def and_or_search_visual(n, goal=None, return_steps=False, return_logs=False):
     start_time = time.time()

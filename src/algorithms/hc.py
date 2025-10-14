@@ -6,12 +6,10 @@ def hill_climbing(n, goal, heuristic=h_partial):
     goal = list(goal) if isinstance(goal, tuple) else goal
 
     current = []
-    steps_visual = []
     expanded_count = 0
     visited_count = 0
 
     while True:
-        steps_visual.append(current[:])
         visited_count += 1
         row = len(current)
         if row == n:
@@ -22,7 +20,7 @@ def hill_climbing(n, goal, heuristic=h_partial):
                 "frontier": 0,
                 "time": elapsed
             }
-            return (current if current == goal else None), steps_visual, stats
+            return (current if current == goal else None), stats
 
         # Sinh tất cả con hợp lệ
         candidates = []
@@ -52,7 +50,7 @@ def hill_climbing(n, goal, heuristic=h_partial):
         "frontier": 0,
         "time": elapsed
     }
-    return None, steps_visual, stats
+    return None, stats
 
 
 def hill_climbing_visual(n, goal, return_steps=False, return_stats=False, return_logs=False, heuristic=h_partial):

@@ -7,9 +7,6 @@ def simulated_annealing(n, goal, heuristic=h_partial, max_iter=10000):
 
     current = []  # bắt đầu rỗng
 
-    steps_visual = []
-    steps_console = []
-
     expanded_count = 0
     visited_count = 0
 
@@ -19,8 +16,6 @@ def simulated_annealing(n, goal, heuristic=h_partial, max_iter=10000):
         visited_count += 1
 
         curr_h = heuristic(current, goal)
-        steps_visual.append(current[:])
-        steps_console.append((t, round(T, 3), current[:], curr_h))
 
         if current == goal:
             elapsed = (time.time() - start_time) * 1000
@@ -30,7 +25,7 @@ def simulated_annealing(n, goal, heuristic=h_partial, max_iter=10000):
                 "frontier": 0,
                 "time": elapsed
             }
-            return current, steps_visual, stats
+            return current, stats
 
         successors = []
         row = len(current)
@@ -68,7 +63,7 @@ def simulated_annealing(n, goal, heuristic=h_partial, max_iter=10000):
         "time": elapsed
     }
 
-    return None, steps_visual, stats
+    return None, stats
 
 def simulated_annealing_visual(n, goal, return_steps=False, return_stats=False, return_logs=False, heuristic=h_partial, max_iter=10000):
     start_time = time.time()

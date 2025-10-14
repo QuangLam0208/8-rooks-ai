@@ -9,7 +9,6 @@ def greedy_best_search(n=8, goal=None, heuristic=h_misplaced):
 
     start_time = time.time()
     open_list = []
-    steps_visual = []
     visited = set()
 
     counter = itertools.count()
@@ -22,7 +21,6 @@ def greedy_best_search(n=8, goal=None, heuristic=h_misplaced):
 
     while open_list:
         h, _, state = heapq.heappop(open_list)
-        steps_visual.append(state)
         visited_count += 1
 
         # kiểm tra goal
@@ -35,7 +33,7 @@ def greedy_best_search(n=8, goal=None, heuristic=h_misplaced):
                     "frontier": len(open_list),
                     "time": elapsed
                 }
-                return state, steps_visual, stats
+                return state, stats
             continue
 
         if tuple(state) in visited:
@@ -58,7 +56,7 @@ def greedy_best_search(n=8, goal=None, heuristic=h_misplaced):
         "frontier": len(open_list),
         "time": elapsed
     }
-    return None, steps_visual, stats
+    return None, stats
 
 def greedy_best_search_visual(n=8, goal=None, return_steps=False, return_stats=False, return_logs=False, heuristic=h_misplaced):
     if goal is not None and isinstance(goal, tuple):

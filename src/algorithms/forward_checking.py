@@ -16,15 +16,12 @@ def forward_checking_search(n, goal=None, return_steps=False, return_stats=False
         goal_list = None
 
     start_time = time.time()
-    steps = [] if return_steps else None
     expanded = 0
     visited = 0
 
     def forward_check(state, domains):
         nonlocal expanded, visited
         visited += 1
-        if return_steps:
-            steps.append(state[:])
 
         # Nếu đạt goal
         if len(state) == n:
@@ -70,8 +67,8 @@ def forward_checking_search(n, goal=None, return_steps=False, return_stats=False
     # Trả kết quả phù hợp mode gọi
     if return_stats:
         if return_steps:
-            return res, steps, stats
+            return res, stats
         return res, stats
     if return_steps:
-        return res, steps
+        return res
     return res

@@ -12,13 +12,11 @@ def uniform_cost_search(n, goal, placement_cost_goal=placement_cost_goal):
 
     heap = [(0, next(counter), [])]  # (cost, count, state)
     visited = set()
-    steps_visual = []
     expanded_count = 0
     visited_count = 0
 
     while heap:
         cost, _, state = heapq.heappop(heap)
-        steps_visual.append(state)
         visited_count += 1
 
         row = len(state)
@@ -31,7 +29,7 @@ def uniform_cost_search(n, goal, placement_cost_goal=placement_cost_goal):
                     "frontier": len(heap),
                     "time": elapsed
                 }
-                return state, steps_visual, stats
+                return state, stats
             continue
 
         if tuple(state) in visited:
@@ -54,7 +52,7 @@ def uniform_cost_search(n, goal, placement_cost_goal=placement_cost_goal):
         "frontier": len(heap),
         "time": elapsed
     }
-    return None, steps_visual, stats
+    return None, stats
 
 def uniform_cost_search_visual(n, goal, return_steps=False, return_stats=False, return_logs=False, placement_cost_goal=placement_cost_goal):
     if isinstance(goal, tuple):

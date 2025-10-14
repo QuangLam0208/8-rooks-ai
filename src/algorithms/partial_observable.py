@@ -43,7 +43,6 @@ def dfs_partial_obs(n, goal, prefix_len=6, max_expansions=None):
     goal_beliefs = [goal]
 
     stack = [belief_start]
-    steps = []
 
     expanded = 0
     visited = 0
@@ -52,8 +51,6 @@ def dfs_partial_obs(n, goal, prefix_len=6, max_expansions=None):
     while stack:
         belief = stack.pop()
         visited += 1
-
-        steps.append([s[:] for s in belief])
 
         # tránh lặp lại cùng belief
         key = tuple(tuple(s) for s in belief)
@@ -72,7 +69,7 @@ def dfs_partial_obs(n, goal, prefix_len=6, max_expansions=None):
                         "frontier": len(stack),
                         "time": elapsed
                     }
-                    return state, steps, stats
+                    return state, stats
 
             # nếu không có state == goal, trả về state đầu
             elapsed = (time.time() - start_time) * 1000
@@ -82,7 +79,7 @@ def dfs_partial_obs(n, goal, prefix_len=6, max_expansions=None):
                 "frontier": len(stack),
                 "time": elapsed
             }
-            return belief[0], steps, stats
+            return belief[0], stats
 
         # ===== Sinh belief mới =====
         move_belief, place_belief = [], []
@@ -102,7 +99,7 @@ def dfs_partial_obs(n, goal, prefix_len=6, max_expansions=None):
                         "frontier": len(stack),
                         "time": elapsed
                     }
-                    return None, steps, stats
+                    return None, stats
 
 
         if move_belief:
@@ -118,7 +115,7 @@ def dfs_partial_obs(n, goal, prefix_len=6, max_expansions=None):
         "frontier": len(stack),
         "time": elapsed
     }
-    return None, steps, stats
+    return None, stats
 
 def successors_visual(belife, n, action):
     new_belief = []

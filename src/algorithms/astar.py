@@ -12,7 +12,6 @@ def a_star_search(n=8, goal=None, placement_cost=placement_cost_goal, heuristic=
     open_list = []
     heapq.heappush(open_list, (0, next(counter), 0, 0, []))  # f=0, count, g=0, h=0, state rỗng
     visited = set()
-    steps_visual = []   # từng node pop ra
 
     expanded_count = 0
     visited_count = 0
@@ -20,7 +19,6 @@ def a_star_search(n=8, goal=None, placement_cost=placement_cost_goal, heuristic=
 
     while open_list:
         f, _, g, h, state = heapq.heappop(open_list)
-        steps_visual.append(state[:])
         visited_count += 1
 
         row = len(state)
@@ -34,7 +32,7 @@ def a_star_search(n=8, goal=None, placement_cost=placement_cost_goal, heuristic=
                     "frontier": len(open_list),
                     "time": elapsed
                 }
-                return state, steps_visual, stats
+                return state, stats
             continue
 
         if tuple(state) in visited:
@@ -65,7 +63,7 @@ def a_star_search(n=8, goal=None, placement_cost=placement_cost_goal, heuristic=
         "frontier": len(open_list),
         "time": elapsed
     }
-    return None, steps_visual, stats
+    return None, stats
 
 def a_star_search_visual(n=8, goal=None, return_steps=False, return_stats=False, return_logs=False, placement_cost=placement_cost_goal, heuristic=h_misplaced):
     if goal is not None and isinstance(goal, tuple):
