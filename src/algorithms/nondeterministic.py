@@ -121,7 +121,7 @@ def and_or_search(n, goal=None):
 
     return result, steps_visual, stats
 
-def and_or_search_visual(n, goal=None, return_logs=False):
+def and_or_search_visual(n, goal=None, return_steps=False, return_logs=False):
     start_time = time.time()
     steps_visual = []
     expanded = 0
@@ -195,7 +195,8 @@ def and_or_search_visual(n, goal=None, return_logs=False):
         result = None
 
     if return_logs:
-        return result, steps_visual, plan_logs
+        if return_steps:
+            return result, steps_visual, plan_logs
 
 def tree_to_strings(plan, indent="", label="ROOT"):
     """

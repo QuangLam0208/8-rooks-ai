@@ -150,7 +150,7 @@ def successors_visual(belife, n, action):
     return new_belief
 
 
-def dfs_belief_search_visual(n, goal, max_expansions=None):
+def dfs_belief_search_visual(n, goal, return_steps=True, return_logs=True, max_expansions=None):
     if isinstance(goal, tuple):
         goal = list(goal)
 
@@ -203,7 +203,9 @@ def dfs_belief_search_visual(n, goal, max_expansions=None):
                         "time": elapsed
                     }
                     logs.append(f"Found GOAL state: {state}")
-                    return state, steps_visual, logs
+                    if return_steps:
+                        if return_logs:
+                            return state, steps_visual, logs
 
             elapsed = (time.time() - start_time) * 1000
             stats = {
@@ -213,7 +215,9 @@ def dfs_belief_search_visual(n, goal, max_expansions=None):
                 "time": elapsed
             }
             logs.append(f"Goal belief found (not exact match): {belief[0]}")
-            return belief[0], steps_visual, logs
+            if return_steps:
+                if return_logs:
+                    return belief[0], steps_visual, logs
 
         # sinh belief mới từ move và place
         move_belief = successors_visual(belief, n, action="move")
@@ -237,7 +241,9 @@ def dfs_belief_search_visual(n, goal, max_expansions=None):
                 "time": elapsed
             }
             logs.append(f"Max expansion limit reached ({max_expansions}), stop.")
-            return None, steps_visual, logs
+            if return_steps:
+                if return_logs:
+                    return None, steps_visual, logs
         
         stack.append(move_belief)
         stack.append(place_belief)
@@ -253,4 +259,6 @@ def dfs_belief_search_visual(n, goal, max_expansions=None):
         "time": elapsed
     }
     logs.append("No goal found after full search.")
-    return None, steps_visual, logs
+    if return_steps:
+        if return_logs:
+            return None, steps_visual, logs
