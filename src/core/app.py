@@ -317,6 +317,8 @@ class GameApp:
                 result, steps, logs = and_or_search_visual(props.BOARD_SIZE, goal, return_steps=True, return_logs=True)
             elif "Unobservable" in alg_name:
                 result, steps, logs = dfs_belief_search_visual(props.BOARD_SIZE, goal, return_steps=True, return_logs=True)
+            elif "Partial Observable" in alg_name:
+                result, steps, logs = dfs_partial_obs_visual(props.BOARD_SIZE, goal, return_steps=True, return_logs=True)
 
             else:
                 print("Chức năng visualize chưa hỗ trợ thuật toán này nhá 😚")
@@ -392,7 +394,7 @@ class GameApp:
         elif "Unobservable" in alg_name:
             result, stats = dfs_belief_search(props.BOARD_SIZE, goal)
         elif "Partial Observable" in alg_name:
-            result, steps, stats = dfs_partial_obs(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, steps, stats = dfs_partial_obs(props.BOARD_SIZE, goal)
 
         elif "Backtracking" in alg_name:
             result, steps, stats = backtracking_search(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)

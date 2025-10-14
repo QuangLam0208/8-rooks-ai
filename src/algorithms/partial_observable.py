@@ -1,12 +1,6 @@
 import time
 
 def successors_partial(state, n, prefix_len):
-    """
-    Sinh ra 1 move hợp lệ và 1 place hợp lệ từ state.
-    - state: trạng thái hiện tại (list các cột đã đặt).
-    - n: kích thước bàn cờ.
-    - prefix_len: số hàng đầu đã biết (không được thay đổi).
-    """
     successors = []
     row = len(state)
 
@@ -31,20 +25,12 @@ def successors_partial(state, n, prefix_len):
 
     return successors
 
-
-def dfs_partial_obs(n, goal, prefix_len=6, return_steps=False, return_stats=False, max_expansions=None):
-    """
-    DFS trong môi trường quan sát một phần (Partial Observable)
-    ✅ Giữ nguyên logic gốc
-    ➕ Thêm thống kê expanded, visited, frontier, time
-    ➕ Thêm visited_beliefs để tránh lặp vô hạn
-    """
+def dfs_partial_obs(n, goal, prefix_len=6, max_expansions=None):
     if isinstance(goal, tuple):
         goal = list(goal)
 
     start_time = time.time()
 
-    # ===== Khởi tạo belief ban đầu =====
     prefix = goal[:prefix_len]
 
     for col in range(n):
@@ -57,7 +43,7 @@ def dfs_partial_obs(n, goal, prefix_len=6, return_steps=False, return_stats=Fals
     goal_beliefs = [goal]
 
     stack = [belief_start]
-    steps = [] if return_steps else None
+    steps = []
 
     expanded = 0
     visited = 0
@@ -67,8 +53,7 @@ def dfs_partial_obs(n, goal, prefix_len=6, return_steps=False, return_stats=Fals
         belief = stack.pop()
         visited += 1
 
-        if return_steps:
-            steps.append([s[:] for s in belief])
+        steps.append([s[:] for s in belief])
 
         # tránh lặp lại cùng belief
         key = tuple(tuple(s) for s in belief)
@@ -87,13 +72,8 @@ def dfs_partial_obs(n, goal, prefix_len=6, return_steps=False, return_stats=Fals
                         "frontier": len(stack),
                         "time": elapsed
                     }
-                    if return_stats:
-                        if return_steps:
-                            return state, steps, stats
-                        return state, stats
-                    if return_steps:
-                        return state, steps
-                    return state
+                    return state, steps, stats
+
             # nếu không có state == goal, trả về state đầu
             elapsed = (time.time() - start_time) * 1000
             stats = {
@@ -102,13 +82,7 @@ def dfs_partial_obs(n, goal, prefix_len=6, return_steps=False, return_stats=Fals
                 "frontier": len(stack),
                 "time": elapsed
             }
-            if return_stats:
-                if return_steps:
-                    return belief[0], steps, stats
-                return belief[0], stats
-            if return_steps:
-                return belief[0], steps
-            return belief[0]
+            return belief[0], steps, stats
 
         # ===== Sinh belief mới =====
         move_belief, place_belief = [], []
@@ -128,13 +102,8 @@ def dfs_partial_obs(n, goal, prefix_len=6, return_steps=False, return_stats=Fals
                         "frontier": len(stack),
                         "time": elapsed
                     }
-                    if return_stats:
-                        if return_steps:
-                            return None, steps, stats
-                        return None, stats
-                    if return_steps:
-                        return None, steps
-                    return None
+                    return None, steps, stats
+
 
         if move_belief:
             stack.append(move_belief)
@@ -149,11 +118,147 @@ def dfs_partial_obs(n, goal, prefix_len=6, return_steps=False, return_stats=Fals
         "frontier": len(stack),
         "time": elapsed
     }
+    return None, steps, stats
 
-    if return_stats:
-        if return_steps:
-            return None, steps, stats
-        return None, stats
+def successors_visual(belife, n, action):
+    new_belief = []
+
+    for state in belife:
+        # chỉ di chuyển 1 quân ở cuối sang vị trí hợp lệ cùng hàng
+        if action == "move":
+            if not state or len(state) == n:
+                new_belief.append(state)
+                continue
+
+            last_col = state[-1]
+            for col in range(n):
+                if col != last_col and col not in state:
+                    new_state = state[:-1] + [col]
+                    new_belief.append(new_state)
+                    break
+
+        # chỉ đặt thêm 1 quân vào 1 vị trí hợp lệ ở hàng tiếp theo
+        if action == "place":
+            if len(state) == n:
+                new_belief.append(state)
+                continue
+
+            for col in range(n):
+                if col not in state:
+                    new_state = state + [col]
+                    new_belief.append(new_state)
+                    break        
+    
+    return new_belief
+
+def dfs_partial_obs_visual(n, goal, return_steps=False, return_logs=False, prefix_len=6, max_expansions=None):
+    if isinstance(goal, tuple):
+        goal = list(goal)
+
+    start_time = time.time()
+    prefix = goal[:prefix_len]
+    for col in range(n):
+        if col not in prefix:
+            start_belief2 = prefix + [col]
+            break
+    belief_start = [prefix, start_belief2]
+
+    # goal beliefs (chỉ để mỗi goal để dễ đạt kết quả)
+    goal_beliefs = [goal]
+    stack = [belief_start]
+    expanded = 0
+    visited = 0
+    visited_beliefs = set()  # tránh lặp vô hạn
+    steps_visual = []
+    logs = []
+    logs.append(f"Initial belief: {belief_start}")
+    steps_visual.append([])
+    logs.append(f"Goal belief: {goal_beliefs}")
+    steps_visual.append([])
+
+    while stack:
+        logs.append(f"Stack: {stack}")
+        steps_visual.append([])
+        belief = stack.pop()
+        steps_visual.append([])
+        visited += 1
+
+        key = tuple(tuple(s) for s in belief)
+        if key in visited_beliefs:
+            logs.append(f"Skip repeated belief: {belief}")
+            continue
+        visited_beliefs.add(key)
+        logs.append(f"Visiting belief #{visited}: {belief}")
+        steps_visual.append(belief[0])
+        steps_visual.append(belief[1] if len(belief) == 2 else belief[0])
+
+        # ===== Kiểm tra goal =====
+        if all(state in goal_beliefs for state in belief):
+            for state in belief:
+                if state == goal:
+                    elapsed = (time.time() - start_time) * 1000
+                    stats = {
+                        "expanded": expanded,
+                        "visited": visited,
+                        "frontier": len(stack),
+                        "time": elapsed
+                    }
+                    logs.append(f"Found GOAL state: {state}")
+                    if return_steps:
+                        if return_logs:
+                            return state, steps_visual, logs
+
+            elapsed = (time.time() - start_time) * 1000
+            stats = {
+                "expanded": expanded,
+                "visited": visited,
+                "frontier": len(stack),
+                "time": elapsed
+            }
+            logs.append(f"Goal belief found (not exact match): {belief[0]}")
+            if return_steps:
+                if return_logs:
+                    return belief[0], steps_visual, logs
+
+        # sinh belief mới từ move và place
+        move_belief = successors_visual(belief, n, action="move")
+        if belief[0] != move_belief[0]:
+            expanded += 1
+        if belief[1] != move_belief[1]:
+            expanded += 1
+        place_belief = successors_visual(belief, n, action="place")
+        if belief[0] != place_belief[0]:
+            expanded += 1
+        if belief[1] != place_belief[1]:
+            expanded += 1
+
+        if max_expansions is not None and expanded > max_expansions:
+            elapsed = (time.time() - start_time) * 1000
+            stats = {
+                "expanded": expanded,
+                "visited": visited,
+                "frontier": len(stack),
+                "time": elapsed
+            }
+            logs.append(f"Max expansion limit reached ({max_expansions}), stop.")
+            if return_steps:
+                if return_logs:
+                    return None, steps_visual, logs
+        
+        stack.append(move_belief)
+        stack.append(place_belief)
+        logs.append(f"Push move_belief: {move_belief}")
+        logs.append(f"Push place_belief: {place_belief}")
+
+    # ===== Không tìm thấy goal =====
+    elapsed = (time.time() - start_time) * 1000
+    stats = {
+        "expanded": expanded,
+        "visited": visited,
+        "frontier": len(stack),
+        "time": elapsed
+    }
+    logs.append("No goal found after full search.")
     if return_steps:
-        return None, steps
-    return None
+        if return_logs:
+            return None, steps_visual, logs
