@@ -315,7 +315,9 @@ class GameApp:
 
             elif "Nondeterministic" in alg_name:
                 result, steps, logs = and_or_search_visual(props.BOARD_SIZE, goal, return_logs=True)
-            
+            elif "Unobservable" in alg_name:
+                result, steps, logs = dfs_belief_search_visual(props.BOARD_SIZE, goal)
+
             else:
                 print("Chức năng visualize chưa hỗ trợ thuật toán này nhá 😚")
                 return
@@ -388,7 +390,7 @@ class GameApp:
         elif "Nondeterministic" in alg_name:
             result, steps, stats = and_or_search(props.BOARD_SIZE, goal)
         elif "Unobservable" in alg_name:
-            result, steps, stats = dfs_belief_search(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, stats = dfs_belief_search(props.BOARD_SIZE, goal)
         elif "Partial Observable" in alg_name:
             result, steps, stats = dfs_partial_obs(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
 
