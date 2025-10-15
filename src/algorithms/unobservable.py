@@ -31,7 +31,7 @@ def dfs_belief_search(n, goal, max_expansions=None):
         goal = list(goal)
 
     start_time = time.time()
-    rand = list(range(8))
+    rand = list(range(n))
     random.shuffle(rand)
     start_belief = [[], [1]]
     goal_beliefs = [

@@ -398,7 +398,7 @@ class GameApp:
         elif "Nondeterministic" in alg_name:
             result, stats = and_or_search(props.BOARD_SIZE, goal)
         elif "Unobservable" in alg_name:
-            result = dfs_belief_search(props.BOARD_SIZE, goal)
+            result, stats = dfs_belief_search(props.BOARD_SIZE, goal)
         elif "Partial Observable" in alg_name:
             result, stats = dfs_partial_obs(props.BOARD_SIZE, goal)
 
@@ -422,17 +422,33 @@ class GameApp:
             self.running_algorithms = True
 
         # ==================== CẬP NHẬT THỐNG KÊ & LỊCH SỬ ====================
-        if stats:  # 
+        # ==================== CẬP NHẬT THỐNG KÊ & LỊCH SỬ ====================
+        if stats:
+            # Xác định trạng thái Done / Not Found
+            if result == goal:
+                status_text = "Done"
+            elif result is None:
+                status_text = "Not Found"
+            else:
+                status_text = "Not Found"
+
             self.current_stats = {
-                "name": alg_name, "expanded": stats["expanded"],"frontier": stats["frontier"], 
-                "visited": stats["visited"], "time": stats["time"]
+                "name": alg_name,
+                "expanded": stats["expanded"],
+                "frontier": stats["frontier"],
+                "visited": stats["visited"],
+                "time": stats["time"],
+                "status": status_text
             }
+
             self.history.append({
-                "name": alg_name, "visited": stats["visited"],"time": stats["time"]
+                "name": alg_name,
+                "visited": stats["visited"],
+                "time": stats["time"],
+                "status": status_text
             })
         else:
-            # Thuật toán chưa có thống kê (các loại khác)
             self.current_stats = {
                 "name": alg_name, "expanded": 0, "frontier": 0,
-                "visited": 0, "time": 0
+                "visited": 0, "time": 0, "status": "Not Found"
             }

@@ -59,7 +59,7 @@ def draw_stats_and_history(screen, font, small_font, current_stats, history, run
             screen.blit(name_text, (stats_x + 10, stats_y + offset_y))
 
             detail_text = small_font.render(
-                f"Visited: {entry['visited']}  |  Time: {entry['time']:.0f}ms",
+                f"Visited: {entry['visited']} | Time: {entry['time']:.0f}ms | {entry.get('status', '---')}",
                 True, color
             )
             screen.blit(detail_text, (stats_x + 10, stats_y + offset_y + 16))
