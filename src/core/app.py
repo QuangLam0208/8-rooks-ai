@@ -293,7 +293,7 @@ class GameApp:
             print("Chưa có dữ liệu lịch sử để thống kê.")
             return
         
-        # --- Lọc dữ liệu (giữ nguyên) ---
+        # --- Lọc dữ liệu  ---
         if self.selected_group >= 0:
             group = algorithm_groups[self.selected_group]
             group_names = [alg["name"] for alg in group["algorithms"]]
@@ -313,9 +313,9 @@ class GameApp:
             print("Không có dữ liệu phù hợp để vẽ biểu đồ.")
             return
 
-        # --- Dữ liệu (giữ nguyên) ---
+        # --- Dữ liệu ---
         alg_names = [h["name"] for h in filtered]
-        expanded_vals = [h.get("visited", 0) for h in filtered]
+        expanded_vals = [h.get("expanded", 0) for h in filtered]
         time_vals = [h.get("time", 0) for h in filtered]
         colors = ["#45664d" if h["status"] == "Done" else "#97555c" for h in filtered]
         
@@ -332,7 +332,7 @@ class GameApp:
         # Biểu đồ 1: Expanded
         axes[0].bar(alg_names, expanded_vals_log, color=colors, width=0.6)
         axes[0].set_yscale('log')
-        axes[0].set_title(f"{title_prefix} - Expanded (Visited)", fontsize=14, fontweight="bold", pad=15)
+        axes[0].set_title(f"{title_prefix} - Expanded", fontsize=14, fontweight="bold", pad=15)
         axes[0].set_ylabel("Expanded Nodes", fontsize=12)
         axes[0].tick_params(axis="x", rotation=15)
         axes[0].grid(False)
@@ -340,7 +340,6 @@ class GameApp:
         
         # Hiển thị giá trị trên cột
         for i, v in enumerate(expanded_vals):
-            # THAY ĐỔI Ở ĐÂY: Bỏ `pad` và nhân vị trí y với 1.05
             y_pos = expanded_vals_log[i] * 1.05 
             axes[0].text(i, y_pos, f"{v:,}", ha="center", va="bottom", fontsize=10, fontweight="semibold")
 
@@ -354,7 +353,6 @@ class GameApp:
         axes[1].legend(handles=[done_patch, fail_patch], loc="upper right", frameon=True, edgecolor='black')
 
         for i, v in enumerate(time_vals):
-            # THAY ĐỔI Ở ĐÂY: Bỏ `pad` và nhân vị trí y với 1.05
             y_pos = time_vals_log[i] * 1.05
             axes[1].text(i, y_pos, f"{v:.2f}", ha="center", va="bottom", fontsize=10, fontweight="semibold")
 
