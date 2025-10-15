@@ -133,7 +133,7 @@ def draw_action_buttons(screen, font, left_board_x, right_board_x, board_width):
     spacing = ACTION_SPACING
     y = ACTION_TOP
 
-    labels = ["Run", "Visual", "Random", "Reset", "Resize"]
+    labels = ["Run", "Visual", "Random", "Reset", "Resize", "Statistic"]
 
     # Tổng chiều rộng để canh giữa
     total_width = button_w * len(labels) + spacing * (len(labels) - 1)

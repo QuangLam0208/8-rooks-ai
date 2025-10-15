@@ -33,7 +33,7 @@ def genetic_algorithm(n, goal, heuristic=h_misplaced,
     start_time = time.time()
     population = [random.sample(range(n), n) for _ in range(pop_size)]
 
-    expanded = 0
+    expanded = len(population)
     visited = 0
 
     result = None
@@ -94,7 +94,7 @@ def genetic_algorithm_visual(n, goal, heuristic=h_misplaced,
 
     steps_visual = []
     logs = []
-    expanded = 0
+    expanded = len(population)
     visited = 0
     result = None
 
