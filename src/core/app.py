@@ -314,8 +314,18 @@ class GameApp:
                 result, steps, logs = beam_search_visual(props.BOARD_SIZE, goal, beam_width=5, return_steps=True, return_logs=True)
 
             elif "Nondeterministic" in alg_name:
-                result, steps, logs = and_or_search_visual(props.BOARD_SIZE, goal, return_logs=True)
+                result, steps, logs = and_or_search_visual(props.BOARD_SIZE, goal, return_steps=True, return_logs=True)
+            elif "Unobservable" in alg_name:
+                result, steps, logs = dfs_belief_search_visual(props.BOARD_SIZE, goal, return_steps=True, return_logs=True)
+            elif "Partial Observable" in alg_name:
+                result, steps, logs = dfs_partial_obs_visual(props.BOARD_SIZE, goal, return_steps=True, return_logs=True)
             
+            elif "Backtracking" in alg_name:
+                result, steps, logs = backtracking_search_visual(props.BOARD_SIZE, goal, return_steps=True, return_logs=True)
+            elif "Forward Checking" in alg_name:
+                result, steps, logs = forward_checking_search_visual(props.BOARD_SIZE, goal, return_steps=True, return_logs=True)
+            elif "Arc" in alg_name:
+                result, steps, logs = ac3_search_visual(props.BOARD_SIZE, goal, return_steps=True, return_logs=True)
             else:
                 print("Chức năng visualize chưa hỗ trợ thuật toán này nhá 😚")
                 return
@@ -361,43 +371,43 @@ class GameApp:
         result, steps, stats = None, None, None
 
         if "Breadth-First" in alg_name:
-            result, steps, stats = breadth_first_search(props.BOARD_SIZE, goal)
+            result, stats = breadth_first_search(props.BOARD_SIZE, goal)
         elif "Depth-First" in alg_name:
-            result, steps, stats = depth_first_search(props.BOARD_SIZE, goal)
+            result, stats = depth_first_search(props.BOARD_SIZE, goal)
         elif "Depth Limited" in alg_name:
-            result, steps, stats = depth_limited_search(props.BOARD_SIZE, goal)
+            result, stats = depth_limited_search(props.BOARD_SIZE, goal)
         elif "Iterative Deepening" in alg_name:
-            result, steps, stats = iterative_deepening_search(props.BOARD_SIZE, goal)
+            result, stats = iterative_deepening_search(props.BOARD_SIZE, goal)
         elif "Uniform Cost" in alg_name:
-            result, steps, stats = uniform_cost_search(props.BOARD_SIZE, goal)
+            result, stats = uniform_cost_search(props.BOARD_SIZE, goal)
             
         elif "A Star" in alg_name:
-            result, steps, stats = a_star_search(props.BOARD_SIZE, goal)
+            result, stats = a_star_search(props.BOARD_SIZE, goal)
         elif "Greedy" in alg_name:
-            result, steps, stats = greedy_best_search(props.BOARD_SIZE, goal)
+            result, stats = greedy_best_search(props.BOARD_SIZE, goal)
 
         elif "Hill" in alg_name:
-            result, steps, stats = hill_climbing(props.BOARD_SIZE, goal)
+            result, stats = hill_climbing(props.BOARD_SIZE, goal)
         elif "Simulated" in alg_name:
-            result, steps, stats = simulated_annealing(props.BOARD_SIZE, goal)
+            result, stats = simulated_annealing(props.BOARD_SIZE, goal)
         elif "Genetic" in alg_name:
-            result, steps, stats = genetic_algorithm(props.BOARD_SIZE, goal)
+            result, stats = genetic_algorithm(props.BOARD_SIZE, goal)
         elif "Beam" in alg_name:
-            result, steps, stats = beam_search(props.BOARD_SIZE, goal)
+            result, stats = beam_search(props.BOARD_SIZE, goal)
 
         elif "Nondeterministic" in alg_name:
-            result, steps, stats = and_or_search(props.BOARD_SIZE, goal)
+            result, stats = and_or_search(props.BOARD_SIZE, goal)
         elif "Unobservable" in alg_name:
-            result, steps, stats = dfs_belief_search(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result = dfs_belief_search(props.BOARD_SIZE, goal)
         elif "Partial Observable" in alg_name:
-            result, steps, stats = dfs_partial_obs(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, stats = dfs_partial_obs(props.BOARD_SIZE, goal)
 
         elif "Backtracking" in alg_name:
-            result, steps, stats = backtracking_search(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, stats = backtracking_search(props.BOARD_SIZE, goal)
         elif "Forward Checking" in alg_name:
-            result, steps, stats = forward_checking_search(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, stats = forward_checking_search(props.BOARD_SIZE, goal)
         elif "Arc" in alg_name:
-            result, steps, stats = ac3_search(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, stats = ac3_search(props.BOARD_SIZE, goal)
 
         else:
             print("Thuật toán chưa được gán!")

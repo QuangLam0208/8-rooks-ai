@@ -33,8 +33,6 @@ def genetic_algorithm(n, goal, heuristic=h_misplaced,
     start_time = time.time()
     population = [random.sample(range(n), n) for _ in range(pop_size)]
 
-    steps_visual = []
-    # steps_console = []
     expanded = 0
     visited = 0
 
@@ -43,8 +41,6 @@ def genetic_algorithm(n, goal, heuristic=h_misplaced,
     for g in range(1, generations + 1):
         best_curr = min(population, key=lambda s: heuristic(s, goal))
         h_best = heuristic(best_curr, goal)
-        steps_visual.append(best_curr[:])
-        # steps_console.append((g, best_curr[:], h_best))
 
         # Duyệt toàn bộ quần thể hiện tại
         for s in population:
@@ -85,7 +81,7 @@ def genetic_algorithm(n, goal, heuristic=h_misplaced,
         "frontier": 0,
         "time": elapsed
     }
-    return best, steps_visual, stats
+    return best, stats
 
 def genetic_algorithm_visual(n, goal, heuristic=h_misplaced,
     pop_size=50, generations=200, crossover_rate=0.9, mutation_rate=0.1,

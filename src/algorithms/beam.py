@@ -15,7 +15,6 @@ def beam_search(n, goal, beam_width=10, max_steps=1000, heuristic=h_misplaced):
     start_time = time.time()
 
     beam = [[]]
-    steps_visual = []
     expanded = 0
     visited = 0
 
@@ -30,14 +29,13 @@ def beam_search(n, goal, beam_width=10, max_steps=1000, heuristic=h_misplaced):
                     "frontier": len(beam),
                     "time": elapsed
                 }
-                return s, steps_visual, stats
+                return s, stats
 
         all_succ = []
         for s in beam:
             succ = successors(s, n)
             all_succ.extend(succ)
             expanded += len(succ)
-            steps_visual.extend(succ)
 
         if not all_succ:
             break
@@ -52,7 +50,7 @@ def beam_search(n, goal, beam_width=10, max_steps=1000, heuristic=h_misplaced):
         "frontier": len(beam),
         "time": elapsed
     }
-    return best, steps_visual, stats
+    return best, stats
 
 def beam_search_visual(n, goal, beam_width=10, max_steps=1000, heuristic=h_misplaced,
     return_steps=False, return_stats=False, return_logs=False

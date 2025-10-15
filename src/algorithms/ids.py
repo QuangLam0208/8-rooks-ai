@@ -5,8 +5,6 @@ def iterative_deepening_search(n, goal=None):
     if goal is not None and isinstance(goal, tuple):
         goal = list(goal)
 
-    steps_visual_all = []  # toàn bộ các state expand được
-
     total_expanded = 0
     total_visited = 0
     total_time = 0
@@ -16,11 +14,7 @@ def iterative_deepening_search(n, goal=None):
 
     for limit in range(n + 1):
         # chạy DLS với giới hạn độ sâu
-        dls_result, dls_steps, dls_stats = depth_limited_search(
-            n, goal, limit=limit
-        )
-
-        steps_visual_all.extend(dls_steps)
+        dls_result, dls_stats = depth_limited_search(n, goal, limit=limit)
 
         # Cộng dồn thống kê
         total_expanded += dls_stats["expanded"]
@@ -39,7 +33,7 @@ def iterative_deepening_search(n, goal=None):
         "frontier": 0,
         "time": elapsed
     }
-    return result, steps_visual_all, final_stats
+    return result, final_stats
 
 def iterative_deepening_search_visual(n, goal=None, return_steps=False, return_stats=False, return_logs=False):
     if goal is not None and isinstance(goal, tuple):

@@ -6,12 +6,10 @@ def breadth_first_search(n, goal=None):
     queue = deque([[]])  
     visited_count = 0     # số node đã được xét
     expanded_count = 0    # số node được sinh ra
-    steps = []  
 
     while queue:
         state = queue.popleft()
         visited_count += 1
-        steps.append(state)
 
         row = len(state)
         if row == n:
@@ -25,7 +23,7 @@ def breadth_first_search(n, goal=None):
                     "frontier": len(queue),
                     "time": elapsed
                 }
-                return (state, steps, stats)
+                return (state, stats)
             continue
 
         # mở rộng node hiện tại
@@ -42,7 +40,7 @@ def breadth_first_search(n, goal=None):
         "frontier": len(queue),
         "time": elapsed
     }
-    return (None, steps, stats)
+    return (None, stats)
 
 def breadth_first_search_visual(n, goal=None, return_steps=False, return_stats=False, return_logs=False):
     start_time = time.time()
