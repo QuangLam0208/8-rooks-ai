@@ -422,7 +422,6 @@ class GameApp:
             self.running_algorithms = True
 
         # ==================== CẬP NHẬT THỐNG KÊ & LỊCH SỬ ====================
-        # ==================== CẬP NHẬT THỐNG KÊ & LỊCH SỬ ====================
         if stats:
             # Xác định trạng thái Done / Not Found
             if result == goal:
