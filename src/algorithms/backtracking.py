@@ -101,16 +101,16 @@ def backtracking_search_visual(n, goal=None, return_steps=False, return_logs=Fal
         for col in range(n):
             if col not in state:
                 expanded += 1
-                add_step(state, f"→ Try placing at column {col}", depth)
+                add_step(state, f"  Try placing at column {col}", depth)
                 if max_expansions is not None and expanded > max_expansions:
-                    add_step(state, f"⚠️ Expansion limit reached ({max_expansions}), stop.", depth)
+                    add_step(state, f"Expansion limit reached ({max_expansions}), stop.", depth)
                     return None
 
                 result = backtrack(state + [col], depth + 1)
                 if result is not None:
                     return result  # stop at first found
 
-                add_step(state, f"← Backtrack from {state + [col]}", depth)
+                add_step(state, f"  Backtrack from {state + [col]}", depth)
 
         add_step(state, f"No valid move from {state}, return None", depth)
         return None
