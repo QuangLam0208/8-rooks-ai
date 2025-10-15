@@ -1,4 +1,5 @@
 import pygame, sys, os, random
+import matplotlib.pyplot as plt
 from ui.layout import render_boards, draw_scrollable_panel
 from ui.buttons import (
     draw_group_buttons,
@@ -288,14 +289,11 @@ class GameApp:
 
     def show_statistics(self):
         """Hiển thị hoặc lưu biểu đồ thống kê từ lịch sử."""
-        import matplotlib.pyplot as plt
-        import os
-
         if not self.history:
-            print("⚠️ Chưa có dữ liệu lịch sử để thống kê.")
+            print("Chưa có dữ liệu lịch sử để thống kê.")
             return
-
-        # --- Lọc dữ liệu ---
+        
+        # --- Lọc dữ liệu (giữ nguyên) ---
         if self.selected_group >= 0:
             group = algorithm_groups[self.selected_group]
             group_names = [alg["name"] for alg in group["algorithms"]]
@@ -312,49 +310,61 @@ class GameApp:
             title_prefix = "Best of Groups"
 
         if not filtered:
-            print("⚠️ Không có dữ liệu phù hợp để vẽ biểu đồ.")
+            print("Không có dữ liệu phù hợp để vẽ biểu đồ.")
             return
 
-        # --- Dữ liệu ---
+        # --- Dữ liệu (giữ nguyên) ---
         alg_names = [h["name"] for h in filtered]
         expanded_vals = [h.get("visited", 0) for h in filtered]
         time_vals = [h.get("time", 0) for h in filtered]
-        colors = ["#28a745" if h["status"] == "Done" else "#dc3545" for h in filtered]
+        colors = ["#45664d" if h["status"] == "Done" else "#97555c" for h in filtered]
+        
+        expanded_vals_log = [v if v > 0 else 0.1 for v in expanded_vals]
+        time_vals_log = [v if v > 0 else 0.01 for v in time_vals]
 
         # --- Tùy chỉnh font, style ---
         plt.style.use("seaborn-v0_8-whitegrid")
-        fig, axes = plt.subplots(2, 1, figsize=(10, 8))
-        fig.subplots_adjust(hspace=0.4)
-
+        fig, axes = plt.subplots(2, 1, figsize=(10, 9))
+        fig.subplots_adjust(hspace=0.5)
+        done_patch = plt.Line2D([0], [0], color="#45664d", marker="s", linestyle="", label="Done")
+        fail_patch = plt.Line2D([0], [0], color="#97555c", marker="s", linestyle="", label="Not Found")
+        
         # Biểu đồ 1: Expanded
-        axes[0].bar(alg_names, expanded_vals, color=colors, width=0.6)
-        axes[0].set_title(f"{title_prefix} – Expanded (Visited)", fontsize=14, fontweight="bold", pad=15)
+        axes[0].bar(alg_names, expanded_vals_log, color=colors, width=0.6)
+        axes[0].set_yscale('log')
+        axes[0].set_title(f"{title_prefix} - Expanded (Visited)", fontsize=14, fontweight="bold", pad=15)
         axes[0].set_ylabel("Expanded Nodes", fontsize=12)
         axes[0].tick_params(axis="x", rotation=15)
+        axes[0].grid(False)
+        axes[0].legend(handles=[done_patch, fail_patch], loc="upper right", frameon=True, edgecolor='black')
+        
         # Hiển thị giá trị trên cột
         for i, v in enumerate(expanded_vals):
-            axes[0].text(i, v + max(expanded_vals) * 0.02, f"{v:,}", ha="center", va="bottom", fontsize=10, fontweight="semibold")
+            # THAY ĐỔI Ở ĐÂY: Bỏ `pad` và nhân vị trí y với 1.05
+            y_pos = expanded_vals_log[i] * 1.05 
+            axes[0].text(i, y_pos, f"{v:,}", ha="center", va="bottom", fontsize=10, fontweight="semibold")
 
         # Biểu đồ 2: Time
-        axes[1].bar(alg_names, time_vals, color=colors, width=0.6)
-        axes[1].set_title(f"{title_prefix} – Time (ms)", fontsize=14, fontweight="bold", pad=15)
+        axes[1].bar(alg_names, time_vals_log, color=colors, width=0.6)
+        axes[1].set_yscale('log')
+        axes[1].set_title(f"{title_prefix} - Time (ms)", fontsize=14, fontweight="bold", pad=15)
         axes[1].set_ylabel("Execution Time (ms)", fontsize=12)
         axes[1].tick_params(axis="x", rotation=15)
+        axes[1].grid(False)
+        axes[1].legend(handles=[done_patch, fail_patch], loc="upper right", frameon=True, edgecolor='black')
+
         for i, v in enumerate(time_vals):
-            axes[1].text(i, v + max(time_vals) * 0.02, f"{v:.2f}", ha="center", va="bottom", fontsize=10, fontweight="semibold")
+            # THAY ĐỔI Ở ĐÂY: Bỏ `pad` và nhân vị trí y với 1.05
+            y_pos = time_vals_log[i] * 1.05
+            axes[1].text(i, y_pos, f"{v:.2f}", ha="center", va="bottom", fontsize=10, fontweight="semibold")
 
-        # --- Ghi chú ---
-        done_patch = plt.Line2D([0], [0], color="#28a745", marker="s", linestyle="", label="Done")
-        fail_patch = plt.Line2D([0], [0], color="#dc3545", marker="s", linestyle="", label="Not Found")
-        axes[1].legend(handles=[done_patch, fail_patch], loc="upper right")
-
-        # --- Lưu ảnh vào thư mục assets/pics ---
+        # --- Lưu ảnh ---
         save_path = os.path.join("assets", "pics", "statistic_chart.png")
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
         plt.savefig(save_path, dpi=200, bbox_inches="tight")
         plt.close(fig)
 
-        print(f"✅ Biểu đồ thống kê đã được lưu tại: {save_path}")
-
+        print(f"Biểu đồ thang đo logarit đã được lưu tại: {save_path}")
     
     def run_visualization_by_name(self, alg_name):
         """Visualization từng bước: mỗi lần nhấn hiển thị 1 bước + log chi tiết"""
