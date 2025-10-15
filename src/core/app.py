@@ -324,6 +324,8 @@ class GameApp:
                 result, steps, logs = backtracking_search_visual(props.BOARD_SIZE, goal, return_steps=True, return_logs=True)
             elif "Forward Checking" in alg_name:
                 result, steps, logs = forward_checking_search_visual(props.BOARD_SIZE, goal, return_steps=True, return_logs=True)
+            elif "Arc" in alg_name:
+                result, steps, logs = ac3_search_visual(props.BOARD_SIZE, goal, return_steps=True, return_logs=True)
             else:
                 print("Chức năng visualize chưa hỗ trợ thuật toán này nhá 😚")
                 return
@@ -405,7 +407,7 @@ class GameApp:
         elif "Forward Checking" in alg_name:
             result, stats = forward_checking_search(props.BOARD_SIZE, goal)
         elif "Arc" in alg_name:
-            result, stats = ac3_search(props.BOARD_SIZE, goal, return_steps=True, return_stats=True)
+            result, stats = ac3_search(props.BOARD_SIZE, goal)
 
         else:
             print("Thuật toán chưa được gán!")
