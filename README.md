@@ -512,23 +512,22 @@ Người dùng có thể xem lại lịch sử chạy **8 thuật toán gần nh
 
 ```
 8-rooks-ai/
-├── main.py                  # File chạy chính
-├── app.py                   # Logic giao diện và xử lý thuật toán
-├── algorithms/              # Các thuật toán tìm kiếm
-│   ├── uninformed/          # BFS, DFS, DLS, IDS, UCS
-│   ├── informed/            # A*, Greedy
-│   ├── local/               # Hill Climbing, GA, SA, Beam
-│   ├── complex_env/         # AND-OR, Partial, Unobservable
-│   └── csp/                 # Backtracking, Forward Checking, AC-3
-├── ui/                      # Giao diện Pygame
-│   ├── buttons.py           # Hệ thống nút nhóm thuật toán
-│   ├── layout.py            # Bố cục bàn cờ và vùng hiển thị
-│   ├── stats_history.py     # Thống kê và lịch sử chạy
-│   └── properties.py        # Cấu hình màu sắc, kích thước
-├── assets/
-│   ├── fonts/               # Font JosefinSans
-│   └── pics/                # Hình quân xe, biểu tượng
-└── utils/                   # Tiện ích chạy và đo hiệu năng
+├── src/
+│   ├── main.py                     # File chạy chính
+│   ├── algorithms/                 # Chứa các thuật toán tìm kiếm
+│   ├── core/                       # Xử lý logic chính của ứng dụng
+│   │   └── app.py
+│   └── ui/                         # Giao diện người dùng (Pygame)
+│       ├── __init__.py
+│       ├── board.py                # Xử lý bàn cờ và hiển thị quân xe
+│       ├── buttons.py              # Tạo và quản lý các nhóm nút thuật toán
+│       ├── layout.py               # Bố cục giao diện
+│       ├── properties.py           # Cấu hình màu sắc, kích thước
+│       └── stats_history.py        # Thống kê và lịch sử chạy thuật toán
+│
+└── assets/
+    ├── fonts/                      # Font chữ (ví dụ: JosefinSans)
+    └── pics/                       # Hình ảnh, biểu tượng minh họa
 ```
 
 ---
