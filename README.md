@@ -544,13 +544,6 @@ Người dùng có thể xem lại lịch sử chạy **8 thuật toán gần nh
 
 ---
 
-## GIAO DIỆN
-
-| Giao diện chính | Visualization BFS |
-|:----------------:|:-----------------:|
-| ![Menu](assets/menu.png) | ![BFS](assets/BFS.gif) |
-
----
 
 ## KẾT LUẬN
 
