@@ -58,6 +58,7 @@ Dự án chia thành **5 nhóm thuật toán chính**.
           5. Quay lại vòng lặp Loop.
   
 - Minh họa áp dụng thuật toán
+![BFS Demo](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/gif_sample/bfs.gif)
   
 **2. Depth-First Search (DFS)** – tìm theo chiều sâu
 - Tìm kiếm theo chiều sâu (Depth First Search) sử dụng cấu trúc ngăn xếp stack (LIFO) để chứa các trạng thái sinh ra.
@@ -75,6 +76,7 @@ Dự án chia thành **5 nhóm thuật toán chính**.
           5. Quay lại vòng lặp Loop.
   
 - Minh họa áp dụng thuật toán
+![DFS Demo](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/gif_sample/dfs.gif)
   
 **3. Depth-Limited Search (DLS)** – DFS giới hạn độ sâu
 - Thuật toán tìm kiếm theo chiều sâu giới hạn (Depth Limited Search) là phiên mở rộng của thuật toán DFS.
@@ -102,7 +104,8 @@ Dự án chia thành **5 nhóm thuật toán chính**.
           5. Ngược lại return None.
  
 - Minh họa áp dụng thuật toán
-  
+![DLS Demo](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/gif_sample/dls.gif)
+
 **4. Iterative Deepening (IDS)** – tìm lặp tăng dần độ sâu
 - Thuật toán tìm kiếm theo chiều sâu lặp sâu dần (Iterative Deepening Search) là sự kết hợp của thuật toán BFS và DFS. Sử dụng với độ sâu lặp đi lặp lại đến khi nào tìm được trạng thái mục tiêu thì dừng lại.
 
@@ -116,6 +119,7 @@ Dự án chia thành **5 nhóm thuật toán chính**.
           3. Nếu không trả về mục tiêu thì tiếp tục tăng độ sâu.
  
 - Minh họa áp dụng thuật toán
+![IDS Demo](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/gif_sample/ids.gif)
 
 **5. Uniform Cost Search (UCS)** – chi phí đồng đều
 - Thuật toán tìm kiếm chi phí đồng đều (Uniform Cost Search) để lưu trữ các trạng thái được sinh ra. Tìm kiếm các chi phí trên đường đi có chi phí nhỏ nhất đến trạng thái mục tiêu.
@@ -134,6 +138,7 @@ Dự án chia thành **5 nhóm thuật toán chính**.
           4. Sau khi sinh xong đưa vào Priority Queue và quay lại Loop.
 
 - Minh họa áp dụng thuật toán
+![UCS Demo](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/gif_sample/ucs.gif)
 
 **6. Nhận xét, đánh giá**
 
@@ -161,6 +166,7 @@ Dự án chia thành **5 nhóm thuật toán chính**.
           5. Quay lại vòng lặp Loop.
 
 - Minh họa áp dụng thuật toán
+![GBF Demo](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/gif_sample/greedy.gif)
 
 **2. A\* Search** – kết hợp chi phí thực tế và heuristic  
 - Thuật toán A* (A Star Search) sử dụng cấu trúc lưu trữ và ý tưởng gần giống với thuật toán Greedy. Chỉ khác ở bên Greedy chỉ sử dụng hàm Herurictics để tính chi phí còn A* sử dụng hai hàm Herurictics và Path Cost để tính chi phí.
@@ -188,7 +194,9 @@ Dự án chia thành **5 nhóm thuật toán chính**.
           5. Quay lại vòng lặp Loop.
 
 - Minh họa áp dụng thuật toán
+![ASTAR Demo](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/gif_sample/astar.gif)
 
+**3. Nhận xét, đánh giá**
 
 ### **Tìm Kiếm Cục Bộ**
 
@@ -214,6 +222,7 @@ Dự án chia thành **5 nhóm thuật toán chính**.
           7. Gán H = M và tiếp lục lặp Loop.
 
 - Minh họa áp dụng thuật toán
+![HILL CLIMBING Demo](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/gif_sample/hill.gif)
   
 **2. Simulated Annealing** – mô phỏng quá trình tôi kim loại
 - Thuật toán mô phỏng quá trình tôi kim loại (Simulated Annealling) còn được gọi là thuật toán mô phỏng luyện kim. Đây là phiên bản cải tiến hơn của Hill Climbing để tránh việc tìm kiếm trong cục bộ mà đưa dần tiếp kiếm ra toàn  cục với một xác xuất nào đó.
@@ -241,6 +250,7 @@ Dự án chia thành **5 nhóm thuật toán chính**.
           9. Gán H = M và tiếp tục lặp Loop.
 
 - Minh họa áp dụng thuật toán
+![SA Demo](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/gif_sample/sa.gif)
 
 **3. Genetic Algorithm (GA)** – tiến hóa tự nhiên
 - Thuật toán tiến hóa tự nhiên (Genetic ALgorithms) được thiết lập theo các cơ chế sau: Khởi tạo quần thểm, chọn lọc quần thể, lại ghép và độ biến gen các cá thể trong quần thể.
@@ -270,7 +280,8 @@ Dự án chia thành **5 nhóm thuật toán chính**.
           6. Nếu quần thể mới đủ 6 trạng thái thì kiểm tra trong quần thể mới có mục tiêu không nếu có thì return.
 
 - Minh họa áp dụng thuật toán
-  
+![GENETIC Demo](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/gif_sample/genetic.gif)
+
 **4. Beam Search** – giữ k trạng thái tốt nhất ở mỗi bước
 - Thuật toán Beam Search dựa trên thuật toán tìm kiếm theo chiều rộng nhưng thay vì lấy hết trạng thái sinh ra thì ở đây Beam chỉ lấy k trạng thái tốt nhất. Beam sử dụng hàm Herurictics để tính chi phí và dùng  queue giống như BFS để lưu trạng thái sinh ra.
 
@@ -293,6 +304,7 @@ Dự án chia thành **5 nhóm thuật toán chính**.
           7. Đưa k trạng thái tốt nhất đó vào queue và quay lại Loop.
 
 - Minh họa áp dụng thuật toán
+![BEAM Demo](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/gif_sample/beam.gif)
 
 **5. Nhận xét, đánh giá**
 
@@ -322,6 +334,7 @@ Dự án chia thành **5 nhóm thuật toán chính**.
               3.2. Return tập trạng thái đều là mục tiêu.
 
 - Minh họa áp dụng thuật toán
+![ANDOR Demo](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/gif_sample/andor.gif)
 
 **2. Unobservable Search** – môi trường không quan sát được
 - Giải thuật tìm kiếm trong môi trường không nhìn thấy ban đầu sẽ không xác định được vị trí hay có thông tin rằng mình đang ở đâu mà phải xây dựng một tập niềm tin ban đầu và muốn biết được kết quả thì cũng xây dựng nên tập niềm tin mục tiêu.
@@ -349,6 +362,7 @@ Dự án chia thành **5 nhóm thuật toán chính**.
             5.4. mội lần thực hiện 1 hành động sinh ra một tập các trạng thái của bàn cờ và đưa vào stack.
 
 - Minh họa áp dụng thuật toán
+![UNOB Demo](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/gif_sample/unobservable.gif)
 
 **3. Partial Observable Search** – quan sát một phần
 - Giải thuật tìm kiếm trong môi trường nhìn thấy một phần có thể coi là phiên bản tối ưu của phiên bản tìm kiếm trong môi trường không nhìn thấy. Thay vì không nhìn thấy mà đi tìm kiếm mục tiêu mù quáng thì ở đây sẽ nhìn thấy được một hoặc 2 vị trí hoặc có thể hơn trong niềm tin ban đầu.
@@ -372,6 +386,7 @@ Dự án chia thành **5 nhóm thuật toán chính**.
               5.4. Đưa các tập trạng thái sinh ra vào priorityQueue.
 
 - Minh họa áp dụng thuật toán
+![PARTOB Demo](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/gif_sample/partialobs.gif)
 
 ### **Tìm Kiếm Thỏa Mãn Ràng Buộc (CSP)**
 
@@ -398,6 +413,7 @@ Dự án chia thành **5 nhóm thuật toán chính**.
               5.7. Return None
 
 - Minh họa áp dụng thuật toán
+![BACKTRACK Demo](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/gif_sample/backtrack.gif)
 
 **2. Forward Checking** – cắt tỉa miền giá trị sau mỗi gán
 - Thông qua quá trình quan sát thì thuật toán CSP Backtracking sẽ thử hết tất các các giá trị nằm trong miền điều này dễ dẫn tới việc bộ nhớ quá lớn và tốn thời gian. Để giảm thiểu việc này mỗi lần ta đặt quân xe ra sẽ giới hạn lại tập giá trị, khi đặt quân xe lên sẽ giảm các vị trí mà quân xe đã đặt đó tấn công được. Đây được gọi là thuật toán Forward Checking.
@@ -422,6 +438,7 @@ Dự án chia thành **5 nhóm thuật toán chính**.
               5.7. Return None
   
 - Minh họa áp dụng thuật toán
+![FORWARD Demo](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/gif_sample/forward.gif)
 
 **3. Arc Consistency (AC-3)** – duy trì tính nhất quán cung
 - Thuật toán AC-3 được xây dựng dựa trên việc tinh giảm miền giá trị trước khi đưa vào quá trình Backtracking. Mỗi quân xe sẽ có một miền giá trị riêng cho mình, thay vì mỗi lần gọi backtracking sau khi đặt thì mới cắt giảm miền giá trị giống Forward Checking thì AC-3 sẽ chọn lọc ra mỗi miền giá trị riêng thuộc về mỗi quân xe bằng việc thõa mãn ràng buộc nào đó.
@@ -443,6 +460,7 @@ Dự án chia thành **5 nhóm thuật toán chính**.
           4. Sau khi miền giá trị của các quân xe đã bị cắt giảm thì bắt đầu gọi hàm Backtracking để tìm ra mục tiêu.
 
 - Minh họa áp dụng thuật toán
+![AC3 Demo](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/gif_sample/ac3.gif)
 
 **4. Nhận xét, đánh giá**
 
