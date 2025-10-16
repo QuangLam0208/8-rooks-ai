@@ -51,11 +51,11 @@ Dự án chia thành **5 nhóm thuật toán chính**.
       Đầu ra: Giải pháp tìm thấy trạng thái mục tiêu.
       Đưa vào queue trạng thái ban đầu.
       Loop:
-        1. Lấy một trạng thái từ queue ra.
-        2. Nếu là trạng thái mục tiêu thì return.
-        3. Sinh các trạng thái có thể có từ trạng thái lấy ra từ queue đó.
-        4. Đẩy các trạng thái sinh ra vào queue.
-        5. Quay lại vòng lặp Loop.
+          1. Lấy một trạng thái từ queue ra.
+          2. Nếu là trạng thái mục tiêu thì return.
+          3. Sinh các trạng thái có thể có từ trạng thái lấy ra từ queue đó.
+          4. Đẩy các trạng thái sinh ra vào queue.
+          5. Quay lại vòng lặp Loop.
   
 - Minh họa áp dụng thuật toán
   
@@ -68,11 +68,11 @@ Dự án chia thành **5 nhóm thuật toán chính**.
       Đầu ra: Giải pháp tìm thấy trạng thái mục tiêu.
       Đưa vào stack trạng thái ban đầu.
       Loop:
-        1. Lấy một trạng thái từ stack ra.
-        2. Nếu là trạng thái mục tiêu thì return.
-        3. Sinh các trạng thái có thể có từ trạng thái lấy ra từ stack đó.
-        4. Đẩy các trạng thái sinh ra đó vào stack.
-        5. Quay lại vòng lặp Loop.
+          1. Lấy một trạng thái từ stack ra.
+          2. Nếu là trạng thái mục tiêu thì return.
+          3. Sinh các trạng thái có thể có từ trạng thái lấy ra từ stack đó.
+          4. Đẩy các trạng thái sinh ra đó vào stack.
+          5. Quay lại vòng lặp Loop.
   
 - Minh họa áp dụng thuật toán
   
@@ -90,16 +90,16 @@ Dự án chia thành **5 nhóm thuật toán chính**.
       Đầu ra: giải pháp từ trạng thái ban đầu đến trạng thái mục tiêu.
       Thực hiện gọi hàm đệ quy và truyền vào vấn đề của bài toán, trạng thái ban đầu và độ sâu.
       Hàm đệ quy:
-        1. Nếu trạng thái đạt trạng thái mục tiêu thì dừng.
-        2. Nếu như độ sâu giảm về không thì return "Không tìm thấy".
-        3. Ngược lại:
-              3.1. Gán CutOff ← False.
-              3.2. Child ← sinh các trạng thái kế tiếp.
-              3.3. result ← Hàm đệ quy (Child, độ sâu -1).
-              3.4. Nếu result là "Không tìm thấy" thì CutOff ← True.
-              3.5. Nếu như result không phải là None thì return result.
-        4. Nếu CutOff ← True thì return "Không tìm thấy".
-        5. Ngược lại return None.
+          1. Nếu trạng thái đạt trạng thái mục tiêu thì dừng.
+          2. Nếu như độ sâu giảm về không thì return "Không tìm thấy".
+          3. Ngược lại:
+                3.1. Gán CutOff ← False.
+                3.2. Child ← sinh các trạng thái kế tiếp.
+                3.3. result ← Hàm đệ quy (Child, độ sâu -1).
+                3.4. Nếu result là "Không tìm thấy" thì CutOff ← True.
+                3.5. Nếu như result không phải là None thì return result.
+          4. Nếu CutOff ← True thì return "Không tìm thấy".
+          5. Ngược lại return None.
  
 - Minh họa áp dụng thuật toán
   
@@ -111,9 +111,9 @@ Dự án chia thành **5 nhóm thuật toán chính**.
       Đầu vào: Bài toán 8 quân xe, trạng thái ban đầu, thuật toán DLS.
       Đầu ra: Giải pháp từ trạng thái ban đầu đến trạng thái mục tiêu.
       Loop độ sâu tăng từ 1:
-        1. Gọi thuật toán DLS và truyền vào độ sâu đang lặp.
-        2. Nếu trả về mục tiêu thì return
-        3. Nếu không trả về mục tiêu thì tiếp tục tăng độ sâu.
+          1. Gọi thuật toán DLS và truyền vào độ sâu đang lặp.
+          2. Nếu trả về mục tiêu thì return
+          3. Nếu không trả về mục tiêu thì tiếp tục tăng độ sâu.
  
 - Minh họa áp dụng thuật toán
 
@@ -128,10 +128,10 @@ Dự án chia thành **5 nhóm thuật toán chính**.
       Đầu ra: Giải giáp từ trạng thái ban đầu đến trạng thái mục tiêu với chi phí tốt nhất.
       Đưa trạng thái ban đầu vào Priority Queue.
       Loop:
-        1. Lấy từ Priority Queue trạng thái có chi phí tốt nhất (Chí phí nhỏ nhất).
-        2. Nếu trạng thái đó là trạng thái mục tiêu thì dừng.
-        3. Sinh các trạng thái đồng thời tính chi phí Path Cost cho từng trạng thái đó.
-        4. Sau khi sinh xong đưa vào Priority Queue và quay lại Loop.
+          1. Lấy từ Priority Queue trạng thái có chi phí tốt nhất (Chí phí nhỏ nhất).
+          2. Nếu trạng thái đó là trạng thái mục tiêu thì dừng.
+          3. Sinh các trạng thái đồng thời tính chi phí Path Cost cho từng trạng thái đó.
+          4. Sau khi sinh xong đưa vào Priority Queue và quay lại Loop.
 
 - Minh họa áp dụng thuật toán
 
