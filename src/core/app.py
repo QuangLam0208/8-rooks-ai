@@ -1,4 +1,5 @@
 import pygame, sys, os, random
+import matplotlib.pyplot as plt
 from ui.layout import render_boards, draw_scrollable_panel
 from ui.buttons import (
     draw_group_buttons,
@@ -144,7 +145,7 @@ class GameApp:
                         if self.selected_algorithm_name:
                             self.run_algorithm_by_name(self.selected_algorithm_name)
 
-                    elif self.rect_visual.collidepoint(mouse_pos):
+                    if self.rect_visual.collidepoint(mouse_pos):
                         if props.BOARD_SIZE > 6:
                             self.panel_logs.clear()
                             self.panel_logs.append("Visualization disabled for board size > 6.")
@@ -154,7 +155,7 @@ class GameApp:
                         if self.selected_algorithm_name:
                             self.run_visualization_by_name(self.selected_algorithm_name)
 
-                    elif self.rect_random.collidepoint(mouse_pos):
+                    if self.rect_random.collidepoint(mouse_pos):
                         # ==================== TẠO BÀN CỜ PHẢI MỚI ====================
                         self.right_solution = random.choice(self.all_solutions)
 
@@ -176,14 +177,14 @@ class GameApp:
 
                         print("Đã random lại bàn cờ và reset toàn bộ thống kê!")
 
-                    elif self.rect_reset.collidepoint(mouse_pos):
+                    if self.rect_reset.collidepoint(mouse_pos):
                         self.left_solution = None
                         self.steps = None
                         self.running_algorithms = False
                         self.panel_logs.clear()
                         self.scroll_offset = 0
 
-                    elif self.rect_size.collidepoint(mouse_pos):
+                    if self.rect_size.collidepoint(mouse_pos):
                         # Mở hộp nhập để đổi kích thước
                         self.prompt_board_size()
 
@@ -208,6 +209,10 @@ class GameApp:
                                 self.selected_algorithm = i
                                 self.selected_algorithm_name = group["algorithms"][i]["name"]
                                 break
+                    
+                    if self.rect_statistic.collidepoint(mouse_pos):
+                        print("Statistic clicked!")
+                        self.show_statistics() 
 
                 elif event.type == pygame.MOUSEWHEEL:
                     SCROLL_SPEED_Y = 50   # tốc độ cuộn dọc
@@ -271,7 +276,7 @@ class GameApp:
                 self.screen, self.font,
                 self.selected_group, self.selected_algorithm
             )
-            self.rect_run, self.rect_visual, self.rect_random, self.rect_reset, self.rect_size = draw_action_buttons(
+            self.rect_run, self.rect_visual, self.rect_random, self.rect_reset, self.rect_size, self.rect_statistic = draw_action_buttons(
                 self.screen, self.font,
                 props.LEFT_BOARD_X, props.RIGHT_BOARD_X, props.BOARD_SIZE * props.SQUARE_SIZE
             )
@@ -282,6 +287,83 @@ class GameApp:
         pygame.quit()
         sys.exit()
 
+    def show_statistics(self):
+        """Hiển thị hoặc lưu biểu đồ thống kê từ lịch sử."""
+        if not self.history:
+            print("Chưa có dữ liệu lịch sử để thống kê.")
+            return
+        
+        # --- Lọc dữ liệu  ---
+        if self.selected_group >= 0:
+            group = algorithm_groups[self.selected_group]
+            group_names = [alg["name"] for alg in group["algorithms"]]
+            filtered = [h for h in self.history if h["name"] in group_names]
+            title_prefix = group["name"]
+        else:
+            filtered = []
+            for group in algorithm_groups:
+                group_names = [alg["name"] for alg in group["algorithms"]]
+                group_hist = [h for h in self.history if h["name"] in group_names and h["status"] == "Done"]
+                if group_hist:
+                    best = min(group_hist, key=lambda x: x["time"])
+                    filtered.append(best)
+            title_prefix = "Best of Groups"
+
+        if not filtered:
+            print("Không có dữ liệu phù hợp để vẽ biểu đồ.")
+            return
+
+        # --- Dữ liệu ---
+        alg_names = [h["name"] for h in filtered]
+        expanded_vals = [h.get("expanded", 0) for h in filtered]
+        time_vals = [h.get("time", 0) for h in filtered]
+        colors = ["#45664d" if h["status"] == "Done" else "#97555c" for h in filtered]
+        
+        expanded_vals_log = [v if v > 0 else 0.1 for v in expanded_vals]
+        time_vals_log = [v if v > 0 else 0.01 for v in time_vals]
+
+        # --- Tùy chỉnh font, style ---
+        plt.style.use("seaborn-v0_8-whitegrid")
+        fig, axes = plt.subplots(2, 1, figsize=(10, 9))
+        fig.subplots_adjust(hspace=0.5)
+        done_patch = plt.Line2D([0], [0], color="#45664d", marker="s", linestyle="", label="Done")
+        fail_patch = plt.Line2D([0], [0], color="#97555c", marker="s", linestyle="", label="Not Found")
+        
+        # Biểu đồ 1: Expanded
+        axes[0].bar(alg_names, expanded_vals_log, color=colors, width=0.6)
+        axes[0].set_yscale('log')
+        axes[0].set_title(f"{title_prefix} - Expanded", fontsize=14, fontweight="bold", pad=15)
+        axes[0].set_ylabel("Expanded Nodes", fontsize=12)
+        axes[0].tick_params(axis="x", rotation=15)
+        axes[0].grid(False)
+        axes[0].legend(handles=[done_patch, fail_patch], loc="upper right", frameon=True, edgecolor='black')
+        
+        # Hiển thị giá trị trên cột
+        for i, v in enumerate(expanded_vals):
+            y_pos = expanded_vals_log[i] * 1.05 
+            axes[0].text(i, y_pos, f"{v:,}", ha="center", va="bottom", fontsize=10, fontweight="semibold")
+
+        # Biểu đồ 2: Time
+        axes[1].bar(alg_names, time_vals_log, color=colors, width=0.6)
+        axes[1].set_yscale('log')
+        axes[1].set_title(f"{title_prefix} - Time (ms)", fontsize=14, fontweight="bold", pad=15)
+        axes[1].set_ylabel("Execution Time (ms)", fontsize=12)
+        axes[1].tick_params(axis="x", rotation=15)
+        axes[1].grid(False)
+        axes[1].legend(handles=[done_patch, fail_patch], loc="upper right", frameon=True, edgecolor='black')
+
+        for i, v in enumerate(time_vals):
+            y_pos = time_vals_log[i] * 1.05
+            axes[1].text(i, y_pos, f"{v:.2f}", ha="center", va="bottom", fontsize=10, fontweight="semibold")
+
+        # --- Lưu ảnh ---
+        save_path = os.path.join("assets", "pics", "statistic_chart.png")
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
+        plt.savefig(save_path, dpi=200, bbox_inches="tight")
+        plt.close(fig)
+
+        print(f"Biểu đồ thang đo logarit đã được lưu tại: {save_path}")
+    
     def run_visualization_by_name(self, alg_name):
         """Visualization từng bước: mỗi lần nhấn hiển thị 1 bước + log chi tiết"""
         goal = list(self.right_solution)
@@ -422,7 +504,6 @@ class GameApp:
             self.running_algorithms = True
 
         # ==================== CẬP NHẬT THỐNG KÊ & LỊCH SỬ ====================
-        # ==================== CẬP NHẬT THỐNG KÊ & LỊCH SỬ ====================
         if stats:
             # Xác định trạng thái Done / Not Found
             if result == goal:
@@ -443,6 +524,7 @@ class GameApp:
 
             self.history.append({
                 "name": alg_name,
+                "expanded": stats["expanded"],
                 "visited": stats["visited"],
                 "time": stats["time"],
                 "status": status_text

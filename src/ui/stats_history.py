@@ -10,7 +10,7 @@ def draw_stats_and_history(screen, font, small_font, current_stats, history, run
     total_height = props.TOTAL_GROUP_HEIGHT + props.TOTAL_LIST5_HEIGHT + props.PARENT_CHILD_SPACING
 
     # Background
-    stats_rect = pygame.Rect(stats_x, stats_y, 300, total_height)
+    stats_rect = pygame.Rect(stats_x, stats_y, 320, total_height)
     pygame.draw.rect(screen, props.LIGHT_GRAY, stats_rect)
     pygame.draw.rect(screen, props.BLACK, stats_rect, 2)
 
