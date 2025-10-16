@@ -524,6 +524,7 @@ class GameApp:
 
             self.history.append({
                 "name": alg_name,
+                "expanded": stats["expanded"],
                 "visited": stats["visited"],
                 "time": stats["time"],
                 "status": status_text
