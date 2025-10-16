@@ -51,10 +51,10 @@ Dự án chia thành **5 nhóm thuật toán chính**.
       Đầu ra: Giải pháp tìm thấy trạng thái mục tiêu.
       Đưa vào queue trạng thái ban đầu.
       Loop:
-          1. Lấy một trạng thái từ queue ra.
-          2. Nếu là trạng thái mục tiêu thì return.
-          3. Sinh các trạng thái có thể có từ trạng thái lấy ra từ queue đó.
-          4. Đẩy các trạng thái sinh ra vào queue.
+          1. Lấy một trạng thái ra khỏi đầu hàng đợi.
+          2. Nếu là trạng thái mục tiêu thì trả về kết quả.
+          3. Ngược lại, sinh ra tất cả các trạng thái kế tiếp hợp lệ bằng cách đặt quân xe vào các cột chưa bị chiếm.
+          4. Thêm các trạng thái mới sinh vào cuối hàng đợi.
           5. Quay lại vòng lặp Loop.
   
 - Minh họa áp dụng thuật toán
@@ -69,10 +69,10 @@ Dự án chia thành **5 nhóm thuật toán chính**.
       Đầu ra: Giải pháp tìm thấy trạng thái mục tiêu.
       Đưa vào stack trạng thái ban đầu.
       Loop:
-          1. Lấy một trạng thái từ stack ra.
-          2. Nếu là trạng thái mục tiêu thì return.
-          3. Sinh các trạng thái có thể có từ trạng thái lấy ra từ stack đó.
-          4. Đẩy các trạng thái sinh ra đó vào stack.
+          1. Lấy một trạng thái ra khỏi đỉnh ngăn xếp.
+          2. Nếu trạng thái này là trạng thái mục tiêu → trả về kết quả.
+          3. Ngược lại, sinh ra các trạng thái con hợp lệ bằng cách đặt quân xe vào các cột chưa bị chiếm.
+          4. Thêm các trạng thái mới vào đỉnh ngăn xếp.
           5. Quay lại vòng lặp Loop.
   
 - Minh họa áp dụng thuật toán
@@ -92,16 +92,12 @@ Dự án chia thành **5 nhóm thuật toán chính**.
       Đầu ra: giải pháp từ trạng thái ban đầu đến trạng thái mục tiêu.
       Thực hiện gọi hàm đệ quy và truyền vào vấn đề của bài toán, trạng thái ban đầu và độ sâu.
       Hàm đệ quy:
-          1. Nếu trạng thái đạt trạng thái mục tiêu thì dừng.
-          2. Nếu như độ sâu giảm về không thì return "Không tìm thấy".
+          1. Nếu đạt đến trạng thái mục tiêu → trả về kết quả.
+          2. Nếu đạt đến giới hạn độ sâu (depth == 0) → cắt nhánh (“cutoff”)..
           3. Ngược lại:
-                3.1. Gán CutOff ← False.
-                3.2. Child ← sinh các trạng thái kế tiếp.
-                3.3. result ← Hàm đệ quy (Child, độ sâu -1).
-                3.4. Nếu result là "Không tìm thấy" thì CutOff ← True.
-                3.5. Nếu như result không phải là None thì return result.
-          4. Nếu CutOff ← True thì return "Không tìm thấy".
-          5. Ngược lại return None.
+                3.1. Sinh các trạng thái con bằng cách đặt quân xe vào các cột chưa bị chiếm.
+                3.2. Gọi đệ quy để tiếp tục tìm kiếm ở mức sâu hơn.
+                3.3. Nếu tất cả nhánh đều bị cắt → trả về “cutoff”; nếu tìm thấy lời giải → trả về trạng thái mục tiêu.
  
 - Minh họa áp dụng thuật toán
 ![DLS Demo](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/gif_sample/dls.gif)
@@ -113,10 +109,9 @@ Dự án chia thành **5 nhóm thuật toán chính**.
 
       Đầu vào: Bài toán 8 quân xe, trạng thái ban đầu, thuật toán DLS.
       Đầu ra: Giải pháp từ trạng thái ban đầu đến trạng thái mục tiêu.
-      Loop độ sâu tăng từ 1:
-          1. Gọi thuật toán DLS và truyền vào độ sâu đang lặp.
-          2. Nếu trả về mục tiêu thì return
-          3. Nếu không trả về mục tiêu thì tiếp tục tăng độ sâu.
+      Loop độ sâu tăng từ 1 đến n:
+          1. Gọi thuật toán tìm kiếm giới hạn độ sâu (DLS) với giới hạn hiện tại.
+          2. Nếu DLS trả về lời giải thực sự (không phải None hay "cutoff") → dừng vòng lặp và lưu kết quả.
  
 - Minh họa áp dụng thuật toán
 ![IDS Demo](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/gif_sample/ids.gif)
@@ -142,6 +137,15 @@ Dự án chia thành **5 nhóm thuật toán chính**.
 
 **6. Nhận xét, đánh giá**
 ![Uninform Statistic](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/statistic_sample/uninformed.png)
+- Về hiệu quả không gian (Số node đã mở rộng)
+
+  Xét về không gian tìm kiếm, **Uniform Cost Search (UCS)** tỏ ra vượt trội nhất. Nguyên nhân chính là do hàm chi phí đã biến nó thành một thuật toán tìm kiếm có thông tin (informed search), giúp nó đi thẳng đến lời giải mục tiêu mà không cần duyệt qua các nhánh không cần thiết.
+  
+  Ngược lại, **Iterative Deepening Search (IDS)** là thuật toán kém hiệu quả nhất do phải liên tục duyệt lại các node ở những tầng nông. Các thuật toán còn lại như **BFS, DFS, và DLS** đều là tìm kiếm "mù", phải duyệt qua một không gian lớn hơn rất nhiều so với **UCS** để tìm ra lời giải.
+
+- Về hiệu quả thời gian (Thời gian thực thi)
+
+  Về mặt thời gian, kết quả cũng phản ánh tương tự. **UCS** hoàn thành nhanh nhất, việc thu hẹp không gian tìm kiếm đã giúp giảm thiểu đáng kể thời gian xử lý. Trong khi đó, **IDS** là thuật toán chậm nhất, trực tiếp là hệ quả của việc phải mở rộng số lượng node lớn nhất. **DFS và DLS** nhanh hơn **BFS** vì chúng nhanh chóng đi sâu xuống một nhánh để tìm lời giải, thay vì phải duyệt toàn bộ các node ở mỗi tầng như **BFS**.
 
 ### **Tìm Kiếm Có Thông Tin**
 
@@ -160,8 +164,8 @@ Dự án chia thành **5 nhóm thuật toán chính**.
       Đầu ra: Giải pháp từ trạng thái ban đầu đến trạng thái mục tiêu.
       Đưa vào priorityQueue trạng thái ban đầu kèm chi phí.
       Loop:
-          1. Lấy từ priorityQueue trạng thái có chi phí thấp nhất.
-          2. Nếu trạng thái lấy ra là trạng thái mục tiêu thì return.
+          1. Lấy từ priorityQueue trạng thái tốt nhất (có chi phí thấp nhất).
+          2. Nếu trạng thái lấy ra là trạng thái mục tiêu thì dừng và trả về kết quả.
           3. Sinh các trạng thái tiếp theo và tính ước lượng chi phí cho các trạng thái sinh ra.
           4. Đưa các trạng thái sinh ra đó vào priorityQueue.
           5. Quay lại vòng lặp Loop.
@@ -188,7 +192,7 @@ Dự án chia thành **5 nhóm thuật toán chính**.
       Đầu ra: Giải pháp từ trạng thái ban đầu đến trạng thái mục tiêu.
       Đưa trạng thái ban đầu kèm chi phí vào priorityQueue.
       Loop:
-          1. Lấy từ priorityQueue trạng thái tốt nhất
+          1. Lấy từ priorityQueue trạng thái tốt nhất (có tổng chi phí nhỏ nhất).
           2. Nếu trạng thái lấy ra đó là trạng thái mục tiêu thì return.
           3. Sinh các trạng thái kế tiếp và tính chi phí f(x) cho trạng thái đó.
           4. Đưa trạng các trạng thái sinh ra vào priorityQueue.
@@ -199,6 +203,13 @@ Dự án chia thành **5 nhóm thuật toán chính**.
 
 **3. Nhận xét, đánh giá**
 ![Inform Statistic](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/statistic_sample/informed.png)
+- Về hiệu quả không gian (Số node đã mở rộng)
+
+  Trong nhóm này, **Greedy Best-First Search** tỏ ra hiệu quả hơn hẳn so với **A Star**. Điều này xảy ra vì **Greedy Search** hoạt động theo nguyên tắc "tham lam": nó chỉ quan tâm đến giá trị *heuristic* (ước tính khoảng cách tới đích) và luôn chọn đường đi có vẻ tốt nhất ở thời điểm hiện tại. Ngược lại, thuật toán **A Star** cân bằng giữa chi phí thực tế từ điểm bắt đầu (g(n)) và giá trị *heuristic* (h(n)). Việc phải tính toán và cân nhắc cả hai yếu tố này khiến A* phải khám phá nhiều node hơn để đảm bảo tìm được đường đi tối ưu.
+
+- Về hiệu quả thời gian (Thời gian thực thi)
+
+  Hiệu quả về thời gian cũng phản ánh trực tiếp số lượng node đã mở rộng. **Greedy Best-First Search** hoàn thành rất nhanh nhờ vào chiến lược đơn giản và tập trung của nó. Trong khi đó, **A Star** thì lâu hơn rất nhiều do chi phí tính toán phức tạp hơn và không gian tìm kiếm lớn hơn mà nó phải duyệt qua. Mặc dù chậm hơn, sự đánh đổi của A* là nó đảm bảo tìm ra lời giải tối ưu nhất (chi phí thấp nhất), điều mà Greedy Search không thể đảm bảo.
 
 ### **Tìm Kiếm Cục Bộ**
 
@@ -215,12 +226,12 @@ Dự án chia thành **5 nhóm thuật toán chính**.
       Đầu ra: Giải pháp từ trạng thái ban đầu đến trạng thái mục tiêu.
       Lưu trạng thái ban đầu vào H
       Loop:
-          1. Kiểm trạn trạng thái H có phải trạng thái mục tiêu không.
+          1. Kiểm trạn trạng thái H có phải trạng thái mục tiêu không, nếu là mục tiêu thì trả về kết quả.
           2. Khởi tạo priorityQueue rỗng.
           3. Sinh các trạng thái lân cận từ H, tính chi phí cho các trạng thái lân cận đó và đưa vào priorityQueue.
-          4. Nếu priorityQueue là rỗng thì return "Không thể sinh tiếp trạng thái".
+          4. Nếu priorityQueue là rỗng thì dừng.
           5. Chọn M từ priorityQueue là trạng thái có chi phí thấp nhất.
-          6. Nếu chi phí của M > chi phí của H thì return "Không có trạng thái nào tốt hơn trạng thái hiện tại".
+          6. Nếu chi phí của M > chi phí của H thì dừng.
           7. Gán H = M và tiếp lục lặp Loop.
 
 - Minh họa áp dụng thuật toán
@@ -237,7 +248,7 @@ Dự án chia thành **5 nhóm thuật toán chính**.
       Đầu ra: Giải pháp từ trạng thái ban đầu đến mục tiêu.
       Lưu trạng thái ban đầu là H.
       Loop t = 1:
-          1. Kiểm trạn trạng thái H có phải trạng thái mục tiêu không.
+          1. Kiểm trạn trạng thái H có phải trạng thái mục tiêu không, là mục tiêu thì trả về kết quả.
           2. Xây dựng hàm tính tính độ T dựa trên t.
           3. Nếu T giảm về 0 thì return "Không tìm thấy mục tiêu".
           4. Khởi tạo priorityQueue rỗng.
@@ -268,13 +279,13 @@ Dự án chia thành **5 nhóm thuật toán chính**.
       Lưu ý: các quần thể là một tập các trạng thái của bàn cờ.
       Khởi tạo quần thể chưa 6 trạng thái bàn cờ ngẫu nhiên.
       Loop với số lượng mã Gen cố định:
-          1. chọn lọc 2 trạng thái tốt và random ngẫu nhiên một trạng thái xấu trong quần thể ban đầu.
-          2. Đem các trạng thái chọn lọc đi lai. (lai từng cặp trạng thái khác nhau)
-              2.1. khởi tạo tỉ lệ lai 65%.
-              2.2. với mỗi cột trong trạng thái có một xác xuất random.
-              2.3. nếu xác xuất random < tỉ lệ lai thì ta sẽ hoán đổi các cột giữa 2 trạng thái với nhau.
+          1. Chọn lọc 2 trạng thái tốt và random ngẫu nhiên một trạng thái xấu trong quần thể ban đầu.
+          2. Đem các trạng thái chọn lọc đi lai (lai từng cặp trạng thái khác nhau).
+              2.1. khởi tạo tỉ lệ lai.
+              2.2. Với mỗi cột trong trạng thái có một xác xuất random.
+              2.3. Nếu xác xuất random < tỉ lệ lai thì ta sẽ hoán đổi các cột giữa 2 trạng thái với nhau.
           3. Đem các trạng thái vừa lai xong đi đột biến.
-              3.1. Khởi tạo tỉ lệ đột biến 5%.
+              3.1. Khởi tạo tỉ lệ đột biến.
               3.2. Với mỗi cột trong trạng thái có một giá trị đột biến random.
               3.3. Nếu giá trị đó < tỉ lệ  đột biến thì đưa tất cả giá trị trong vột về 0 và random ngẫu nhiên một vị trí đặt 1.
           4. Đưa các trạng thái trên vào quần thể mới.
@@ -310,6 +321,13 @@ Dự án chia thành **5 nhóm thuật toán chính**.
 
 **5. Nhận xét, đánh giá**
 ![Local Statistic](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/statistic_sample/local.png)
+- Về hiệu quả không gian (Số node đã mở rộng)
+
+  Đối với nhóm tìm kiếm cục bộ, **Hill Climbing** và **Simulated Annealing** là hai thuật toán tiết kiệm không gian nhất. Cả hai đều hoạt động bằng cách chỉ xem xét các "hàng xóm" trực tiếp của trạng thái hiện tại, giúp không gian tìm kiếm được giữ ở mức tối thiểu. Ngược lại, **Genetic Algorithm** và **Beam Search** mở rộng nhiều node hơn đáng kể. Lý do là chúng duy trì và làm việc với một tập hợp nhiều trạng thái cùng lúc — một "quần thể" trong **Genetic Algorithm** và một "chùm" (beam) trong **Beam Search** — thay vì chỉ một trạng thái duy nhất.
+
+- Về hiệu quả thời gian (Thời gian thực thi)
+
+  Về thời gian, **Hill Climbing** và **Simulated Annealing** tiếp tục dẫn đầu nhờ sự đơn giản của chúng. **Simulated Annealing** chậm hơn một chút do phải thực hiện thêm các phép tính xác suất để quyết định có nên chấp nhận một bước đi tệ hơn hay không. **Genetic Algorithm** là thuật toán chậm nhất với. Chi phí thời gian cao này đến từ việc phải quản lý cả một quần thể, thực hiện các thao tác phức tạp như lựa chọn, lai ghép và đột biến qua nhiều thế hệ. **Beam Search** nằm ở giữa, nhanh hơn Genetic Algorithm vì nó chỉ giữ lại một số lượng trạng thái tốt nhất cố định ở mỗi bước, giảm bớt gánh nặng tính toán.
 
 ### **Môi Trường Phức Tạp**
 
@@ -393,6 +411,13 @@ Dự án chia thành **5 nhóm thuật toán chính**.
 
 **4. Nhận xét, đánh giá**
 ![Complex Statistic](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/statistic_sample/complex.png)
+- Về hiệu quả không gian (Số node đã mở rộng)
+
+  Trong các môi trường phức tạp, **Partial Observable** (Quan sát được một phần) là hiệu quả nhất. Điều này là do thuật toán có một phần thông tin về trạng thái (ví dụ: biết trước vị trí của vài con xe đầu tiên), giúp thu hẹp không gian tìm kiếm một cách đáng kể. Ngược lại, môi trường **Nondeterministic** (Không xác định) là tốn kém nhất. Nguyên nhân là vì mỗi hành động có thể dẫn đến nhiều kết quả không thể đoán trước, và thuật toán AND-OR phải tìm ra một kế hoạch dự phòng hoạt động được với tất cả các khả năng, dẫn đến một cây tìm kiếm khổng lồ. Môi trường **Unobservable** (Không quan sát được) mở rộng rất ít nhưng lại không tìm thấy lời giải, cho thấy thuật toán đã nhanh chóng thất bại do không có thông tin cảm biến để định hướng.
+
+- Về hiệu quả thời gian (Thời gian thực thi)
+
+  Hiệu quả về thời gian cũng cho thấy kết quả tương tự. **Partial Observable** là nhanh nhất , khẳng định lợi ích của việc có thông tin, dù chỉ là một phần. Môi trường **Nondeterministic** chậm nhất. Thuật toán **Unobservable** kết thúc nhanh (0.11 ms) nhưng đó là thời gian của một lần chạy thất bại, không phải là một chỉ số hiệu suất thành công. Tóm lại, lượng thông tin mà agent có về môi trường ảnh hưởng trực tiếp và mạnh mẽ đến hiệu quả tìm kiếm.
 
 ### **Tìm Kiếm Thỏa Mãn Ràng Buộc (CSP)**
 
@@ -470,13 +495,29 @@ Dự án chia thành **5 nhóm thuật toán chính**.
 
 **4. Nhận xét, đánh giá**
 ![CSP Statistic](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/statistic_sample/csp.png)
+- Về hiệu quả không gian (Số node đã mở rộng)
+
+  Một điểm đáng chú ý là cả ba thuật toán — **Backtracking, Forward Checking, và Arc Consistency (AC-3)** — đều mở rộng cùng một số lượng node. Điều này có thể được giải thích: đối với bài toán 8 con xe, ràng buộc "các con xe không được nằm trên cùng một cột" khá đơn giản. Phép kiểm tra if col not in state cơ bản trong thuật toán **Backtracking** đã đủ mạnh để cắt tỉa các nhánh không hợp lệ một cách hiệu quả. Các kỹ thuật phức tạp hơn như **Forward Checking và AC-3**, mặc dù mạnh mẽ hơn trong các bài toán phức tạp, nhưng trong trường hợp này lại không mang lại lợi ích cắt tỉa nào thêm, dẫn đến việc chúng duyệt qua cùng một không gian tìm kiếm.
+
+- Về hiệu quả thời gian (Thời gian thực thi)
+
+  Sự khác biệt lớn nằm ở thời gian thực thi. **Backtracking** là nhanh nhất vì nó có chi phí xử lý ở mỗi node là thấp nhất. **Forward Checking** chậm hơn vì sau mỗi lần đặt xe, nó phải thực hiện thêm công việc là cập nhật "miền giá trị" (các cột hợp lệ) cho các hàng còn lại. **Arc Consistency (AC-3)** là chậm nhất. Lý do là ở mỗi bước, nó phải chạy một thuật toán tốn kém để kiểm tra và thực thi tính nhất quán trên tất cả các cặp biến, một sự đầu tư quá mức cần thiết cho bài toán này. Kết quả cho thấy, đối với các bài toán có ràng buộc đơn giản, một thuật toán cơ bản như **Backtracking** có thể hiệu quả hơn các phương pháp phức tạp do chi phí tính toán thấp hơn.
 
 ### **Tổng quát**
 ![Group](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/statistic_sample/bestgroup.png)
+- Về hiệu quả không gian (Số node đã mở rộng)
+
+  Khi so sánh các thuật toán hiệu quả nhất từ mỗi nhóm, sự khác biệt về chiến lược tìm kiếm trở nên cực kỳ rõ rệt. **Partial Observable** (Quan sát được một phần) là thuật toán vượt trội nhất, mở rộng rất ít nhờ vào việc có sẵn thông tin ban đầu để định hướng tìm kiếm. Các thuật toán dựa trên heuristic như Greedy **Best-First và Hill Climbing** cũng cực kỳ hiệu quả, luôn đi theo hướng hứa hẹn nhất để đến mục tiêu. Ngược lại, **Backtracking**, đại diện cho phương pháp duyệt vét cạn có hệ thống, phải khám phá một không gian tìm kiếm khổng lồ. Ngay cả **Uniform Cost**, vốn được hưởng lợi từ một hàm chi phí "thông minh", cũng phải mở rộng rất nhiều, cho thấy rằng việc chỉ dựa vào heuristic (Greedy/Hill Climbing) hoặc có thông tin cảm biến (Partial Observable) là chiến lược tối ưu hơn về mặt không gian.
+
+- Về hiệu quả thời gian (Thời gian thực thi)
+
+  Về mặt thời gian, kết quả cũng phản ánh chính xác hiệu quả về không gian. **Partial Observable** là nhanh nhất, chứng tỏ rằng càng có nhiều thông tin về môi trường thì việc tìm kiếm càng nhanh. **Greedy Best-First và Hill Climbing** theo sát phía sau, cho thấy các thuật toán "tham lam" có chi phí tính toán ở mỗi bước rất thấp, giúp chúng đạt được tốc độ ấn tượng. **Backtracking** là thuật toán chậm nhất do phải xử lý số lượng node rất rất lớn. **Uniform Cost**  tuy nhanh hơn **Backtracking** nhưng vẫn chậm hơn đáng kể so với các thuật toán dựa trên heuristic, vì nó phải duy trì một hàng đợi ưu tiên và tính toán chi phí phức tạp hơn ở mỗi bước.
+
+- Kết luận chung: Biểu đồ tổng hợp này là một minh chứng xuất sắc cho thấy sức mạnh của thông tin và heuristic. Các thuật toán được trang bị "kiến thức" về bài toán, dù là thông qua cảm biến hay hàm đánh giá heuristic, đều vượt trội hoàn toàn so với các phương pháp duyệt có hệ thống nhưng "mù quáng" như Backtracking, cả về không gian lẫn thời gian.
 
 ---
 
-## THỐNG KÊ SO SẢNH
+## THỐNG KÊ SO SÁNH
 
 Bảng thống kê tự động cập nhật sau mỗi lần chạy thuật toán:
 
