@@ -141,6 +141,7 @@ Dự án chia thành **5 nhóm thuật toán chính**.
 ![UCS Demo](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/gif_sample/ucs.gif)
 
 **6. Nhận xét, đánh giá**
+![Uninform Statistic](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/statistic_sample/uninformed.png)
 
 ### **Tìm Kiếm Có Thông Tin**
 
@@ -197,6 +198,7 @@ Dự án chia thành **5 nhóm thuật toán chính**.
 ![ASTAR Demo](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/gif_sample/astar.gif)
 
 **3. Nhận xét, đánh giá**
+![Inform Statistic](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/statistic_sample/informed.png)
 
 ### **Tìm Kiếm Cục Bộ**
 
@@ -307,6 +309,7 @@ Dự án chia thành **5 nhóm thuật toán chính**.
 ![BEAM Demo](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/gif_sample/beam.gif)
 
 **5. Nhận xét, đánh giá**
+![Local Statistic](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/statistic_sample/local.png)
 
 ### **Môi Trường Phức Tạp**
 
@@ -388,6 +391,9 @@ Dự án chia thành **5 nhóm thuật toán chính**.
 - Minh họa áp dụng thuật toán
 ![PARTOB Demo](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/gif_sample/partialobs.gif)
 
+**4. Nhận xét, đánh giá**
+![Complex Statistic](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/statistic_sample/complex.png)
+
 ### **Tìm Kiếm Thỏa Mãn Ràng Buộc (CSP)**
 
 **1. Backtracking** – thử-sai và quay lui
@@ -463,10 +469,14 @@ Dự án chia thành **5 nhóm thuật toán chính**.
 ![AC3 Demo](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/gif_sample/ac3.gif)
 
 **4. Nhận xét, đánh giá**
+![CSP Statistic](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/statistic_sample/csp.png)
+
+### **Tổng quát**
+![Group](https://github.com/QuangLam0208/8-rooks-ai/blob/main/assets/pics/statistic_sample/bestgroup.png)
 
 ---
 
-## Thống Kê & So Sánh
+## THỐNG KÊ SO SẢNH
 
 Bảng thống kê tự động cập nhật sau mỗi lần chạy thuật toán:
 
